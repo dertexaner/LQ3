@@ -1,0 +1,1 @@
+root://eoscms//eos/cms/store/user/hsaka/2012Skims/2013_PromptMuSkim_V1//analysisClass_DATA_MC_LTEM_PromptMuSkim_MuTrigger___inputList_RootNtuple-V00-03-11_T_s-channel.root

@@ -1,0 +1,2 @@
+config/inputFolder/inputList_RootNtuple-V00-03-11_DYJetsToLL_M-10To50.txt
+config/inputFolder/inputList_RootNtuple-V00-03-11_DYJetsToLL_M-50.txt

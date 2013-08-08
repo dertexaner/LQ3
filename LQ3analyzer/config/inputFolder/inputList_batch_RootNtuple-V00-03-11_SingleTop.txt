@@ -1,0 +1,6 @@
+config/inputFolder/inputList_RootNtuple-V00-03-11_T_s-channel.txt
+config/inputFolder/inputList_RootNtuple-V00-03-11_T_t-channel.txt
+config/inputFolder/inputList_RootNtuple-V00-03-11_T_tW-channel.txt
+config/inputFolder/inputList_RootNtuple-V00-03-11_Tbar_s-channel.txt
+config/inputFolder/inputList_RootNtuple-V00-03-11_Tbar_t-channel.txt
+config/inputFolder/inputList_RootNtuple-V00-03-11_Tbar_tW-channel.txt

@@ -1,0 +1,1 @@
+root://eoscms//eos/cms/store/user/hsaka/2013Skims/LTEM_MuTauSkim_V3/analysisClass_DATA_MC_LTEM_MuTauSkim___inputList_RootNtuple-V00-03-11_DYToTauTau_M-20_CT10_TuneZ2star_v2_8TeV-powheg-tauola-pythia6.root

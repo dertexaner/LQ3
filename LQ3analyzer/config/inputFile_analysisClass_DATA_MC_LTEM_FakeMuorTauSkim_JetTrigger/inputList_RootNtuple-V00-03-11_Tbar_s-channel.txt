@@ -1,0 +1,1 @@
+root://eoscms//eos/cms/store/user/hsaka/2012Skims/2013_FakeMuTauSkim_MuOnly_V3//analysisClass_DATA_MC_LTEM_FakeMuorTauSkim_JetTrigger___inputList_RootNtuple-V00-03-11_Tbar_s-channel.root

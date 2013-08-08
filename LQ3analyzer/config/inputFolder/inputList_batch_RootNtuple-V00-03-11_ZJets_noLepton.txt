@@ -1,0 +1,5 @@
+config/inputFolder/inputList_RootNtuple-V00-03-11_ZJetsFullyHadronic.txt
+config/inputFolder/inputList_RootNtuple-V00-03-11_ZJetsToNuNu_50_HT_100.txt
+config/inputFolder/inputList_RootNtuple-V00-03-11_ZJetsToNuNu_100_HT_200.txt
+config/inputFolder/inputList_RootNtuple-V00-03-11_ZJetsToNuNu_200_HT_400.txt
+config/inputFolder/inputList_RootNtuple-V00-03-11_ZJetsToNuNu_400_HT_inf.txt

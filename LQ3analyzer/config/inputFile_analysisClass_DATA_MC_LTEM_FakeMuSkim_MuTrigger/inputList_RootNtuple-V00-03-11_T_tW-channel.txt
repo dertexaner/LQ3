@@ -1,0 +1,1 @@
+root://eoscms//eos/cms/store/user/hsaka/2012Skims/2013_FakeMuSkim_V3//analysisClass_DATA_MC_LTEM_FakeMuSkim_MuTrigger___inputList_RootNtuple-V00-03-11_T_tW-channel.root

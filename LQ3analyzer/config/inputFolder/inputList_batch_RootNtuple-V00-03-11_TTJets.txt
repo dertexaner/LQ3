@@ -1,0 +1,3 @@
+config/inputFolder/inputList_RootNtuple-V00-03-11_TTJets_FullLeptMGDecays.txt
+config/inputFolder/inputList_RootNtuple-V00-03-11_TTJets_HadronicMGDecays.txt
+config/inputFolder/inputList_RootNtuple-V00-03-11_TTJets_SemiLeptMGDecays.txt

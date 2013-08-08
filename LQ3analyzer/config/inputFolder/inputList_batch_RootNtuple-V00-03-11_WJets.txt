@@ -1,0 +1,5 @@
+config/inputFolder/inputList_RootNtuple-V00-03-11_W0JetsToLNu.txt
+config/inputFolder/inputList_RootNtuple-V00-03-11_W1JetsToLNu.txt
+config/inputFolder/inputList_RootNtuple-V00-03-11_W2JetsToLNu.txt
+config/inputFolder/inputList_RootNtuple-V00-03-11_W3JetsToLNu.txt
+config/inputFolder/inputList_RootNtuple-V00-03-11_W4JetsToLNu.txt

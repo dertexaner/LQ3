@@ -1,0 +1,2 @@
+config/inputFolder/inputList_RootNtuple-V00-03-11_SingleMu__Run2012A-13Jul2012-v1.txt
+config/inputFolder/inputList_RootNtuple-V00-03-11_SingleMu__Run2012A-recover-06Aug2012-v1.txt

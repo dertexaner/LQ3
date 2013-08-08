@@ -1,0 +1,1 @@
+root://eoscms//eos/cms/store/user/hsaka/2013Skims/LTEM_MuMuSkim_V1/analysisClass_DATA_MC_LTEM_MuMuSkim_V2___inputList_RootNtuple-V00-03-11_W0JetsToLNu.root

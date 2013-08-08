@@ -1,0 +1,1 @@
+root://eoscms//eos/cms/store/user/hsaka/2013Skims/LTEM_MuTauSkim_V2//analysisClass_DATA_MC_LTEM_MuTauSkim___inputList_RootNtuple-V00-03-11_SingleMu__Run2012B-13Jul2012-v1_run195833-196531.root

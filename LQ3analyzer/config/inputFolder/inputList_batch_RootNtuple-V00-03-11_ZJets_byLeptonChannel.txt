@@ -1,0 +1,3 @@
+config/inputFolder/inputList_RootNtuple-V00-03-11_DYToMuMu_M_20_TuneZ2star_8TeV_pythia6_v2.txt
+config/inputFolder/inputList_RootNtuple-V00-03-11_DYToTauTau_M-20_CT10_TuneZ2star_v2_8TeV-powheg-tauola-pythia6.txt
+config/inputFolder/inputList_RootNtuple-V00-03-11_DYToEE_M-20_CT10_TuneZ2star_v2_8TeV-powheg-pythia6.txt

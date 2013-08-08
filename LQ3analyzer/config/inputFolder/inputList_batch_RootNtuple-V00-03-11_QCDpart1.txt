@@ -1,0 +1,6 @@
+config/inputFolder/inputList_RootNtuple-V00-03-11_QCD_Pt-15to20.txt
+config/inputFolder/inputList_RootNtuple-V00-03-11_QCD_Pt-30to50.txt
+config/inputFolder/inputList_RootNtuple-V00-03-11_QCD_Pt-80to120.txt
+config/inputFolder/inputList_RootNtuple-V00-03-11_QCD_Pt-170to300.txt
+config/inputFolder/inputList_RootNtuple-V00-03-11_QCD_Pt-470to600.txt
+config/inputFolder/inputList_RootNtuple-V00-03-11_QCD_Pt-800to1000.txt

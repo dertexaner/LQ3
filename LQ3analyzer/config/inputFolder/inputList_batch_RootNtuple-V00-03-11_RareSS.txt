@@ -1,0 +1,9 @@
+config/inputFolder/inputList_RootNtuple-V00-03-11_WZJetsTo3LNu.txt
+config/inputFolder/inputList_RootNtuple-V00-03-11_ZZTo2mu2tau.txt
+config/inputFolder/inputList_RootNtuple-V00-03-11_TTZJets.txt
+config/inputFolder/inputList_RootNtuple-V00-03-11_TTWJets.txt
+config/inputFolder/inputList_RootNtuple-V00-03-11_TTWWJets.txt
+config/inputFolder/inputList_RootNtuple-V00-03-11_WWW.txt
+config/inputFolder/inputList_RootNtuple-V00-03-11_WWZ.txt
+config/inputFolder/inputList_RootNtuple-V00-03-11_WZZ.txt
+config/inputFolder/inputList_RootNtuple-V00-03-11_ZZZ.txt

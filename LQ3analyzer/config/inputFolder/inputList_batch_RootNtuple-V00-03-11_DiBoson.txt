@@ -1,0 +1,3 @@
+config/inputFolder/inputList_RootNtuple-V00-03-11_WW.txt
+config/inputFolder/inputList_RootNtuple-V00-03-11_WZ.txt
+config/inputFolder/inputList_RootNtuple-V00-03-11_ZZ.txt

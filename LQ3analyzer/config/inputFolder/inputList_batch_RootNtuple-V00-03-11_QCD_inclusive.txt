@@ -1,0 +1,13 @@
+config/inputFolder/inputList_RootNtuple-V00-03-11_QCD_Pt-15to30_inclusive.txt
+config/inputFolder/inputList_RootNtuple-V00-03-11_QCD_Pt-30to50_inclusive.txt
+config/inputFolder/inputList_RootNtuple-V00-03-11_QCD_Pt-50to80_inclusive.txt
+config/inputFolder/inputList_RootNtuple-V00-03-11_QCD_Pt-80to120_inclusive.txt
+config/inputFolder/inputList_RootNtuple-V00-03-11_QCD_Pt-120to170_inclusive.txt
+config/inputFolder/inputList_RootNtuple-V00-03-11_QCD_Pt-170to300_inclusive.txt
+config/inputFolder/inputList_RootNtuple-V00-03-11_QCD_Pt-300to470_inclusive.txt
+config/inputFolder/inputList_RootNtuple-V00-03-11_QCD_Pt-470to600_inclusive.txt
+config/inputFolder/inputList_RootNtuple-V00-03-11_QCD_Pt-600to800_inclusive.txt
+config/inputFolder/inputList_RootNtuple-V00-03-11_QCD_Pt-800to1000_inclusive.txt
+config/inputFolder/inputList_RootNtuple-V00-03-11_QCD_Pt-1000to1400_inclusive.txt
+config/inputFolder/inputList_RootNtuple-V00-03-11_QCD_Pt-1400to1800_inclusive.txt
+config/inputFolder/inputList_RootNtuple-V00-03-11_QCD_Pt-1800_inclusive.txt

@@ -1,0 +1,10 @@
+https://twiki.cern.ch/twiki/bin/viewauth/CMS/LumiCalc
+ssh to lxplus.cern.ch (or any slc5 host)
+scramv1 p CMSSW CMSSW_5_0_1
+cd CMSSW_5_0_1/src
+cvs co  -r V04-02-01 RecoLuminosity/LumiDB
+cd RecoLuminosity/LumiDB
+scramv1 b
+cmsenv
+
+pileupCalc.py -i SingleMu__Run2012ABCD_filtered.json --inputLumiJSON /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/PileUp/pileup_JSON_DCSONLY_190389-208686_corr.txt --calcMode true --minBiasXsec 69400 --maxPileupBin 60 --numPileupBins 60 SingleMu__Run2012ABCD_filtered_missing_run205768-206767_69400_calcMod_true_60.root
