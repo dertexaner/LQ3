@@ -1,0 +1,15 @@
+imax 1 number of channels
+jmax 26 number of backgrounds
+kmax 3 number of nuisance parameters (sources of systematical uncertainties)
+------------
+bin         ch1
+observation 1.182915
+------------
+bin      ch1 ch1 ch1 ch1 ch1 ch1 ch1 ch1 ch1 ch1 ch1 ch1 ch1 ch1 ch1 ch1 ch1 ch1 ch1 ch1 ch1 ch1 ch1 ch1 ch1 ch1 ch1
+process  LQ Fake TTJetsFullLep ZJets SingleTop_tW_ WW WZ ZZ TTG TBZ TTW TTWW TTZ WpWpqq WmWmqq WWDoubleScattering WWW WWZ WZZ ZZZ WGstarToLNu2Mu WGstarToLNu2Tau WWGJets TTTT AscProdHToZZ AscProdHToWW AscProdHToTauTau
+process  0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26
+rate     0.125286704679 0.104367 0.0 0.0 0.0 0.0 0.0233814030843 0.0 0.0 0.0 0.0437882967824 0.00122913087759 0.0 0.0497504132404 0.0 0.0 0.00850875026403 0.00754146358874 0.00195081057324 0.0 0.0 0.0 0.0 0.00020404259162 0.0 0.0 0.0019897258461
+------------
+Fake_sys lnN  - 1.61796841819 - - - - - - - - - - - - - - - - - - - - - - - - -
+LQ_stat gmN 76 0.00164850927209 - - - - - - - - - - - - - - - - - - - - - - - - - -
+Fake_stat gmN 1 - 0.104366629182 - - - - - - - - - - - - - - - - - - - - - - - - -

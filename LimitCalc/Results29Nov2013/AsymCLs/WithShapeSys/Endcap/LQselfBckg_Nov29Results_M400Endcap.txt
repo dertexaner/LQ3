@@ -1,0 +1,22 @@
+ExpFakesStatError:  0.176371827283
+         ExpFakes:  -0.169251489048
+     StatErrRatio:  -1.04206957513
+  EquivalentStats:  1
+   fakeWeightinTT:  -0.169251489048
+
+MC LL:  0.726827490923
+MC LT:  1.2354900845
+MC TL:  3.89225139683
+MC TT:  6.10708382968
+
+
+MCcontrolResults  FakesShapeSysErr:  -0.02031012
+MCcontrolResults   FakesRateSysErr:  0.170256798273
+MCcontrolResults  TotalFakesSysErr:  0.149946678273
+
+MCcontrolResults  RESULTS in  Endcap  Region M400
+MCcontrolResults                   Observed : 6.107084   +/- 0.949488  
+MCcontrolResults             Expected Total : 5.594004   +/- 0.941589  
+MCcontrolResults             Expected Fakes : -0.169251  +/- 0.176372  
+MCcontrolResults                Expected PP : 5.763256   +/- 0.924923  
+

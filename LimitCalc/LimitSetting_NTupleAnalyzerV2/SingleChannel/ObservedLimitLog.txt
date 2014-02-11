@@ -1,0 +1,150 @@
+>>> including systematics
+>>> method used to compute upper limit is MarkovChainMC
+>>> method used to hint where the upper limit is MarkovChainMC
+>>> Used OpenSSL to get a really random seed -1486049055
+Computing limit starting from observation
+
+ -- MarkovChainMC -- 
+Limit: r < 0.466415 +/- 0.0238965 @ 95% CL (40 tries)
+
+ -- MarkovChainMC -- 
+Limit: r < 0.315419 +/- 0.012227 @ 95% CL (40 tries)
+Done in 0.55 min (cpu), 0.55 min (real)
+>>> including systematics
+>>> method used to compute upper limit is MarkovChainMC
+>>> method used to hint where the upper limit is MarkovChainMC
+>>> Used OpenSSL to get a really random seed -1965925188
+Computing limit starting from observation
+
+ -- MarkovChainMC -- 
+Limit: r < 0.29803 +/- 0.0118609 @ 95% CL (40 tries)
+
+ -- MarkovChainMC -- 
+Limit: r < 0.267467 +/- 0.00555876 @ 95% CL (40 tries)
+Done in 0.54 min (cpu), 0.54 min (real)
+>>> including systematics
+>>> method used to compute upper limit is MarkovChainMC
+>>> method used to hint where the upper limit is MarkovChainMC
+>>> Used OpenSSL to get a really random seed -1085350877
+Computing limit starting from observation
+
+ -- MarkovChainMC -- 
+Limit: r < 0.491948 +/- 0.0123054 @ 95% CL (40 tries)
+
+ -- MarkovChainMC -- 
+Limit: r < 0.491373 +/- 0.00856533 @ 95% CL (40 tries)
+Done in 0.54 min (cpu), 0.54 min (real)
+>>> including systematics
+>>> method used to compute upper limit is MarkovChainMC
+>>> method used to hint where the upper limit is MarkovChainMC
+>>> Used OpenSSL to get a really random seed -1605106608
+Computing limit starting from observation
+
+ -- MarkovChainMC -- 
+Limit: r < 0.725914 +/- 0.0225857 @ 95% CL (40 tries)
+
+ -- MarkovChainMC -- 
+Limit: r < 0.688009 +/- 0.0104378 @ 95% CL (40 tries)
+Done in 0.54 min (cpu), 0.54 min (real)
+>>> including systematics
+>>> method used to compute upper limit is MarkovChainMC
+>>> method used to hint where the upper limit is MarkovChainMC
+>>> Used OpenSSL to get a really random seed 146561642
+Computing limit starting from observation
+
+ -- MarkovChainMC -- 
+Limit: r < 0.930121 +/- 0.0164212 @ 95% CL (40 tries)
+
+ -- MarkovChainMC -- 
+Limit: r < 0.886101 +/- 0.0175144 @ 95% CL (40 tries)
+Done in 0.55 min (cpu), 0.55 min (real)
+>>> including systematics
+>>> method used to compute upper limit is MarkovChainMC
+>>> method used to hint where the upper limit is MarkovChainMC
+>>> Used OpenSSL to get a really random seed 1106286389
+Computing limit starting from observation
+
+ -- MarkovChainMC -- 
+Limit: r < 1.35959 +/- 0.0260605 @ 95% CL (40 tries)
+
+ -- MarkovChainMC -- 
+Limit: r < 1.33516 +/- 0.0164047 @ 95% CL (40 tries)
+Done in 0.55 min (cpu), 0.55 min (real)
+>>> including systematics
+>>> method used to compute upper limit is MarkovChainMC
+>>> method used to hint where the upper limit is MarkovChainMC
+>>> Used OpenSSL to get a really random seed 1530430976
+Computing limit starting from observation
+
+ -- MarkovChainMC -- 
+Limit: r < 2.0088 +/- 0.0428322 @ 95% CL (40 tries)
+
+ -- MarkovChainMC -- 
+Limit: r < 2.09726 +/- 0.0378915 @ 95% CL (40 tries)
+Done in 0.53 min (cpu), 0.53 min (real)
+>>> including systematics
+>>> method used to compute upper limit is MarkovChainMC
+>>> method used to hint where the upper limit is MarkovChainMC
+>>> Used OpenSSL to get a really random seed -722545797
+Computing limit starting from observation
+
+ -- MarkovChainMC -- 
+Limit: r < 3.50571 +/- 0.0552683 @ 95% CL (40 tries)
+
+ -- MarkovChainMC -- 
+Limit: r < 3.55104 +/- 0.0556878 @ 95% CL (40 tries)
+Done in 0.54 min (cpu), 0.54 min (real)
+>>> including systematics
+>>> method used to compute upper limit is MarkovChainMC
+>>> method used to hint where the upper limit is MarkovChainMC
+>>> Used OpenSSL to get a really random seed -1522080297
+Computing limit starting from observation
+
+ -- MarkovChainMC -- 
+Limit: r < 8.31887 +/- 0.118871 @ 95% CL (40 tries)
+
+ -- MarkovChainMC -- 
+Limit: r < 8.54378 +/- 0.133999 @ 95% CL (40 tries)
+Done in 0.55 min (cpu), 0.55 min (real)
+>>> including systematics
+>>> method used to compute upper limit is MarkovChainMC
+>>> method used to hint where the upper limit is MarkovChainMC
+>>> Used OpenSSL to get a really random seed -1228471673
+Computing limit starting from observation
+
+ -- MarkovChainMC -- 
+Limit: r < 17.7077 +/- 0.0832706 @ 95% CL (40 tries)
+
+ -- MarkovChainMC -- 
+Limit: r < 22.7869 +/- 0.447202 @ 95% CL (40 tries)
+Done in 0.57 min (cpu), 0.57 min (real)
+Calculating limit for: LQToCMu_BetaHalf_M_250
+LQToCMu_BetaHalf_M_250
+LQToCMu_BetaHalf_M_250.txt
+Calculating limit for: LQToCMu_BetaHalf_M_350
+LQToCMu_BetaHalf_M_350
+LQToCMu_BetaHalf_M_350.txt
+Calculating limit for: LQToCMu_BetaHalf_M_400
+LQToCMu_BetaHalf_M_400
+LQToCMu_BetaHalf_M_400.txt
+Calculating limit for: LQToCMu_BetaHalf_M_450
+LQToCMu_BetaHalf_M_450
+LQToCMu_BetaHalf_M_450.txt
+Calculating limit for: LQToCMu_BetaHalf_M_500
+LQToCMu_BetaHalf_M_500
+LQToCMu_BetaHalf_M_500.txt
+Calculating limit for: LQToCMu_BetaHalf_M_550
+LQToCMu_BetaHalf_M_550
+LQToCMu_BetaHalf_M_550.txt
+Calculating limit for: LQToCMu_BetaHalf_M_600
+LQToCMu_BetaHalf_M_600
+LQToCMu_BetaHalf_M_600.txt
+Calculating limit for: LQToCMu_BetaHalf_M_650
+LQToCMu_BetaHalf_M_650
+LQToCMu_BetaHalf_M_650.txt
+Calculating limit for: LQToCMu_BetaHalf_M_750
+LQToCMu_BetaHalf_M_750
+LQToCMu_BetaHalf_M_750.txt
+Calculating limit for: LQToCMu_BetaHalf_M_850
+LQToCMu_BetaHalf_M_850
+LQToCMu_BetaHalf_M_850.txt

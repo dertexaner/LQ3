@@ -1,0 +1,172 @@
+These instructions are a walk-through of the steps needed to calculated limits in the form of 
+Single Channel Sigma*BranchingFraction versus Mass and Single/Combined Channel Beta Vs Mass Plots. 
+
+The first step is to create a text file "FinalCards.txt" which stores all of the "card" info needed
+as inputs to the Higgs Combine tool used for limit setting. 
+
+IMPORTANT: You will need some code from the Higgs Group. In the NTUpleAnalyzer/tools/HiggsLimit directory:
+Go to your CMSSW src directory and do:
+  cmsenv 
+  cvs co -r T01-07-02 HiggsAnalysis/CombinedLimit
+  scramv1 b -j 16
+  cmsenv
+
+
+--------------------------------       CARD FILE CREATION       -------------------------------------
+
+
+First and foremost, you need to be have the uncertainty information as calculated from the 
+NTupleAnalyzerV2/Systematics package. The main uncertainties calculated in this method are
+the JES, muon momentum scale, and jet and muon resolutions. The rest are constant values. 
+
+So, go to NTupleAnalyzerV2/Systematics.
+
+1) Get the systematics info if you haven't already:
+
+    You should run 'python CalculateSystematicsFullHiggs.py' to get output log file SysVerboseLog.txt. 
+
+2) Parse the log file from step (1) into more organized tables, and touch up by hand if needed. 
+
+    You should run 'python LogSkimmer.py > OutputSysCards.txt' to get a cleaner version of the
+    uncertainty information.  
+   
+    Then you need to make important changes to OutputSysCards.txt. It is best to open this file in a 
+    spreadsheet. You will need to insert by hand the following uncertainties:
+
+      a) Mod: Background modelling uncertainties
+      b) Mrii: muon reco, ID, isolation uncertainty
+      c) Lum: Integrated luminosity uncertainty. 
+
+      d) Add the Data info (sorry, doing this by hand now). For each channel the number of data events
+         should be specified at the end of OutputSysCards.txt like this, for example:
+         
+ 
+           D:Data,Count
+           LQToCMu_M_250,489
+           LQToCMu_M_350,101
+           LQToCMu_M_400,50
+           LQToCMu_M_450,27
+           LQToCMu_M_500,18
+           LQToCMu_M_550,9
+           LQToCMu_M_600,8
+           LQToCMu_M_650,7
+           LQToCMu_M_750,1
+           LQToCMu_M_850,1
+
+           LQToCMu_BetaHalf_M_250,1288
+           LQToCMu_BetaHalf_M_350,116
+           LQToCMu_BetaHalf_M_400,63
+           LQToCMu_BetaHalf_M_450,35
+           LQToCMu_BetaHalf_M_500,15
+           LQToCMu_BetaHalf_M_550,9
+           LQToCMu_BetaHalf_M_600,8
+           LQToCMu_BetaHalf_M_650,6
+           LQToCMu_BetaHalf_M_750,5
+           LQToCMu_BetaHalf_M_850,5
+        
+     Save this again as OutputSysCards.txt
+
+3) Make finalized cards for the Higgs Combine tool. 
+
+    You should run 'python CardMaker.py'. This will output "FinalCards.txt".  
+
+
+Once you have a FinalCards.txt file, you can use this for running the sigma*BR (M) single 
+channel limits or the Beta(M) single channel and combined limits. 
+
+To start, copy the FinalCard.txt to the two relevant directories:
+   
+    NTupleAnalyzerV2/tools/HiggsLimit/SingleChannel
+    NTupleAnalyzerV2/tools/HiggsLimit/Combination
+
+
+--------------------------------           SINGLE CHANNEL       -------------------------------------
+
+
+1) Go to the SingleChannel directory. 
+
+2) Run the observed limits:
+
+   a) To run the limits:
+      python RunStatsBasicMC.py  --do_mumu --do_munu --just_observed | tee ObservedLimitLog.txt
+   
+   b) To convert the limits into macro-usable information:
+      python ObservedLimitParser.py
+
+3) Run the expected limits with batch. 
+
+   a) Use the batch mode launching with:
+      python RunStatsBasicMC.py --do_mumu --do_munu -q 2nd -n 30 -l launcherMCMC.py -c StandardExample 
+      
+      About the options:
+      
+      --do_mumu --do_munu :  Specifies to do both channels.
+      -q 2nd              :  Specifies batch queue '2nd'
+      -n 30               :  Specifies 30 jobs per mass point per channel. 
+                             Each job does 50 evaluations, for a total 30x50 = 1500 pseudoexperiments. 
+                             50 Evaluations is specified in 'launcherMCMC.py'. 
+      -l launcherMCMC.py  :  Use the launcherMCMC.py file to launch the batch jobs. This file specifies
+                             the limit method, and facilitates the batch process by running the combine
+                             commands and saving the log files and output root files to castor. 
+      -c StandardExample  :  Specifies the output log files and castor directories of root files will be
+                             labeled "StandardExample". Choose whatever name you want. 
+      
+    b) Wait for all the batch jobs to finish and merge the output. 
+       python AnalyzerCastorDirectory.py /castor/cern.ch/user/d/darinb/MuMuStandardExample/ 
+       python AnalyzerCastorDirectory.py /castor/cern.ch/user/d/darinb/MuNuStandardExample/ --munu
+       
+       The '--munu' adjusts the cross-sections by an appropriate factor for munujj beta = 1/2 . 
+       
+       After rfcp'ing the files to a tmp, the script uses pyroot to aggregate all the pseudo-experiments.
+       For each mass, it orders the results of the pseudo-experiments, and gets the 1 and 2 sigma bands
+       and median, and reports the results in a plot-friendly way.  
+       
+    c) Make plots. Use the scripts:
+	   BR_Sigma_MuMu_vsMass.C   and   BR_Sigma_MuNu_vsMass.C
+       Insert values from steps (a) and (b) and run. 
+
+--------------------------------            COMBINATION         -------------------------------------
+
+
+1) Go to the Combination directory. 
+
+2) You can edit the method used for the combination in RunStatsCombo.py
+
+   a) The limit setting method is at the top : "METHOD = .... "
+   b) The beta test values are at the top: " betas = [ 0.01,0.03 ....]"
+
+3) When you are happy with (2), you can run the tool:
+
+   python ComboBatcher.py -cards FinalCards.txt -tag exampletag
+
+   Here, 'FinalCards.txt' is the text file containing your card info, and "exampletag" 
+   is a tag name which will be used in naming the log files. 
+   
+   Running this will submit many batch jobs (one per beta value per channel), and 
+   return Log files which look like "ComboLog_exampletag_6548654548.txt"
+   
+4) Aggregate the results. All of the log files contain information which you can
+   turn into hand plot information with using the ComboBatchSkimmer.py:
+   
+      python ComboBatchSkimmer.py exampletag
+      
+   This will return information for the plot macro. e.g.:  
+   
+     Double_t beta_comb[77] = {0.24, 0.25, 0.26, 0.27, 0.28, ..... };
+
+     Double_t masses_comb[77] = {520, 521, 526, 527, 527,  ..... };
+
+     Double_t beta_one[79] = {0.22, 0.23, 0.24, 0.25, 0.26,  ..... };
+
+     Double_t masses_one[79] = {251, 262, 266, 278, 286, 313,  ..... };
+
+     Double_t beta_half[48] = {0.25, 0.26, 0.27, 0.29, 0.3,  ..... };
+  
+     Double_t masses_half[48] = {542, 547, 550, 552, 556, 556,  ..... };
+
+5) Make the plot. Take the output arrays from step 4, put them in MakeComboPlot.C, 
+   and run :
+   
+     root -b MakeComboPlot.C
+     
+     

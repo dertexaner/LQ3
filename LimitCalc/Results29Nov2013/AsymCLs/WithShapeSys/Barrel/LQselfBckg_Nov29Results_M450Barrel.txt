@@ -1,0 +1,22 @@
+ExpFakesStatError:  0.212659144005
+         ExpFakes:  -0.0721143844119
+     StatErrRatio:  -2.94891436346
+  EquivalentStats:  1
+   fakeWeightinTT:  -0.0721143844119
+
+MC LL:  4.02516645612
+MC LT:  4.96743573741
+MC TL:  14.2057040759
+MC TT:  17.2664962108
+
+
+MCcontrolResults  FakesShapeSysErr:  -0.00072114
+MCcontrolResults   FakesRateSysErr:  0.515711393511
+MCcontrolResults  TotalFakesSysErr:  0.514990253511
+
+MCcontrolResults  RESULTS in  Barrel  Region M450
+MCcontrolResults                   Observed : 17.266496  +/- 1.103323  
+MCcontrolResults             Expected Total : 15.991509  +/- 1.086137  
+MCcontrolResults             Expected Fakes : -0.072114  +/- 0.212659  
+MCcontrolResults                Expected PP : 16.063624  +/- 1.065115  
+

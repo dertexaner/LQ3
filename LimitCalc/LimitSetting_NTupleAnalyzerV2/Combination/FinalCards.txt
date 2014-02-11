@@ -1,0 +1,585 @@
+
+
+LQToCMu_BetaHalf_M_250.txt
+
+imax 1
+jmax 5
+kmax 13
+
+bin 1 
+observation 1288
+
+bin  1 1 1 1 1 1
+process LQToCMu_BetaHalf_M_250 DiBoson SingleTop TTBar WJets ZJetsMG
+process 0 1 2 3 4 5
+rate 1059.56406044 15.8736585065 39.3064447036 430.921185367 784.502654542 11.4172296952
+Jes  lnN  1.04982386015 1.16723363149   1.19258299609    1.16185676537     1.23370009032      1.14254465282 
+Mes  lnN  1.01199677281 1.02598810147   1.03428121054    1.02089486486     1      1.04170763515 
+Jres  lnN  1.00545210575 1.14396138044   1.17135286723    1.15566101468     1.25310039267      1.62526172042 
+Mres  lnN  1.00016226458 1.00790778202   1.01112927333    1.0110987754     1.01188295815      1.0480983088 
+Mod  lnN  - -   -    1.07     1.2      - 
+Mrii  lnN  1.01 1.01   1.01    1.01     1.01      1.01 
+Lum  lnN  1.045 1.045   1.045    -     -      1.045 
+stat2_DiBoson  lnN   - 1.04142030576 -  -  -  - 
+stat2_SingleTop  lnN   -  - 1.02597233335 -  -  - 
+stat2_TTBar  lnN   -  -  - 1.01798466457 -  - 
+stat2_WJets  lnN   -  -  -  - 1.03694971762 - 
+stat2_ZJetsMG  lnN   -  -  -  -  - 1.1543482446
+stat2_sig  lnN  1.00854293731 -  -  -  -  - 
+
+
+
+
+LQToCMu_BetaHalf_M_350.txt
+
+imax 1
+jmax 5
+kmax 13
+
+bin 1 
+observation 116
+
+bin  1 1 1 1 1 1
+process LQToCMu_BetaHalf_M_350 DiBoson SingleTop TTBar WJets ZJetsMG
+process 0 1 2 3 4 5
+rate 141.220801219 2.57421120861 4.00545407746 39.15108658 57.2847113548 0.748797265356
+Jes  lnN  1.04290644897 1.08943299249   1.18162039923    1.25904729868     1.34444838182      1 
+Mes  lnN  1.00828062537 1.03874694121   1.00938628717    1.04183051343     1.02462140348      1 
+Jres  lnN  1.0092068392 1.10152103974   1.34536293985    1.26752842681     1.89448719376      2.31169051187 
+Mres  lnN  1.00139501064 1.01058035443   1.02133737832    1.01502995427     1.07777051289      1 
+Mod  lnN  - -   -    1.07     1.2      - 
+Mrii  lnN  1.01 1.01   1.01    1.01     1.01      1.01 
+Lum  lnN  1.045 1.045   1.045    -     -      1.045 
+stat2_DiBoson  lnN   - 1.10440407405 -  -  -  - 
+stat2_SingleTop  lnN   -  - 1.07723016286 -  -  - 
+stat2_TTBar  lnN   -  -  - 1.05883912415 -  - 
+stat2_WJets  lnN   -  -  -  - 1.12945325907 - 
+stat2_ZJetsMG  lnN   -  -  -  -  - 1.51796319654
+stat2_sig  lnN  1.00969187703 -  -  -  -  - 
+
+
+
+
+LQToCMu_BetaHalf_M_400.txt
+
+imax 1
+jmax 5
+kmax 13
+
+bin 1 
+observation 63
+
+bin  1 1 1 1 1 1
+process LQToCMu_BetaHalf_M_400 DiBoson SingleTop TTBar WJets ZJetsMG
+process 0 1 2 3 4 5
+rate 66.5263478667 1.68292334703 2.16921478801 22.1347083997 20.3547615675 0.252535685945
+Jes  lnN  1.0349672636 1.08149785711   1.08559993197    1.09728396763     1.54658380137      1.51645010787 
+Mes  lnN  1.00811621467 1.03874694121   1.00664841617    1.04183051343     1.13493340585      2.58088239948 
+Jres  lnN  1.00417479154 1.09590815628   1.40641964242    1.21623686269     2.4980017705      4.93562133675 
+Mres  lnN  1.00178676354 1.03578480499   1.01842750157    1.04988337445     1.13515835873      2.06443229161 
+Mod  lnN  - -   -    1.07     1.2      - 
+Mrii  lnN  1.01 1.01   1.01    1.01     1.01      1.01 
+Lum  lnN  1.045 1.045   1.045    -     -      1.045 
+stat2_DiBoson  lnN   - 1.13332708483 -  -  -  - 
+stat2_SingleTop  lnN   -  - 1.1014514421 -  -  - 
+stat2_TTBar  lnN   -  -  - 1.07899874723 -  - 
+stat2_WJets  lnN   -  -  -  - 1.22258355015 - 
+stat2_ZJetsMG  lnN   -  -  -  -  - 1.90076225997
+stat2_sig  lnN  1.0091435984 -  -  -  -  - 
+
+
+
+
+LQToCMu_BetaHalf_M_450.txt
+
+imax 1
+jmax 5
+kmax 13
+
+bin 1 
+observation 35
+
+bin  1 1 1 1 1 1
+process LQToCMu_BetaHalf_M_450 DiBoson SingleTop TTBar WJets ZJetsMG
+process 0 1 2 3 4 5
+rate 31.5380024888 1.06780317973 0.934522702112 9.87500591722 10.2551240703 0.252535685945
+Jes  lnN  1.04287100476 1.014897701   1.12825522896    1.33488088793     1.56351082462      1 
+Mes  lnN  1.00817714749 1.03874694121   1.0971796204    1.04183051343     1.0885041699      1 
+Jres  lnN  1.00936447134 1.07954150792   1.52006451349    1.33272597645     2.3314230943      3.82012468803 
+Mres  lnN  1.00042314527 1.04741196261   1.00001132514    1.01928819211     1.28509802527      2.06443229161 
+Mod  lnN  - -   -    1.07     1.2      - 
+Mrii  lnN  1.01 1.01   1.01    1.01     1.01      1.01 
+Lum  lnN  1.045 1.045   1.045    -     -      1.045 
+stat2_DiBoson  lnN   - 1.17357402994 -  -  -  - 
+stat2_SingleTop  lnN   -  - 1.14911008871 -  -  - 
+stat2_TTBar  lnN   -  -  - 1.11771848363 -  - 
+stat2_WJets  lnN   -  -  -  - 1.32528565491 - 
+stat2_ZJetsMG  lnN   -  -  -  -  - 1.90076225997
+stat2_sig  lnN  1.0091639504 -  -  -  -  - 
+
+
+
+
+LQToCMu_BetaHalf_M_500.txt
+
+imax 1
+jmax 5
+kmax 13
+
+bin 1 
+observation 15
+
+bin  1 1 1 1 1 1
+process LQToCMu_BetaHalf_M_500 DiBoson SingleTop TTBar WJets ZJetsMG
+process 0 1 2 3 4 5
+rate 13.4120211882 0.687477452617 0.359480542608 3.13293936941 1.57054397437 0.225911117255
+Jes  lnN  1.04153246485 1.03389729213   1.12081935743    1.42792746629     2.46708805992      1 
+Mes  lnN  1.01025870875 1.03874694121   1.0971796204    1.04183051343     1.06533081541      1 
+Jres  lnN  1.00391429146 1.11429816842   1.2614110954    1.43986752732     1.95050210201      2 
+Mres  lnN  1.00382614512 1.00940621507   1.00001132514    1.05770601375     1.07195094628      1 
+Mod  lnN  - -   -    1.07     1.2      - 
+Mrii  lnN  1.01 1.01   1.01    1.01     1.01      1.01 
+Lum  lnN  1.045 1.045   1.045    -     -      1.045 
+stat2_DiBoson  lnN   - 1.22185946429 -  -  -  - 
+stat2_SingleTop  lnN   -  - 1.24346178228 -  -  - 
+stat2_TTBar  lnN   -  -  - 1.2035598562 -  - 
+stat2_WJets  lnN   -  -  -  - 1.85423896651 - 
+stat2_ZJetsMG  lnN   -  -  -  -  - 2.0
+stat2_sig  lnN  1.00886854612 -  -  -  -  - 
+
+
+
+
+LQToCMu_BetaHalf_M_550.txt
+
+imax 1
+jmax 5
+kmax 12
+
+bin 1 
+observation 9
+
+bin  1 1 1 1 1 1
+process LQToCMu_BetaHalf_M_550 DiBoson SingleTop TTBar WJets ZJetsMG
+process 0 1 2 3 4 5
+rate 7.38931143345 0.424171010879 0.267275213502 1.22865104589 1.57054397437 0.0
+Jes  lnN  1.04219635193 1.12817158504   1.018125932    1.61284852378     1.35096500684      1 
+Mes  lnN  1.00826740453 1.03874694121   1.0971796204    1.15103378664     1      1 
+Jres  lnN  1.00008085951 1.00368587942   1.35303882259    1.62980363515     1.74794839635      1 
+Mres  lnN  1.00127816898 1.00940621507   1.00001132514    1.21108045882     1      1 
+Mod  lnN  - -   -    1.07     1.2      - 
+Mrii  lnN  1.01 1.01   1.01    1.01     1.01      1.01 
+Lum  lnN  1.045 1.045   1.045    -     -      1.045 
+stat2_DiBoson  lnN   - 1.2882581339 -  -  -  - 
+stat2_SingleTop  lnN   -  - 1.29177384599 -  -  - 
+stat2_TTBar  lnN   -  -  - 1.33051210246 -  - 
+stat2_WJets  lnN   -  -  -  - 1.85423896651 - 
+stat2_sig  lnN  1.00897797982 -  -  -  -  - 
+
+
+
+
+LQToCMu_BetaHalf_M_600.txt
+
+imax 1
+jmax 5
+kmax 12
+
+bin 1 
+observation 8
+
+bin  1 1 1 1 1 1
+process LQToCMu_BetaHalf_M_600 DiBoson SingleTop TTBar WJets ZJetsMG
+process 0 1 2 3 4 5
+rate 4.5466594857 0.301562538766 0.216438469095 0.661850892793 1.60308383568 0.0
+Jes  lnN  1.03807305678 1.07953526043   1.03226991045    2.02730972933     2.0444999218      1 
+Mes  lnN  1.00874369031 1.03874694121   1.11970784143    1.15103378664     1      1 
+Jres  lnN  1.00737810232 1.14168184005   1.47034807295    2.0962382712     2.07372686762      1 
+Mres  lnN  1.00196506983 1.11927910453   1.11970784143    1.05645222227     1      1 
+Mod  lnN  - -   -    1.07     1.2      - 
+Mrii  lnN  1.01 1.01   1.01    1.01     1.01      1.01 
+Lum  lnN  1.045 1.045   1.045    -     -      1.045 
+stat2_DiBoson  lnN   - 1.3424649637 -  -  -  - 
+stat2_SingleTop  lnN   -  - 1.31882225393 -  -  - 
+stat2_TTBar  lnN   -  -  - 1.45843905917 -  - 
+stat2_WJets  lnN   -  -  -  - 1.83836162638 - 
+stat2_sig  lnN  1.00802392452 -  -  -  -  - 
+
+
+
+
+LQToCMu_BetaHalf_M_650.txt
+
+imax 1
+jmax 5
+kmax 12
+
+bin 1 
+observation 6
+
+bin  1 1 1 1 1 1
+process LQToCMu_BetaHalf_M_650 DiBoson SingleTop TTBar WJets ZJetsMG
+process 0 1 2 3 4 5
+rate 2.53607904898 0.253682809008 0.14221718438 0.0154528320718 1.38428072873 0.0
+Jes  lnN  1.03807305678 1.07953526043   1.03226991045    2.02730972933     2.0444999218      1 
+Mes  lnN  1.00874369031 1.03874694121   1.11970784143    1.15103378664     1      1 
+Jres  lnN  1.00737810232 1.14168184005   1.47034807295    2.0962382712     2.07372686762      1 
+Mres  lnN  1.00196506983 1.11927910453   1.11970784143    1.05645222227     1      1 
+Mod  lnN  - -   -    1.07     1.2      - 
+Mrii  lnN  1.01 1.01   1.01    1.01     1.01      1.01 
+Lum  lnN  1.045 1.045   1.045    -     -      1.045 
+stat2_DiBoson  lnN   - 1.3616127089 -  -  -  - 
+stat2_SingleTop  lnN   -  - 1.41368849349 -  -  - 
+stat2_TTBar  lnN   -  -  - 1.74707949126 -  - 
+stat2_WJets  lnN   -  -  -  - 1.96127495377 - 
+stat2_sig  lnN  1.00806716591 -  -  -  -  - 
+
+
+
+
+LQToCMu_BetaHalf_M_750.txt
+
+imax 1
+jmax 5
+kmax 12
+
+bin 1 
+observation 5
+
+bin  1 1 1 1 1 1
+process LQToCMu_BetaHalf_M_750 DiBoson SingleTop TTBar WJets ZJetsMG
+process 0 1 2 3 4 5
+rate 0.944835052257 0.221405017004 0.14221718438 0.00509199670617 1.32954830814 0.0
+Jes  lnN  1.03807305678 1.07953526043   1.03226991045    2.02730972933     2.0444999218      1 
+Mes  lnN  1.00874369031 1.03874694121   1.11970784143    1.15103378664     1      1 
+Jres  lnN  1.00737810232 1.14168184005   1.47034807295    2.0962382712     2.07372686762      1 
+Mres  lnN  1.00196506983 1.11927910453   1.11970784143    1.05645222227     1      1 
+Mod  lnN  - -   -    1.07     1.2      - 
+Mrii  lnN  1.01 1.01   1.01    1.01     1.01      1.01 
+Lum  lnN  1.045 1.045   1.045    -     -      1.045 
+stat2_DiBoson  lnN   - 1.40022282636 -  -  -  - 
+stat2_SingleTop  lnN   -  - 1.41368849349 -  -  - 
+stat2_TTBar  lnN   -  -  - 2.0 -  - 
+stat2_WJets  lnN   -  -  -  - 2.0 - 
+stat2_sig  lnN  1.00747041264 -  -  -  -  - 
+
+
+
+
+LQToCMu_BetaHalf_M_850.txt
+
+imax 1
+jmax 5
+kmax 12
+
+bin 1 
+observation 5
+
+bin  1 1 1 1 1 1
+process LQToCMu_BetaHalf_M_850 DiBoson SingleTop TTBar WJets ZJetsMG
+process 0 1 2 3 4 5
+rate 0.36191459846 0.221405017004 0.116307802442 0.00509199670617 1.32954830814 0.0
+Jes  lnN  1.03807305678 1.07953526043   1.03226991045    2.02730972933     2.0444999218      1 
+Mes  lnN  1.00874369031 1.03874694121   1.11970784143    1.15103378664     1      1 
+Jres  lnN  1.00737810232 1.14168184005   1.47034807295    2.0962382712     2.07372686762      1 
+Mres  lnN  1.00196506983 1.11927910453   1.11970784143    1.05645222227     1      1 
+Mod  lnN  - -   -    1.07     1.2      - 
+Mrii  lnN  1.01 1.01   1.01    1.01     1.01      1.01 
+Lum  lnN  1.045 1.045   1.045    -     -      1.045 
+stat2_DiBoson  lnN   - 1.40022282636 -  -  -  - 
+stat2_SingleTop  lnN   -  - 1.45415162487 -  -  - 
+stat2_TTBar  lnN   -  -  - 2.0 -  - 
+stat2_WJets  lnN   -  -  -  - 2.0 - 
+stat2_sig  lnN  1.0073839448 -  -  -  -  - 
+
+
+
+
+LQToCMu_M_250.txt
+
+imax 1
+jmax 4
+kmax 12
+
+bin 1 
+observation 489
+
+bin  1 1 1 1 1
+process LQToCMu_M_250 SingleTop TTBar WJets ZJetsMG
+process 0 1 2 3 4 
+rate 3667.3168153 8.58104338656 263.2 0.723094503069 263.680955713
+Jes  lnN  1.01021731538 1.04845388233   -    1     1.04638083453 
+Mes  lnN  1.00678770078 1.03039037961   -    1     1.10521277049 
+Jres  lnN  1.00009793232 1.00962292183   -    1     1.00876092683 
+Mres  lnN  1.00108067074 1.01293598776   -    1     1.09790223058 
+Mod  lnN  - -   -    -     1.6 
+Mrii  lnN  1.02 1.02   -    1.02     1.02 
+Lum  lnN  1.045 1.045   -    1.045     - 
+stat_SingleTop  gmN  679 - 0.0126377664014 -  -  - 
+stat_TTBar  gmN  560 -  - 0.47 -  - 
+stat_WJets  gmN  1 -  -  - 0.723094503069 - 
+stat_ZJetsMG  gmN  1551 -  -  -  - 0.170007063644
+stat_sig  gmN  26350  0.13917710874 -  -  -  - 
+
+
+
+
+LQToCMu_M_350.txt
+
+imax 1
+jmax 4
+kmax 12
+
+bin 1 
+observation 101
+
+bin  1 1 1 1 1
+process LQToCMu_M_350 SingleTop TTBar WJets ZJetsMG
+process 0 1 2 3 4 
+rate 556.655204946 1.98087511817 57.81 0.0 58.5766847967
+Jes  lnN  1.00790431192 1.08478668846   -    1     1.08276086508 
+Mes  lnN  1.00512774605 1.06084349694   -    1     1.03814909264 
+Jres  lnN  1.00315343026 1.00713202613   -    1     1.03783037766 
+Mres  lnN  1.00252142397 1.01131785752   -    1     1.00848375601 
+Mod  lnN  - -   -    -     1.6 
+Mrii  lnN  1.02 1.02   -    1.02     1.02 
+Lum  lnN  1.045 1.045   -    1.045     - 
+stat_SingleTop  gmN  175 - 0.0113192863895 -  -  - 
+stat_TTBar  gmN  123 -  - 0.47 -  - 
+stat_WJets  gmN  0 -  -  - 0.723094503069 - 
+stat_ZJetsMG  gmN  353 -  -  -  - 0.165939616988
+stat_sig  gmN  32545  0.0171041697633 -  -  -  - 
+
+
+
+
+LQToCMu_M_400.txt
+
+imax 1
+jmax 4
+kmax 12
+
+bin 1 
+observation 50
+
+bin  1 1 1 1 1
+process LQToCMu_M_400 SingleTop TTBar WJets ZJetsMG
+process 0 1 2 3 4 
+rate 234.818350816 0.982954597422 30.08 0.0 18.8926747983
+Jes  lnN  1.00845437019 1.08792815758   -    1     1.12763989019 
+Mes  lnN  1.00589154511 1.06049141462   -    1     1.07271522598 
+Jres  lnN  1.00288163738 1.03716677165   -    1     1.04895134004 
+Mres  lnN  1.00043779851 1.0161312689   -    1     1.00215775787 
+Mod  lnN  - -   -    -     1.6 
+Mrii  lnN  1.02 1.02   -    1.02     1.02 
+Lum  lnN  1.045 1.045   -    1.045     - 
+stat_SingleTop  gmN  85 - 0.0115641717344 -  -  - 
+stat_TTBar  gmN  64 -  - 0.47 -  - 
+stat_WJets  gmN  0 -  -  - 0.723094503069 - 
+stat_ZJetsMG  gmN  126 -  -  -  - 0.149941863479
+stat_sig  gmN  33380  0.00703470194176 -  -  -  - 
+
+
+
+
+LQToCMu_M_450.txt
+
+imax 1
+jmax 4
+kmax 12
+
+bin 1 
+observation 27
+
+bin  1 1 1 1 1
+process LQToCMu_M_450 SingleTop TTBar WJets ZJetsMG
+process 0 1 2 3 4 
+rate 110.084721744 0.511431439001 13.63 0.0 9.89411919388
+Jes  lnN  1.01142596646 1.04486662122   -    1     1.04015616986 
+Mes  lnN  1.00615393855 1.06049141462   -    1     1.09583962353 
+Jres  lnN  1.0042436434 1.00185349024   -    1     1.01314937689 
+Mres  lnN  1.00053524149 1.0161312689   -    1     1.00346585661 
+Mod  lnN  - -   -    -     1.6 
+Mrii  lnN  1.02 1.02   -    1.02     1.02 
+Lum  lnN  1.045 1.045   -    1.045     - 
+stat_SingleTop  gmN  41 - 0.0124739375366 -  -  - 
+stat_TTBar  gmN  29 -  - 0.47 -  - 
+stat_WJets  gmN  0 -  -  - 0.723094503069 - 
+stat_ZJetsMG  gmN  68 -  -  -  - 0.145501752851
+stat_sig  gmN  39381  0.00279537649486 -  -  -  - 
+
+
+
+
+LQToCMu_M_500.txt
+
+imax 1
+jmax 4
+kmax 12
+
+bin 1 
+observation 18
+
+bin  1 1 1 1 1
+process LQToCMu_M_500 SingleTop TTBar WJets ZJetsMG
+process 0 1 2 3 4 
+rate 54.770015399 0.371714418113 8.46 0.0 4.70631524601
+Jes  lnN  1.00902819202 1.00263400398   -    1     1.13341462821 
+Mes  lnN  1.004724935 1.06049141462   -    1     1.14677245531 
+Jres  lnN  1.00532861411 1.01410892843   -    1     1.07116150218 
+Mres  lnN  1.00307626677 1.0161312689   -    1     1.00346585661 
+Mod  lnN  - -   -    -     1.6 
+Mrii  lnN  1.02 1.02   -    1.02     1.02 
+Lum  lnN  1.045 1.045   -    1.045     - 
+stat_SingleTop  gmN  27 - 0.0137672006708 -  -  - 
+stat_TTBar  gmN  18 -  - 0.47 -  - 
+stat_WJets  gmN  0 -  -  - 0.723094503069 - 
+stat_ZJetsMG  gmN  31 -  -  -  - 0.151816620839
+stat_sig  gmN  34550  0.00158523923007 -  -  -  - 
+
+
+
+
+LQToCMu_M_550.txt
+
+imax 1
+jmax 4
+kmax 12
+
+bin 1 
+observation 9
+
+bin  1 1 1 1 1
+process LQToCMu_M_550 SingleTop TTBar WJets ZJetsMG
+process 0 1 2 3 4 
+rate 24.6946273112 0.0705078369127 2.35 0.0 0.688301800585
+Jes  lnN  1.0167053239 1.00263400398   -    1     2.138086122 
+Mes  lnN  1.00607071874 1.06049141462   -    1     2.20186494873 
+Jres  lnN  1.00675114598 1.22726577712   -    1     2.1399423074 
+Mres  lnN  1.00103606776 1.1453036712   -    1     1.00346585661 
+Mod  lnN  - -   -    -     1.6 
+Mrii  lnN  1.02 1.02   -    1.02     1.02 
+Lum  lnN  1.045 1.045   -    1.045     - 
+stat_SingleTop  gmN  10 - 0.00705078369127 -  -  - 
+stat_TTBar  gmN  5 -  - 0.47 -  - 
+stat_WJets  gmN  0 -  -  - 0.723094503069 - 
+stat_ZJetsMG  gmN  7 -  -  -  - 0.098328828655
+stat_sig  gmN  38950  0.00063400840337 -  -  -  - 
+
+
+
+
+LQToCMu_M_600.txt
+
+imax 1
+jmax 4
+kmax 12
+
+bin 1 
+observation 8
+
+bin  1 1 1 1 1
+process LQToCMu_M_600 SingleTop TTBar WJets ZJetsMG
+process 0 1 2 3 4 
+rate 14.1483538952 0.0705078369127 2.35 0.0 0.553365509196
+Jes  lnN  1.01127262041 1.00263400398   -    1     2.04305510264 
+Mes  lnN  1.00478144617 1.06049141462   -    1     2.12217130425 
+Jres  lnN  1.00751403505 1.1453036712   -    1     1.80123349987 
+Mres  lnN  1.00212274136 1.1453036712   -    1     1.2438465881 
+Mod  lnN  - -   -    -     1.6 
+Mrii  lnN  1.02 1.02   -    1.02     1.02 
+Lum  lnN  1.045 1.045   -    1.045     - 
+stat_SingleTop  gmN  10 - 0.00705078369127 -  -  - 
+stat_TTBar  gmN  5 -  - 0.47 -  - 
+stat_WJets  gmN  0 -  -  - 0.723094503069 - 
+stat_ZJetsMG  gmN  6 -  -  -  - 0.0922275848661
+stat_sig  gmN  33814  0.000418417043095 -  -  -  - 
+
+
+
+
+LQToCMu_M_650.txt
+
+imax 1
+jmax 4
+kmax 12
+
+bin 1 
+observation 7
+
+bin  1 1 1 1 1
+process LQToCMu_M_650 SingleTop TTBar WJets ZJetsMG
+process 0 1 2 3 4 
+rate 7.86706841277 0.0160647408799 0.94 0.0 0.284558370293
+Jes  lnN  1.01040279918 1.61639997647   -    1     2.70762441019 
+Mes  lnN  1.00516897422 1.06049141462   -    1     2.70858145504 
+Jres  lnN  1.00618714137 1.1453036712   -    1     2.55811611931 
+Mres  lnN  1.00120389173 1.1453036712   -    1     1.2438465881 
+Mod  lnN  - -   -    -     1.6 
+Mrii  lnN  1.02 1.02   -    1.02     1.02 
+Lum  lnN  1.045 1.045   -    1.045     - 
+stat_SingleTop  gmN  5 - 0.00321294817598 -  -  - 
+stat_TTBar  gmN  2 -  - 0.47 -  - 
+stat_WJets  gmN  0 -  -  - 0.723094503069 - 
+stat_ZJetsMG  gmN  5 -  -  -  - 0.0569116740586
+stat_sig  gmN  33612  0.00023405534966 -  -  -  - 
+
+
+
+
+LQToCMu_M_750.txt
+
+imax 1
+jmax 4
+kmax 12
+
+bin 1 
+observation 1
+
+bin  1 1 1 1 1
+process LQToCMu_M_750 SingleTop TTBar WJets ZJetsMG
+process 0 1 2 3 4 
+rate 2.35767328966 0.0 0.0 0.0 0.0192804588181
+Jes  lnN  1.01204366959 1.61639997647   -    1     2.70762441019 
+Mes  lnN  1.0053471497 1.06049141462   -    1     2.70858145504 
+Jres  lnN  1.00954270858 1.1453036712   -    1     2.55811611931 
+Mres  lnN  1.00327087857 1.1453036712   -    1     1.2438465881 
+Mod  lnN  - -   -    -     1.6 
+Mrii  lnN  1.02 1.02   -    1.02     1.02 
+Lum  lnN  1.045 1.045   -    1.045     - 
+stat_SingleTop  gmN  0 - 0.0125716903568 -  -  - 
+stat_TTBar  gmN  0 -  - 0.47 -  - 
+stat_WJets  gmN  0 -  -  - 0.723094503069 - 
+stat_ZJetsMG  gmN  2 -  -  -  - 0.00964022940904
+stat_sig  gmN  38367  6.14505509856e-05 -  -  -  - 
+
+
+
+
+LQToCMu_M_850.txt
+
+imax 1
+jmax 4
+kmax 12
+
+bin 1 
+observation 1
+
+bin  1 1 1 1 1
+process LQToCMu_M_850 SingleTop TTBar WJets ZJetsMG
+process 0 1 2 3 4 
+rate 0.856917200659 0.0 0.0 0.0 0.0192804588181
+Jes  lnN  1.00738572364 1.61639997647   -    1     2.70762441019 
+Mes  lnN  1.00280958544 1.06049141462   -    1     2.70858145504 
+Jres  lnN  1.00807324219 1.1453036712   -    1     2.55811611931 
+Mres  lnN  1.00247858939 1.1453036712   -    1     1.2438465881 
+Mod  lnN  - -   -    -     1.6 
+Mrii  lnN  1.02 1.02   -    1.02     1.02 
+Lum  lnN  1.045 1.045   -    1.045     - 
+stat_SingleTop  gmN  0 - 0.0125716903568 -  -  - 
+stat_TTBar  gmN  0 -  - 0.47 -  - 
+stat_WJets  gmN  0 -  -  - 0.723094503069 - 
+stat_ZJetsMG  gmN  2 -  -  -  - 0.00964022940904
+stat_sig  gmN  36703  2.33473340234e-05 -  -  -  - 
+
+
