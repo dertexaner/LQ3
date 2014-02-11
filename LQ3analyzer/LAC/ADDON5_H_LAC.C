@@ -28,6 +28,12 @@ bool analysisClass::isRecoMuPrompt( unsigned int iMuR ){
     if( GenMu.DeltaR(RecoMu)<0.15 ) isRecoMuPrompt_ = true;
   }
   //
+  //Check RecoMu  ( H )
+  for( unsigned int iMuT=0; iMuT<GenHMuPt->size(); iMuT++){
+    GenMu.SetPtEtaPhiM( GenHMuPt->at(iMuT),     GenHMuEta->at(iMuT),   GenHMuPhi->at(iMuT), 0 );
+    if( GenMu.DeltaR(RecoMu)<0.15 ) isRecoMuPrompt_ = true;
+  }
+  //
   return isRecoMuPrompt_;
 }
 // // //
@@ -51,14 +57,14 @@ bool analysisClass::isRecoTauPrompt( unsigned int iTauR ){
       isRecoTauPrompt_ = true;
     }
   }
-  //Check RecoTau (LQ3->Tau->Had_Tau)
-  //for( unsigned int iTauT=0; iTauT<GenLQTauTauPt->size(); iTauT++){
-  //if( GenLQTauTauTauDecayMode->at(iTauT)<3 ) continue;//mode 1: electron, 2: muon (semileptonic)
-  //GenTau.SetPtEtaPhiM( GenLQTauTauTauVisiblePt->at(iTauT), GenLQTauTauTauVisibleEta->at(iTauT), GenLQTauTauTauVisiblePhi->at(iTauT), 0 );
-  //if( GenTau.DeltaR(RecoTau)<0.15 ){
-  //isRecoTauPrompt_ = true;
-  //}
-  //}
+  //Check RecoTau ( H )
+  for( unsigned int iTauT=0; iTauT<GenHTauPt->size(); iTauT++){
+    if( GenHTauTauDecayMode->at(iTauT)<3 ) continue;//mode 1: electron, 2: muon (semileptonic)
+    GenTau.SetPtEtaPhiM( GenHTauTauVisiblePt->at(iTauT),     GenHTauTauVisibleEta->at(iTauT),   GenHTauTauVisiblePhi->at(iTauT), 0 );
+    if( GenTau.DeltaR(RecoTau)<0.15 ){
+      isRecoTauPrompt_ = true;
+    }
+  }
   //
   return isRecoTauPrompt_;
 }
@@ -83,14 +89,14 @@ double analysisClass::getRecoTauGenPt( unsigned int iTauR ){
       genTauPT_ = GenTau.Pt();
     }
   }
-  //Check RecoTau (LQ3->Tau->Had_Tau)
-  //for( unsigned int iTauT=0; iTauT<GenLQTauTauPt->size(); iTauT++){
-  //if( GenLQTauTauTauDecayMode->at(iTauT)<3 ) continue;//mode 1: electron, 2: muon (semileptonic)
-  //GenTau.SetPtEtaPhiM( GenLQTauTauTauVisiblePt->at(iTauT), GenLQTauTauTauVisibleEta->at(iTauT), GenLQTauTauTauVisiblePhi->at(iTauT), 0 );
-  //if( GenTau.DeltaR(RecoTau)<0.15 ){
-  //genTauPT_ = GenTau.Pt();
-  //}
-  //}
+  //Check RecoTau ( H )
+  for( unsigned int iTauT=0; iTauT<GenHTauPt->size(); iTauT++){
+    if( GenHTauTauDecayMode->at(iTauT)<3 ) continue;//mode 1: electron, 2: muon (semileptonic)
+    GenTau.SetPtEtaPhiM( GenHTauTauVisiblePt->at(iTauT),     GenHTauTauVisibleEta->at(iTauT),   GenHTauTauVisiblePhi->at(iTauT), 0 );
+    if( GenTau.DeltaR(RecoTau)<0.15 ){
+      genTauPT_ = GenTau.Pt();
+    }
+  }
   //
   return genTauPT_;
 }
@@ -123,48 +129,17 @@ bool analysisClass::isRecoTauChargeFlip( unsigned int iTauR ){ //has to be promp
       if( HPSTauCharge->at(iTauR)*GenZTauPdgId->at(iTauT)>0 ) isTauChargeFlip_ = true;
     }
   }
-  //Check RecoTau (LQ3->Tau->Had_Tau)
-  //for( unsigned int iTauT=0; iTauT<GenLQTauTauPt->size(); iTauT++){
-  //if( GenLQTauTauTauDecayMode->at(iTauT)<3 ) continue;//mode 1: electron, 2: muon (semileptonic)
-  //GenTau.SetPtEtaPhiM( GenLQTauTauTauVisiblePt->at(iTauT), GenLQTauTauTauVisibleEta->at(iTauT), GenLQTauTauTauVisiblePhi->at(iTauT), 0 );
-  //if( GenTau.DeltaR(RecoTau)<0.15 ){
-  //if( HPSTauCharge->at(iTauR)*GenLQTauTauPdgId->at(iTauT)>0 ) isTauChargeFlip_ = true;
-  //}
-  //}
+  //Check RecoTau ( H )
+  for( unsigned int iTauT=0; iTauT<GenHTauPt->size(); iTauT++){
+    if( GenHTauTauDecayMode->at(iTauT)<3 ) continue;//mode 1: electron, 2: muon (semileptonic)
+    GenTau.SetPtEtaPhiM( GenHTauTauVisiblePt->at(iTauT),     GenHTauTauVisibleEta->at(iTauT),   GenHTauTauVisiblePhi->at(iTauT), 0 );
+    if( GenTau.DeltaR(RecoTau)<0.15 ){
+      if( HPSTauCharge->at(iTauR)*GenHTauPdgId->at(iTauT)>0 ) isTauChargeFlip_ = true;
+    }
+  }
   //
   return isTauChargeFlip_;
 }
 // // //
-//FOR GEN-RECO MATCHING IN SIGNAL:
-/*
-       //Check RecoMu  (LQ3->Tau->Muon)
-       for( unsigned int iMuT=0; iMuT<GenLQTauMuonPt->size(); iMuT++){
-         GenMu.SetPtEtaPhiM( GenLQTauMuonPt->at((iMuT),     GenLQTauMuonEta->at(iMuT),   GenLQTauMuonPhi->at(iMuT), 0 );
-         if( GenMu.DeltaR(RecoMu)<0.15 ) isRecoMuPrompt_ = true;
-       }
-       //Check RecoMu  (LQ3->Top->Muon)
-       for( unsigned int iMuT=0; iMuT<GenLQTopMuonPt->size(); iMuT++){
-         GenMu.SetPtEtaPhiM( GenLQTopMuonPt->at((iMuT),     GenLQTopMuonEta->at(iMuT),   GenLQTopMuonPhi->at(iMuT), 0 );
-         if( GenMu.DeltaR(RecoMu)<0.15 ) isRecoMuPrompt_ = true;
-       }
-       //Check RecoTau (LQ3->Tau->Had_Tau)
-       for( unsigned int iTauT=0; iTauT<GenLQTauTauPt->size(); iTauT++){
-         if( GenLQTauTauTauDecayMode->at(iTauT)<3 ) continue;//mode 1: electron, 2: muon (semileptonic)
-         GenTau.SetPtEtaPhiM( GenLQTauTauTauVisiblePt->at(iTauT), GenLQTauTauTauVisibleEta->at(iTauT), GenLQTauTauTauVisiblePhi->at(iTauT), 0 );
-         if( GenTau.DeltaR(RecoTau)<0.15 ){
-           isRecoTauPrompt_ = true;
-           if( HPSTauCharge->at(ltemMuTau[1])*GenLQTauTauPdgId->at(iTauT)>0 ) isTauChargeFlip_ = true;
-         }
-       }
-       //Check RecoTau (LQ3->Top->Had_Tau)
-       for( unsigned int iTauT=0; iTauT<GenLQTopTauPt->size(); iTauT++){
-         if( GenLQTopTauTauDecayMode->at(iTauT)<3 ) continue;//mode 1: electron, 2: muon (semileptonic)
-         GenTau.SetPtEtaPhiM( GenLQTopTauTauVisiblePt->at(iTauT), GenLQTopTauTauVisibleEta->at(iTauT), GenLQTopTauTauVisiblePhi->at(iTauT), 0 );
-         if( GenTau.DeltaR(RecoTau)<0.15 ){
-           isRecoTauPrompt_ = true;
-           if( HPSTauCharge->at(ltemMuTau[1])*GenLQTopTauPdgId->at(iTauT)>0 ) isTauChargeFlip_ = true;
-         }
-       }
-*/
 
 

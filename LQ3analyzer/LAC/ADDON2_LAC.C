@@ -13,7 +13,8 @@
 #include <TVector2.h>
 #include <TVector3.h>
 #include <iostream>
-#include "ADDON1_LAC.C"
+//#include "ADDON1_LAC.C"
+#include "ADDON1_LAC_Alt.C"
 using namespace std;
 
 // // //
@@ -252,7 +253,7 @@ double analysisClass::RecoHLTdeltaRmin_DoubleMuTrigger( unsigned int iReco ){
   TLorentzVector HLTLep;
   TLorentzVector RecoLep;
   double deltaRmin=999999.9;
-  RecoLep.SetPtEtaPhiM( MuonPt->at(iReco),   MuonEta->at(iReco),   MuonPhi->at(iReco),   0);
+  RecoLep.SetPtEtaPhiM( muPtcorr(iReco),   MuonEta->at(iReco),   MuonPhi->at(iReco),   0);
   //
   for(unsigned int ifilter=0; ifilter<HLTFilterName->size(); ifilter++){  
     //
@@ -296,7 +297,7 @@ double analysisClass::RecoHLTdeltaRmin_SingleMuTrigger( unsigned int iReco ){
   TLorentzVector HLTLep;
   TLorentzVector RecoLep;
   double deltaRmin=999999.9;
-  RecoLep.SetPtEtaPhiM( MuonPt->at(iReco),   MuonEta->at(iReco),   MuonPhi->at(iReco),   0);
+  RecoLep.SetPtEtaPhiM( muPtcorr(iReco),   MuonEta->at(iReco),   MuonPhi->at(iReco),   0);
   //
   // This is the trigger list for 2012 :: 190456-203002
   //
@@ -343,7 +344,7 @@ double analysisClass::RecoHLTdeltaRmin_SingleMu40Trigger( unsigned int iReco ){
   TLorentzVector HLTLep;
   TLorentzVector RecoLep;
   double deltaRmin=999999.9;
-  RecoLep.SetPtEtaPhiM( MuonPt->at(iReco),   MuonEta->at(iReco),   MuonPhi->at(iReco),   0);
+  RecoLep.SetPtEtaPhiM( muPtcorr(iReco),   MuonEta->at(iReco),   MuonPhi->at(iReco),   0);
   //
   for(unsigned int ifilter=0; ifilter<HLTFilterName->size(); ifilter++){  
     //
@@ -374,7 +375,7 @@ double analysisClass::RecoHLTdeltaRmin_SingleMu24Trigger( unsigned int iReco ){
   TLorentzVector HLTLep;
   TLorentzVector RecoLep;
   double deltaRmin=999999.9;
-  RecoLep.SetPtEtaPhiM( MuonPt->at(iReco),   MuonEta->at(iReco),   MuonPhi->at(iReco),   0);
+  RecoLep.SetPtEtaPhiM( muPtcorr(iReco),   MuonEta->at(iReco),   MuonPhi->at(iReco),   0);
   //
   for(unsigned int ifilter=0; ifilter<HLTFilterName->size(); ifilter++){  
     //
@@ -430,17 +431,17 @@ double analysisClass::MuonForTrigEffAnalysis_SingleMuTrigger(  int probeCharge, 
   //
   for(unsigned int iMuPR=0; iMuPR<MuonPt->size(); iMuPR++){//loop over all TAG muons
     if(  MuonCharge->at( iMuPR ) == probeCharge  ) continue;
-    if(  MuonPt->at(iMuPR)<35                    ) continue;// LQ Filter & HLT_IsoMu24_eta2p1_v*  
+    if(  muPtcorr(iMuPR)<35                    ) continue;// LQ Filter & HLT_IsoMu24_eta2p1_v*  
     if( !muRisoCheck( iMuPR )                    ) continue; 
     //
     if( RecoHLTdeltaRmin_SingleMuTrigger( iMuPR )>0.1 ) continue;
     //
-    MuPos.SetPtEtaPhiM( MuonPt->at(iMuPR), MuonEta->at(iMuPR), MuonPhi->at(iMuPR), 0 );
+    MuPos.SetPtEtaPhiM( muPtcorr(iMuPR), MuonEta->at(iMuPR), MuonPhi->at(iMuPR), 0 );
     //
     for(unsigned int iMuNR=0; iMuNR<MuonPt->size(); iMuNR++){//loop over all PROBE muons
       if(  MuonCharge->at(iMuNR) != probeCharge   ) continue; 
       if( !muRisoCheck( iMuNR )                   ) continue; 
-      MuNeg.SetPtEtaPhiM( MuonPt->at(iMuNR), MuonEta->at(iMuNR), MuonPhi->at(iMuNR), 0 ); 
+      MuNeg.SetPtEtaPhiM( muPtcorr(iMuNR), MuonEta->at(iMuNR), MuonPhi->at(iMuNR), 0 ); 
       // -- -
       //
       if( fabs((MuPos+MuNeg).M()-Zmass)<Abs_diMuDeltaMass && MuPos.Pt()>0 && MuNeg.Pt()>0 && MuPos.DeltaR(MuNeg)>0.2 ){

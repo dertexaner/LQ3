@@ -41,19 +41,20 @@ void analysisClass::Loop()
    //BTagDef = "CSVL";
    BTagDef = "CSVM";
    idDef   = "CUT";
-   MuonPtCut = 20;
-   MuonEtaCut= 2.4;
+   MuonPtCut = 25;
+   MuonEtaCut= 2.1;
    TauPtCut  = 20;
-   //MuonPtCut = 35;
-   //MuonEtaCut= 2.1;
-   //TauPtCut  = 20;
    ApplyAbsMuonIsolation=false;
-   removeOverlaps=false;
+   removeOverlaps=true;
    //
-   LumiA=1; 
-   LumiB=1;
-   LumiC=1;
-   LumiD=1;
+   LumiA=891;
+   LumiB=4428;
+   LumiC=7018;
+   LumiD=7248;
+   //LumiA=1; 
+   //LumiB=1;
+   //LumiC=1;
+   //LumiD=1;
 
    //////////book histos here
    TH1D* ProvidedPileUpWeightshisto  = new TH1D("ProvidedPileUpWeightshisto","ProvidedPileUpWeightshisto",10000,0,100);//distribution of the provided PileUp-weights

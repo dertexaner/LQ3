@@ -1025,46 +1025,65 @@ double analysisClass::tauJetDeltaRmin( unsigned int iTauR ){
 // // //
 void analysisClass::ResetAllSFs_KEEPERROR(){
   //muon prompt rate scale factors (none for muon fake rate)
-  if( muPRdR3B_SF>1.0 ){ muPRdR3B_SFerr = muPRdR3B_SFerr*(1.0/muPRdR3B_SF); } 
-  muPRdR3B_SF    = 1; 
-  if( muPRdR2B_SF>1.0 ){ muPRdR2B_SFerr = muPRdR2B_SFerr*(1.0/muPRdR2B_SF); } 
-  muPRdR2B_SF    = 1;
-  if( muPRdR1B_SF>1.0 ){ muPRdR1B_SFerr = muPRdR1B_SFerr*(1.0/muPRdR1B_SF); } 
-  muPRdR1B_SF    = 1;
-  if( muPRdR3E_SF>1.0 ){ muPRdR3E_SFerr = muPRdR3E_SFerr*(1.0/muPRdR3E_SF); } 
-  muPRdR3E_SF    = 1;
-  if( muPRdR2E_SF>1.0 ){ muPRdR2E_SFerr = muPRdR2E_SFerr*(1.0/muPRdR2E_SF); } 
-  muPRdR2E_SF    = 1;
-  if( muPRdR1E_SF>1.0 ){ muPRdR1E_SFerr = muPRdR2E_SFerr*(1.0/muPRdR1E_SF); } 
-  muPRdR1E_SF    = 1;
+  //if( muPRdR3B_SF>1.0 ){ muPRdR3B_SFerr = muPRdR3B_SFerr*(1.0/muPRdR3B_SF); } 
+  //muPRdR3B_SF    = 1; 
+  //if( muPRdR2B_SF>1.0 ){ muPRdR2B_SFerr = muPRdR2B_SFerr*(1.0/muPRdR2B_SF); } 
+  //muPRdR2B_SF    = 1;
+  //if( muPRdR1B_SF>1.0 ){ muPRdR1B_SFerr = muPRdR1B_SFerr*(1.0/muPRdR1B_SF); } 
+  //muPRdR1B_SF    = 1;
+  //if( muPRdR3E_SF>1.0 ){ muPRdR3E_SFerr = muPRdR3E_SFerr*(1.0/muPRdR3E_SF); } 
+  //muPRdR3E_SF    = 1;
+  //if( muPRdR2E_SF>1.0 ){ muPRdR2E_SFerr = muPRdR2E_SFerr*(1.0/muPRdR2E_SF); } 
+  //muPRdR2E_SF    = 1;
+  //if( muPRdR1E_SF>1.0 ){ muPRdR1E_SFerr = muPRdR2E_SFerr*(1.0/muPRdR1E_SF); } 
+  //muPRdR1E_SF    = 1;
   //
   //tau prompt rate scale factors
-  if( tauPRdR3B_SF>1.0 ){ tauPRdR3B_SFerr = tauPRdR3B_SFerr*(1.0/tauPRdR3B_SF); }
-  tauPRdR3B_SF    = 1;
-  if( tauPRdR2B_SF>1.0 ){ tauPRdR2B_SFerr = tauPRdR2B_SFerr*(1.0/tauPRdR2B_SF); }
-  tauPRdR2B_SF    = 1;
-  if( tauPRdR1B_SF>1.0 ){ tauPRdR1B_SFerr = tauPRdR1B_SFerr*(1.0/tauPRdR1B_SF); }
-  tauPRdR1B_SF    = 1;
-  if( tauPRdR3E_SF>1.0 ){ tauPRdR3E_SFerr = tauPRdR3E_SFerr*(1.0/tauPRdR3E_SF); }
-  tauPRdR3E_SF    = 1;
-  if( tauPRdR2E_SF>1.0 ){ tauPRdR2E_SFerr = tauPRdR2E_SFerr*(1.0/tauPRdR2E_SF); }
-  tauPRdR2E_SF    = 1;
-  if( tauPRdR1E_SF>1.0 ){ tauPRdR1E_SFerr = tauPRdR1E_SFerr*(1.0/tauPRdR1E_SF); }
-  tauPRdR1E_SF    = 1;
+  //if( tauPRdR3B_SF>1.0 ){ tauPRdR3B_SFerr = tauPRdR3B_SFerr*(1.0/tauPRdR3B_SF); }
+  //tauPRdR3B_SF    = 1;
+  //if( tauPRdR2B_SF>1.0 ){ tauPRdR2B_SFerr = tauPRdR2B_SFerr*(1.0/tauPRdR2B_SF); }
+  //tauPRdR2B_SF    = 1;
+  //if( tauPRdR1B_SF>1.0 ){ tauPRdR1B_SFerr = tauPRdR1B_SFerr*(1.0/tauPRdR1B_SF); }
+  //tauPRdR1B_SF    = 1;
+  //if( tauPRdR3E_SF>1.0 ){ tauPRdR3E_SFerr = tauPRdR3E_SFerr*(1.0/tauPRdR3E_SF); }
+  //tauPRdR3E_SF    = 1;
+  //if( tauPRdR2E_SF>1.0 ){ tauPRdR2E_SFerr = tauPRdR2E_SFerr*(1.0/tauPRdR2E_SF); }
+  //tauPRdR2E_SF    = 1;
+  //if( tauPRdR1E_SF>1.0 ){ tauPRdR1E_SFerr = tauPRdR1E_SFerr*(1.0/tauPRdR1E_SF); }
+  //tauPRdR1E_SF    = 1;
+  //tauPRdR2B_SF    = tauPRdR3B_SF;
+  //tauPRdR2B_SFerr = tauPRdR3B_SFerr;
+  //tauPRdR1B_SF    = tauPRdR3B_SF;
+  //tauPRdR1B_SFerr = tauPRdR3B_SFerr;
+  //
+  //tauPRdR2E_SF    = tauPRdR3E_SF;
+  //tauPRdR2E_SFerr = tauPRdR3E_SFerr;
+  //tauPRdR1E_SF    = tauPRdR3E_SF;
+  //tauPRdR1E_SFerr = tauPRdR3E_SFerr;
+  //
   //
   //tau fake rate scale factors
-  if( tauFRdR3B_SF>1.0 ){ tauFRdR3B_SFerr = tauFRdR3B_SFerr*(1.0/tauFRdR3B_SF); }
-  tauFRdR3B_SF    = 1;
-  if( tauFRdR2B_SF>1.0 ){ tauFRdR2B_SFerr = tauFRdR2B_SFerr*(1.0/tauFRdR2B_SF); }
-  tauFRdR2B_SF    = 1;
-  if( tauFRdR1B_SF>1.0 ){ tauFRdR1B_SFerr = tauFRdR1B_SFerr*(1.0/tauFRdR1B_SF); }
-  tauFRdR1B_SF    = 1;
-  if( tauFRdR3E_SF>1.0 ){ tauFRdR3E_SFerr = tauFRdR3E_SFerr*(1.0/tauFRdR3E_SF); }
-  tauFRdR3E_SF    = 1;
-  if( tauFRdR2E_SF>1.0 ){ tauFRdR2E_SFerr = tauFRdR2E_SFerr*(1.0/tauFRdR2E_SF); }
-  tauFRdR2E_SF    = 1;
-  if( tauFRdR1E_SF>1.0 ){ tauFRdR1E_SFerr = tauFRdR1E_SFerr*(1.0/tauFRdR1E_SF); }
-  tauFRdR1E_SF    = 1;
+  //if( tauFRdR3B_SF>1.0 ){ tauFRdR3B_SFerr = tauFRdR3B_SFerr*(1.0/tauFRdR3B_SF); }
+  //tauFRdR3B_SF    = 1;
+  //if( tauFRdR2B_SF>1.0 ){ tauFRdR2B_SFerr = tauFRdR2B_SFerr*(1.0/tauFRdR2B_SF); }
+  //tauFRdR2B_SF    = 1;
+  //if( tauFRdR1B_SF>1.0 ){ tauFRdR1B_SFerr = tauFRdR1B_SFerr*(1.0/tauFRdR1B_SF); }
+  //tauFRdR1B_SF    = 1;
+  //if( tauFRdR3E_SF>1.0 ){ tauFRdR3E_SFerr = tauFRdR3E_SFerr*(1.0/tauFRdR3E_SF); }
+  //tauFRdR3E_SF    = 1;
+  //if( tauFRdR2E_SF>1.0 ){ tauFRdR2E_SFerr = tauFRdR2E_SFerr*(1.0/tauFRdR2E_SF); }
+  //tauFRdR2E_SF    = 1;
+  //if( tauFRdR1E_SF>1.0 ){ tauFRdR1E_SFerr = tauFRdR1E_SFerr*(1.0/tauFRdR1E_SF); }
+  //tauFRdR1E_SF    = 1;
+  tauFRdR2B_SF    = tauFRdR3B_SF;
+  tauFRdR2B_SFerr = tauFRdR3B_SFerr;
+  tauFRdR1B_SF    = tauFRdR3B_SF;
+  tauFRdR1B_SFerr = tauFRdR3B_SFerr;
+  //
+  tauFRdR2E_SF    = tauFRdR3E_SF;
+  tauFRdR2E_SFerr = tauFRdR3E_SFerr;
+  tauFRdR1E_SF    = tauFRdR3E_SF;
+  tauFRdR1E_SFerr = tauFRdR3E_SFerr;
 }
 // // //
 void analysisClass::ResetAllSFs(){
@@ -1153,12 +1172,12 @@ double analysisClass::tauFR_STcorrection( unsigned int iTauR ){
   //1) N/A
   //2) %decrease:  8.48449655111 +/- 7.15889810989
   //3) N/A
-  if( tauJetDeltaRmin_>=0.7 && isBarrel_ ) slope_=1.5e-5;
+  if( tauJetDeltaRmin_>=0.7 && isBarrel_ ) slope_=-1.5e-5;
   return slope_*(ST_-400.0);
 }
 // // //
 double analysisClass::tauFR_STcorrectionError( unsigned int iTauR ){
-  return tauFR_STcorrection( iTauR ); //100% on the slope
+  return fabs(tauFR_STcorrection( iTauR )); //100% on the slope
 }
 // // //
 double analysisClass::tauPR_STcorrection( unsigned int iTauR ){
@@ -1171,16 +1190,16 @@ double analysisClass::tauPR_STcorrection( unsigned int iTauR ){
   //dr3) %decrease:  1.31878004647 +/- 0.114942769887  : slope:  7.98897373973 +/- 0.696306235944 e-05
   //dr2) %decrease:  1.64741377278 +/- 0.206149830536  : slope:  8.73170447916 +/- 1.09264559299 e-05
   //dr1) %decrease:  2.53529667149 +/- 0.34006408606   : slope:  11.2601614215 +/- 1.51034651911 e-05
-  if(                          tauJetDeltaRmin_>=1.0 && isBarrel_ ) slope_=8.0e-5;
-  if( tauJetDeltaRmin_< 1.0 && tauJetDeltaRmin_>=0.8 && isBarrel_ ) slope_=8.7e-5;
-  if( tauJetDeltaRmin_< 0.8 && tauJetDeltaRmin_>=0.7 && isBarrel_ ) slope_=11.3e-5;
+  if(                          tauJetDeltaRmin_>=1.0 && isBarrel_ ) slope_=-8.0e-5;
+  if( tauJetDeltaRmin_< 1.0 && tauJetDeltaRmin_>=0.8 && isBarrel_ ) slope_=-8.7e-5;
+  if( tauJetDeltaRmin_< 0.8 && tauJetDeltaRmin_>=0.7 && isBarrel_ ) slope_=-11.3e-5;
   //
   //3) %decrease:  0.663781078609 +/- 0.383807341426        : slope:  4.28354916833 +/- 2.47680699427 e-05
   //2) %decrease:  N/A (0.00487712462848 +/- 31.5495380986) : slope:  0.02893124009 +/- 187.152744902 e-05
   //1) %decrease:  2.94732920613 +/- 1.21800191413          : slope:  14.953039925  +/- 6.17943567784 e-05
-  if(                          tauJetDeltaRmin_>=1.0 && !isBarrel_ ) slope_=4.3e-5;
-  if( tauJetDeltaRmin_< 1.0 && tauJetDeltaRmin_>=0.8 && !isBarrel_ ) slope_=4.3e-5;
-  if( tauJetDeltaRmin_< 0.8 && tauJetDeltaRmin_>=0.7 && !isBarrel_ ) slope_=15.0e-5;
+  if(                          tauJetDeltaRmin_>=1.0 && !isBarrel_ ) slope_=-4.3e-5;
+  if( tauJetDeltaRmin_< 1.0 && tauJetDeltaRmin_>=0.8 && !isBarrel_ ) slope_=-4.3e-5;
+  if( tauJetDeltaRmin_< 0.8 && tauJetDeltaRmin_>=0.7 && !isBarrel_ ) slope_=-15.0e-5;
   return slope_*(ST_-400.0);
 }
 // // //
@@ -1204,7 +1223,74 @@ double analysisClass::tauPR_STcorrectionError( unsigned int iTauR ){
   if(                          tauJetDeltaRmin_>=1.0 && !isBarrel_ ) slope_=2.5e-5;
   if( tauJetDeltaRmin_< 1.0 && tauJetDeltaRmin_>=0.8 && !isBarrel_ ) slope_=2.5e-5;
   if( tauJetDeltaRmin_< 0.8 && tauJetDeltaRmin_>=0.7 && !isBarrel_ ) slope_=6.2e-5;
-  return slope_*(ST_-400.0);
+  return fabs(slope_*(ST_-400.0));
+}
+// // //
+void analysisClass::InitTauFakeRates(){
+  tauFRw_dR1B=0.113;  tauFRw_dR1B_Err=0.011;
+  tauFRw_dR2B=0.114;  tauFRw_dR2B_Err=0.014;
+  tauFRw_dR3B=0.124;  tauFRw_dR3B_Err=0.004;
+  tauFRw_dR1E=0.154;  tauFRw_dR1E_Err=0.019;
+  tauFRw_dR2E=0.173;  tauFRw_dR2E_Err=0.041;
+  tauFRw_dR3E=0.169;  tauFRw_dR3E_Err=0.009;
+  //
+  tauFRtt_dR1B=0.113;  tauFRtt_dR1B_Err=0.008;
+  tauFRtt_dR2B=0.127;  tauFRtt_dR2B_Err=0.006;
+  tauFRtt_dR3B=0.140;  tauFRtt_dR3B_Err=0.003;
+  tauFRtt_dR1E=0.112;  tauFRtt_dR1E_Err=0.010;
+  tauFRtt_dR2E=0.132;  tauFRtt_dR2E_Err=0.011;
+  tauFRtt_dR3E=0.157;  tauFRtt_dR3E_Err=0.007;
+  //
+  tauFRdata_dR1B=0.143;  tauFRdata_dR1B_Err=0.018;
+  tauFRdata_dR2B=0.132;  tauFRdata_dR2B_Err=0.012;
+  tauFRdata_dR3B=0.131;  tauFRdata_dR3B_Err=0.003;
+  tauFRdata_dR1E=0.092;  tauFRdata_dR1E_Err=0.031;
+  tauFRdata_dR2E=0.154;  tauFRdata_dR2E_Err=0.027;
+  tauFRdata_dR3E=0.166;  tauFRdata_dR3E_Err=0.007;
+}
+// // //
+double analysisClass::QuadSum( double A, double B ){
+  return TMath::Power( (TMath::Power(A,2)+TMath::Power(B,2)), 0.5 );
+}
+// // //
+double analysisClass::TauFakeRateCalculator( double ttrate, double ttrateErr, double wrate, double wrateErr, 
+					     double stcorr, double stcorrErr, double SF, double SFerr ){
+  double highBound = 0;
+  double lowBound  = 0;
+  double rate      = 0;
+  //
+  highBound= TMath::Max( ttrate+stcorr, wrate+stcorr );//pick the largest  of the two as upper bound
+  lowBound = TMath::Min( ttrate+stcorr, wrate+stcorr );//pick the smallest of the two as lower bound
+  rate    = (highBound+lowBound)*0.5;
+  //
+  if( !isData ) return rate;//for MC
+  //
+  // If using data!
+  rate = rate*SF;
+  return rate;
+}
+// // //
+double analysisClass::TauFakeRateErrorCalculator( double ttrate, double ttrateErr, double wrate, double wrateErr,
+						  double stcorr, double stcorrErr, double SF, double SFerr ){
+  double highBound = 0;
+  double lowBound  = 0;
+  double rate      = 0;
+  double rateErr   = 0;
+  //
+  highBound= TMath::Max( ttrate+stcorr, wrate+stcorr );//pick the largest  of the two as upper bound
+  lowBound = TMath::Min( ttrate+stcorr, wrate+stcorr );//pick the smallest of the two as lower bound
+  rate    = (highBound+lowBound)*0.5;
+  //
+  highBound= TMath::Max( ttrate+stcorr+QuadSum(stcorrErr,ttrateErr), wrate+stcorr+QuadSum(stcorrErr,wrateErr) );
+  lowBound = TMath::Min( ttrate+stcorr-QuadSum(stcorrErr,ttrateErr), wrate+stcorr-QuadSum(stcorrErr,wrateErr) );
+  //rateErr = (highBound-lowBound)*0.5;
+  rateErr = TMath::Max( fabs(highBound-rate), fabs(rate-lowBound) );
+  //
+  if( !isData ) return rateErr;// for MC
+  //
+  // If using data!
+  if( SF>0 && rate>0 )  rateErr = QuadSum( SFerr/SF, rateErr/rate )*rate*SF;
+  return rateErr;
 }
 // // //
 double analysisClass::tauFR( unsigned int iTauR ){
@@ -1212,21 +1298,36 @@ double analysisClass::tauFR( unsigned int iTauR ){
   bool   isBarrel_=false;
   if( fabs(HPSTauEta->at(iTauR))<1.5 ) isBarrel_=true;
   //
-  double tauFR_  = 0;
-  double stcorr_ = tauFR_STcorrection(iTauR);//this is currently set to zero!
-  if(                          tauJetDeltaRmin_>=1.0 && isBarrel_ ) tauFR_=(0.132-stcorr_)*tauFRdR3B_SF;
-  if( tauJetDeltaRmin_< 1.0 && tauJetDeltaRmin_>=0.8 && isBarrel_ ) tauFR_=(0.121-stcorr_)*tauFRdR2B_SF;
-  if( tauJetDeltaRmin_< 0.8 && tauJetDeltaRmin_>=0.7 && isBarrel_ ) tauFR_=(0.113-stcorr_)*tauFRdR1B_SF;
+  double stcorr_    = tauFR_STcorrection(iTauR);
+  double stcorrErr_ = tauFR_STcorrectionError(iTauR);
   //
-  if(                          tauJetDeltaRmin_>=1.0 && !isBarrel_ ) tauFR_=(0.163-stcorr_)*tauFRdR3E_SF;
-  if( tauJetDeltaRmin_< 1.0 && tauJetDeltaRmin_>=0.8 && !isBarrel_ ) tauFR_=(0.153-stcorr_)*tauFRdR2E_SF;
-  if( tauJetDeltaRmin_< 0.8 && tauJetDeltaRmin_>=0.7 && !isBarrel_ ) tauFR_=(0.133-stcorr_)*tauFRdR1E_SF;
+  if(                          tauJetDeltaRmin_>=1.0 && isBarrel_ ){
+    return TauFakeRateCalculator( tauFRtt_dR3B,tauFRtt_dR3B_Err, tauFRw_dR3B,tauFRw_dR3B_Err,
+				  stcorr_,stcorrErr_, tauFRdR3B_SF,tauFRdR3B_SFerr );
+  }
+  if( tauJetDeltaRmin_< 1.0 && tauJetDeltaRmin_>=0.8 && isBarrel_ ){
+    return TauFakeRateCalculator( tauFRtt_dR2B,tauFRtt_dR2B_Err, tauFRw_dR2B,tauFRw_dR2B_Err,
+                                  stcorr_,stcorrErr_, tauFRdR2B_SF,tauFRdR2B_SFerr );
+  }
+  if( tauJetDeltaRmin_< 0.8 && tauJetDeltaRmin_>=0.7 && isBarrel_ ){
+    return TauFakeRateCalculator( tauFRtt_dR1B,tauFRtt_dR1B_Err, tauFRw_dR1B,tauFRw_dR1B_Err,
+                                  stcorr_,stcorrErr_, tauFRdR1B_SF,tauFRdR1B_SFerr );
+  }
   //
-  return tauFR_;
-}
-// // //
-double analysisClass::QuadSum( double A, double B ){
-  return TMath::Power( (TMath::Power(A,2)+TMath::Power(B,2)), 0.5 );
+  if(                          tauJetDeltaRmin_>=1.0 && !isBarrel_ ){
+    return TauFakeRateCalculator( tauFRtt_dR3E,tauFRtt_dR3E_Err, tauFRw_dR3E,tauFRw_dR3E_Err,
+                                  stcorr_,stcorrErr_, tauFRdR3E_SF,tauFRdR3E_SFerr );
+  }
+  if( tauJetDeltaRmin_< 1.0 && tauJetDeltaRmin_>=0.8 && !isBarrel_ ){
+    return TauFakeRateCalculator( tauFRtt_dR2E,tauFRtt_dR2E_Err, tauFRw_dR2E,tauFRw_dR2E_Err,
+                                  stcorr_,stcorrErr_, tauFRdR2E_SF,tauFRdR2E_SFerr );
+  }
+  if( tauJetDeltaRmin_< 0.8 && tauJetDeltaRmin_>=0.7 && !isBarrel_ ){
+    return TauFakeRateCalculator( tauFRtt_dR1E,tauFRtt_dR1E_Err, tauFRw_dR1E,tauFRw_dR1E_Err,
+                                  stcorr_,stcorrErr_, tauFRdR1E_SF,tauFRdR1E_SFerr );
+  }
+  //
+  return 0;
 }
 // // //
 double analysisClass::tauFRE( unsigned int iTauR ){
@@ -1234,46 +1335,36 @@ double analysisClass::tauFRE( unsigned int iTauR ){
   bool   isBarrel_=false;
   if( fabs(HPSTauEta->at(iTauR))<1.5 ) isBarrel_=true;
   //
-  double tauFRE_=0;
   double stcorr_    = tauFR_STcorrection(iTauR);
   double stcorrErr_ = tauFR_STcorrectionError(iTauR);
-  double stcorrErrRatio_=0;
-  if( stcorr_>0 ) stcorrErrRatio_=stcorrErr_/stcorr_;
   //
-  // rate = ( ptPART + stPART )*SF = ptPART*SF + stPART*SF =  OLD +  stPART*SF
   if(                          tauJetDeltaRmin_>=1.0 && isBarrel_ ){
-    //tauFRE_=QuadSum( 0.008/0.132, tauFRdR3B_SFerr/tauFRdR3B_SF )*tauFR(iTauR);
-    tauFRE_=QuadSum( QuadSum( 0.008/0.132, tauFRdR3B_SFerr/tauFRdR3B_SF )*0.132*tauFRdR3B_SF,
-		     QuadSum( stcorrErrRatio_, tauFRdR3B_SFerr/tauFRdR3B_SF )*stcorr_*tauFRdR3B_SF );
+    return TauFakeRateErrorCalculator( tauFRtt_dR3B,tauFRtt_dR3B_Err, tauFRw_dR3B,tauFRw_dR3B_Err,
+				       stcorr_,stcorrErr_, tauFRdR3B_SF,tauFRdR3B_SFerr );
   }
   if( tauJetDeltaRmin_< 1.0 && tauJetDeltaRmin_>=0.8 && isBarrel_ ){
-    //tauFRE_=QuadSum( 0.010/0.121, tauFRdR2B_SFerr/tauFRdR2B_SF )*tauFR(iTauR);
-    tauFRE_=QuadSum( QuadSum( 0.010/0.121, tauFRdR2B_SFerr/tauFRdR2B_SF )*0.121*tauFRdR2B_SF,
-		     QuadSum( stcorrErrRatio_, tauFRdR2B_SFerr/tauFRdR2B_SF )*stcorr_*tauFRdR2B_SF );
+    return TauFakeRateErrorCalculator( tauFRtt_dR2B,tauFRtt_dR2B_Err, tauFRw_dR2B,tauFRw_dR2B_Err,
+				       stcorr_,stcorrErr_, tauFRdR2B_SF,tauFRdR2B_SFerr );
   }
   if( tauJetDeltaRmin_< 0.8 && tauJetDeltaRmin_>=0.7 && isBarrel_ ){
-    //tauFRE_=QuadSum( 0.007/0.113, tauFRdR1B_SFerr/tauFRdR1B_SF )*tauFR(iTauR);
-    tauFRE_=QuadSum( QuadSum( 0.007/0.113, tauFRdR1B_SFerr/tauFRdR1B_SF )*0.113*tauFRdR1B_SF,
-		     QuadSum( stcorrErrRatio_, tauFRdR1B_SFerr/tauFRdR1B_SF )*stcorr_*tauFRdR1B_SF );
+    return TauFakeRateErrorCalculator( tauFRtt_dR1B,tauFRtt_dR1B_Err, tauFRw_dR1B,tauFRw_dR1B_Err,
+				       stcorr_,stcorrErr_, tauFRdR1B_SF,tauFRdR1B_SFerr );
   }
   //
   if(                          tauJetDeltaRmin_>=1.0 && !isBarrel_ ){
-    //tauFRE_=QuadSum( 0.008/0.163, tauFRdR3E_SFerr/tauFRdR3E_SF )*tauFR(iTauR);
-    tauFRE_=QuadSum( QuadSum( 0.008/0.163, tauFRdR3E_SFerr/tauFRdR3E_SF )*0.163*tauFRdR3E_SF,
-		     QuadSum( stcorrErrRatio_, tauFRdR3E_SFerr/tauFRdR3E_SF )*stcorr_*tauFRdR3E_SF );
+    return TauFakeRateErrorCalculator( tauFRtt_dR3E,tauFRtt_dR3E_Err, tauFRw_dR3E,tauFRw_dR3E_Err,
+				       stcorr_,stcorrErr_, tauFRdR3E_SF,tauFRdR3E_SFerr );
   }
   if( tauJetDeltaRmin_< 1.0 && tauJetDeltaRmin_>=0.8 && !isBarrel_ ){
-    //tauFRE_=QuadSum( 0.030/0.153, tauFRdR2E_SFerr/tauFRdR2E_SF )*tauFR(iTauR);
-    tauFRE_=QuadSum( QuadSum( 0.030/0.153, tauFRdR2E_SFerr/tauFRdR2E_SF )*0.153*tauFRdR2E_SF,
-		     QuadSum( stcorrErrRatio_, tauFRdR2E_SFerr/tauFRdR2E_SF )*stcorr_*tauFRdR2E_SF );
+    return TauFakeRateErrorCalculator( tauFRtt_dR2E,tauFRtt_dR2E_Err, tauFRw_dR2E,tauFRw_dR2E_Err,
+				       stcorr_,stcorrErr_, tauFRdR2E_SF,tauFRdR2E_SFerr );
   }
   if( tauJetDeltaRmin_< 0.8 && tauJetDeltaRmin_>=0.7 && !isBarrel_ ){
-    //tauFRE_=QuadSum( 0.024/0.133, tauFRdR1E_SFerr/tauFRdR1E_SF )*tauFR(iTauR);
-    tauFRE_=QuadSum( QuadSum( 0.024/0.133, tauFRdR1E_SFerr/tauFRdR1E_SF )*0.133*tauFRdR1E_SF,
-		     QuadSum( stcorrErrRatio_, tauFRdR1E_SFerr/tauFRdR1E_SF )*stcorr_*tauFRdR1E_SF );
+    return TauFakeRateErrorCalculator( tauFRtt_dR1E,tauFRtt_dR1E_Err, tauFRw_dR1E,tauFRw_dR1E_Err,
+				       stcorr_,stcorrErr_, tauFRdR1E_SF,tauFRdR1E_SFerr );
   }
   //
-  return tauFRE_;
+  return 0;
 }
 // // //
 double analysisClass::tauPR( unsigned int iTauR ){
@@ -1281,22 +1372,67 @@ double analysisClass::tauPR( unsigned int iTauR ){
   bool   isBarrel_=false;
   if( fabs(HPSTauEta->at(iTauR))<1.5 ) isBarrel_=true;
   double TauPt=tauPtcorr(iTauR);
-  double Slambda=0.5;
-  double lambda=0.5;
+  //
+  double stcorr_    = tauPR_STcorrection(iTauR);
+  double stcorrErr_ = tauPR_STcorrectionError(iTauR);
   //
   double tauPR_=0;
-  double stcorr_ = tauPR_STcorrection(iTauR);
-  if(                          tauJetDeltaRmin_>=1.0 && isBarrel_ ) tauPR_=tauPRdR3B_SF*((0.672*(1-lambda)+(0.618-0.00018*TauPt)*(lambda))-stcorr_);
-  if( tauJetDeltaRmin_< 1.0 && tauJetDeltaRmin_>=0.8 && isBarrel_ ) tauPR_=tauPRdR2B_SF*((0.598*(1-lambda)+(0.539-0.00018*TauPt)*(lambda))-stcorr_);
-  if( tauJetDeltaRmin_< 0.8 && tauJetDeltaRmin_>=0.7 && isBarrel_ ) tauPR_=tauPRdR1B_SF*((0.525*(1-lambda)+(0.463-0.00032*TauPt)*(lambda))-stcorr_);
+  if(                          tauJetDeltaRmin_>=1.0 && isBarrel_ ){
+    tauPR_  = pol1UP(   0.672,0.001,  0,0,             iTauR, stcorr_,stcorrErr_ );//wjets
+    tauPR_ += pol1DOWN( 0.618,0.001, -0.00018,0.00003, iTauR, stcorr_,stcorrErr_ );//ttjets
+    tauPR_  = (tauPR_*0.5)*tauPRdR3B_SF;
+  }
+  if( tauJetDeltaRmin_< 1.0 && tauJetDeltaRmin_>=0.8 && isBarrel_ ){
+    tauPR_  = pol1UP(   0.598,0.003,  0,0,             iTauR, stcorr_,stcorrErr_ );//wjets
+    tauPR_ += pol1DOWN( 0.539,0.002, -0.00018,0.00004, iTauR, stcorr_,stcorrErr_ );//ttjets
+    tauPR_  = (tauPR_*0.5)*tauPRdR2B_SF;
+  }
+  if( tauJetDeltaRmin_< 0.8 && tauJetDeltaRmin_>=0.7 && isBarrel_ ){
+    tauPR_  = pol1UP(   0.525,0.005,  0,0,             iTauR, stcorr_,stcorrErr_ );//wjets
+    tauPR_ += pol1DOWN( 0.463,0.002, -0.00032,0.00005, iTauR, stcorr_,stcorrErr_ );//ttjets
+    tauPR_  = (tauPR_*0.5)*tauPRdR1B_SF;
+  }
   //
-  if(                          tauJetDeltaRmin_>=1.0 && !isBarrel_ ) tauPR_=tauPRdR3E_SF*(((0.692+0.00018*TauPt)*(1-lambda)+0.650*(lambda))-stcorr_);
-  if( tauJetDeltaRmin_< 1.0 && tauJetDeltaRmin_>=0.8 && !isBarrel_ ) tauPR_=tauPRdR2E_SF*((0.634*(1-lambda)+0.587*(lambda))-stcorr_);
-  if( tauJetDeltaRmin_< 0.8 && tauJetDeltaRmin_>=0.7 && !isBarrel_ ) tauPR_=tauPRdR1E_SF*((0.559*(1-lambda)+0.507*(lambda))-stcorr_);
+  if(                          tauJetDeltaRmin_>=1.0 && !isBarrel_ ){
+    tauPR_  = pol1UP(   0.692,0.002, 0.00018,0.00005, iTauR, stcorr_,stcorrErr_ ); //wjets
+    tauPR_ += pol1DOWN( 0.650,0.002, 0,0,             iTauR, stcorr_,stcorrErr_ );//ttjets
+    tauPR_  = (tauPR_*0.5)*tauPRdR3E_SF;
+  }
+  if( tauJetDeltaRmin_< 1.0 && tauJetDeltaRmin_>=0.8 && !isBarrel_ ){
+    tauPR_  = pol1UP(   0.634,0.007, 0,0, iTauR, stcorr_,stcorrErr_ );//wjets
+    tauPR_ += pol1DOWN( 0.587,0.005, 0,0, iTauR, stcorr_,stcorrErr_ );//ttjets
+    tauPR_  = (tauPR_*0.5)*tauPRdR2E_SF;
+  }
+  if( tauJetDeltaRmin_< 0.8 && tauJetDeltaRmin_>=0.7 && !isBarrel_ ){
+    tauPR_  = pol1UP(   0.559,0.012, 0,0, iTauR, stcorr_,stcorrErr_ );//wjets - No data rate, SF is used!
+    tauPR_ += pol1DOWN( 0.507,0.009, 0,0, iTauR, stcorr_,stcorrErr_ );//ttjets
+    tauPR_  = (tauPR_*0.5)*tauPRdR1E_SF;
+  }
   //
   return tauPR_;
 }
 // // //
+double analysisClass::pol1UP( double c1, double Sc1, double m1, double Sm1, unsigned int iTauR, 
+			      double stcorr, double stcorrErr ){
+  double TauPt=tauPtcorr(iTauR);
+  //
+  double mean      = c1 + m1*TauPt + stcorr;
+  double meanError =  TMath::Power( (TMath::Power(Sc1,2) + TMath::Power(Sm1*TauPt,2) + TMath::Power(stcorrErr,2)), 0.5 );
+  //
+  return (mean+meanError);
+}
+// // //
+double analysisClass::pol1DOWN(double c1, double Sc1, double m1, double Sm1, unsigned int iTauR,
+			       double stcorr, double stcorrErr){
+  double TauPt=tauPtcorr(iTauR);
+  //
+  double mean      = c1 + m1*TauPt + stcorr;
+  double meanError =  TMath::Power( (TMath::Power(Sc1,2) + TMath::Power(Sm1*TauPt,2) + TMath::Power(stcorrErr,2)), 0.5 );
+  //
+  return (mean-meanError);
+}
+// // //
+/*
 double analysisClass::pol0w_pol1tt_Err( double c1, double Sc1, double c2, double Sc2, double m2, double Sm2, double sf, double Ssf, unsigned int iTauR){
   double Slambda=0.5;
   double lambda=0.5;
@@ -1308,7 +1444,9 @@ double analysisClass::pol0w_pol1tt_Err( double c1, double Sc1, double c2, double
   double sfe2=TMath::Power( (c1*(1-lambda)+(c2+m2*TauPt)*lambda)*Ssf, 2);
   return TMath::Power( c1e2+c2e2+m2e2+lambdae2+sfe2, 0.5 );
 }
+*/
 // // //
+/*
 double analysisClass::pol0tt_pol1w_Err( double c1, double Sc1, double c2, double Sc2, double m2, double Sm2, double sf, double Ssf, unsigned int iTauR){
   double Slambda=0.5;
   double lambda=0.5;
@@ -1320,50 +1458,48 @@ double analysisClass::pol0tt_pol1w_Err( double c1, double Sc1, double c2, double
   double sfe2=TMath::Power( (c1*lambda+(c2+m2*TauPt)*(1-lambda))*Ssf, 2);
   return TMath::Power( c1e2+c2e2+m2e2+lambdae2+sfe2, 0.5 );
 }
+*/
 // // //
 double analysisClass::tauPRE( unsigned int iTauR ){
   double tauJetDeltaRmin_=tauJetDeltaRmin(iTauR);
   bool   isBarrel_=false;
   if( fabs(HPSTauEta->at(iTauR))<1.5 ) isBarrel_=true;
   //
+  double stcorr_    =tauPR_STcorrection(iTauR);
+  double stcorrErr_ =tauPR_STcorrectionError(iTauR);
+  double tauPR_=tauPR(iTauR);//if isData, this already has the SF included!
+  double DeltatauPR_=0;
   double tauPRE_=0;
-  double stcorr_    = tauPR_STcorrection(iTauR);
-  double stcorrErr_ = tauPR_STcorrectionError(iTauR);
-  double stcorrErrRatio_=0;
-  if( stcorr_>0 ) stcorrErrRatio_=stcorrErr_/stcorr_;
   //
-  // rate = ( ptPART + stPART )*SF = ptPART*SF + stPART*SF =  OLD +  stPART*SF
   if(                          tauJetDeltaRmin_>=1.0 && isBarrel_ ){
-    tauPRE_=QuadSum( pol0w_pol1tt_Err( 0.672,0.001, 0.618,0.001,-0.00018,0.00003, tauPRdR3B_SF,tauPRdR3B_SFerr, iTauR ),
-		     QuadSum( stcorrErrRatio_, tauPRdR3B_SFerr/tauPRdR3B_SF )*stcorr_*tauPRdR3B_SF );
+    DeltatauPR_ = fabs( pol1UP( 0.672,0.001, 0,0, iTauR, stcorr_,stcorrErr_ ) - tauPR_/tauPRdR3B_SF );//wjets minus the mean (undo SF)
+    tauPRE_ =  QuadSum( DeltatauPR_/(tauPR_/tauPRdR3B_SF), tauPRdR3B_SFerr/tauPRdR3B_SF )*tauPR_; 
   }
   if( tauJetDeltaRmin_< 1.0 && tauJetDeltaRmin_>=0.8 && isBarrel_ ){
-    tauPRE_=QuadSum( pol0w_pol1tt_Err( 0.598,0.003, 0.539,0.002,-0.00018,0.00004, tauPRdR2B_SF,tauPRdR2B_SFerr, iTauR ),
-		     QuadSum( stcorrErrRatio_, tauPRdR2B_SFerr/tauPRdR2B_SF )*stcorr_*tauPRdR2B_SF );
+    DeltatauPR_ = fabs( pol1UP( 0.598,0.003, 0,0, iTauR, stcorr_,stcorrErr_ ) - tauPR_/tauPRdR2B_SF );//wjets minus the mean (undo SF)
+    tauPRE_ =  QuadSum( DeltatauPR_/(tauPR_/tauPRdR2B_SF), tauPRdR2B_SFerr/tauPRdR2B_SF )*tauPR_; 
   }
   if( tauJetDeltaRmin_< 0.8 && tauJetDeltaRmin_>=0.7 && isBarrel_ ){
-    tauPRE_=QuadSum( pol0w_pol1tt_Err( 0.525,0.005, 0.463,0.002,-0.00032,0.00005, tauPRdR1B_SF,tauPRdR1B_SFerr, iTauR ),
-		     QuadSum( stcorrErrRatio_, tauPRdR1B_SFerr/tauPRdR1B_SF )*stcorr_*tauPRdR1B_SF );
+    DeltatauPR_ = fabs( pol1UP( 0.525,0.005, 0,0, iTauR, stcorr_,stcorrErr_ ) - tauPR_/tauPRdR1B_SF );//wjets minus the mean (undo SF)
+    tauPRE_ =  QuadSum( DeltatauPR_/(tauPR_/tauPRdR1B_SF), tauPRdR1B_SFerr/tauPRdR1B_SF )*tauPR_;
   }
   //
   if(                          tauJetDeltaRmin_>=1.0 && !isBarrel_ ){
-    tauPRE_=QuadSum( pol0tt_pol1w_Err( 0.650,0.002, 0.692,0.002,0.00018,0.00005, tauPRdR3E_SF,tauPRdR3E_SFerr, iTauR ),
-		     QuadSum( stcorrErrRatio_, tauPRdR3E_SFerr/tauPRdR3E_SF )*stcorr_*tauPRdR3E_SF );
+    DeltatauPR_ = fabs( pol1UP( 0.692,0.002, 0.00018,0.00005, iTauR, stcorr_,stcorrErr_ ) - tauPR_/tauPRdR3E_SF );//wjets minus the mean (undo SF)
+    tauPRE_ =  QuadSum( DeltatauPR_/(tauPR_/tauPRdR3E_SF), tauPRdR3E_SFerr/tauPRdR3E_SF )*tauPR_;
   }
   if( tauJetDeltaRmin_< 1.0 && tauJetDeltaRmin_>=0.8 && !isBarrel_ ){
-    tauPRE_=QuadSum( pol0tt_pol1w_Err( 0.587,0.005, 0.634,0.007,0,0,             tauPRdR2E_SF,tauPRdR2E_SFerr, iTauR ),
-		     QuadSum( stcorrErrRatio_, tauPRdR2E_SFerr/tauPRdR2E_SF )*stcorr_*tauPRdR2E_SF );
+    DeltatauPR_ = fabs( pol1UP( 0.634,0.007, 0,0, iTauR, stcorr_,stcorrErr_ ) - tauPR_/tauPRdR2E_SF );//wjets minus the mean (undo SF)
+    tauPRE_ =  QuadSum( DeltatauPR_/(tauPR_/tauPRdR2E_SF), tauPRdR2E_SFerr/tauPRdR2E_SF )*tauPR_;
   }
   if( tauJetDeltaRmin_< 0.8 && tauJetDeltaRmin_>=0.7 && !isBarrel_ ){
-    tauPRE_=QuadSum( pol0tt_pol1w_Err( 0.507,0.009, 0.559,0.012,0,0,             tauPRdR1E_SF,tauPRdR1E_SFerr, iTauR ),
-		     QuadSum( stcorrErrRatio_, tauPRdR1E_SFerr/tauPRdR1E_SF )*stcorr_*tauPRdR1E_SF );
+    DeltatauPR_ = fabs( pol1UP( 0.559,0.012, 0,0, iTauR, stcorr_,stcorrErr_ ) - tauPR_/tauPRdR1E_SF );//wjets minus the mean (undo SF)
+    tauPRE_ =  QuadSum( DeltatauPR_/(tauPR_/tauPRdR1E_SF), tauPRdR1E_SFerr/tauPRdR1E_SF )*tauPR_;
   }
   //
   return tauPRE_;
 }
 double analysisClass::muFR( unsigned int iMuR ){
-  //return 0.005;
-  //
   double st_ = ST();
   if( fabs(MuonEta->at(iMuR))< 1.5 && st_< 400 ) return 0.010;//barrel
   if( fabs(MuonEta->at(iMuR))< 1.5 && st_>=400 ) return 0.005;
@@ -1373,7 +1509,6 @@ double analysisClass::muFR( unsigned int iMuR ){
 }
 // // //
 double analysisClass::muFRE( unsigned int iMuR ){
-  //return 0.005;
   return muFR( iMuR ); // >> 100% error
 }
 // // //
@@ -1531,6 +1666,127 @@ double analysisClass::muPR( unsigned int iMuR ){
   return 0;
 }
 // // //
+double analysisClass::muPRE_STcorrection( double eta, double dr, double pt, double st ){
+  //
+  return 3;
+  //
+  unsigned int drbin=0;
+  if( dr>0.5 && dr<0.7 ) drbin=1;
+  if( dr>0.7 && dr<1.0 ) drbin=2;
+  if( dr>1.0           ) drbin=3;
+  //
+  // barrel
+  if( fabs(eta)<1.5 ){
+    if( st>100 && st<400 ){
+      if( pt>25 && pt<30  && drbin==1 ) return 1.1;
+      if( pt>25 && pt<30  && drbin==2 ) return 1.0;
+      if( pt>25 && pt<30  && drbin==3 ) return 1.0;
+      //
+      if( pt>30 && pt<50  && drbin==1 ) return 1.3;
+      if( pt>30 && pt<50  && drbin==2 ) return 1.1;
+      if( pt>30 && pt<50  && drbin==3 ) return 1.0;
+      //
+      if( pt>50 && pt<100 && drbin==1 ) return 1.1;
+      if( pt>50 && pt<100 && drbin==2 ) return 1.1;
+      if( pt>50 && pt<100 && drbin==3 ) return 1.0;
+      //
+      if( pt>100          && drbin==1 ) return 1.5;
+      if( pt>100          && drbin==2 ) return 1.2;
+      if( pt>100          && drbin==3 ) return 1.1;
+    }
+    if( st>400 && st<800 ){
+      if( pt>25 && pt<30  && drbin==1 ) return 1.4;
+      if( pt>25 && pt<30  && drbin==2 ) return 1.0;
+      if( pt>25 && pt<30  && drbin==3 ) return 1.5;
+      //
+      if( pt>30 && pt<50  && drbin==1 ) return 1.0;
+      if( pt>30 && pt<50  && drbin==2 ) return 1.0;
+      if( pt>30 && pt<50  && drbin==3 ) return 1.0;
+      //
+      if( pt>50 && pt<100 && drbin==1 ) return 1.0;
+      if( pt>50 && pt<100 && drbin==2 ) return 1.0;
+      if( pt>50 && pt<100 && drbin==3 ) return 1.0;
+      //
+      if( pt>100          && drbin==1 ) return 1.1;
+      if( pt>100          && drbin==2 ) return 1.0;
+      if( pt>100          && drbin==3 ) return 1.0;
+    }
+    if( st>800           ){
+      if( pt>25 && pt<30  && drbin==1 ) return 2.0;
+      if( pt>25 && pt<30  && drbin==2 ) return 1.0;
+      if( pt>25 && pt<30  && drbin==3 ) return 2.3;
+      //
+      if( pt>30 && pt<50  && drbin==1 ) return 1.7;
+      if( pt>30 && pt<50  && drbin==2 ) return 1.2;
+      if( pt>30 && pt<50  && drbin==3 ) return 1.1;
+      //
+      if( pt>50 && pt<100 && drbin==1 ) return 1.2;
+      if( pt>50 && pt<100 && drbin==2 ) return 1.0;
+      if( pt>50 && pt<100 && drbin==3 ) return 1.0;
+      //
+      if( pt>100          && drbin==1 ) return 1.4;
+      if( pt>100          && drbin==2 ) return 1.0;
+      if( pt>100          && drbin==3 ) return 1.0;
+    }
+  }
+  //
+  // endcap
+  if( fabs(eta)>=1.5 ){
+    if( st>100 && st<400 ){
+      if( pt>25 && pt<30  && drbin==1 ) return 1.0;
+      if( pt>25 && pt<30  && drbin==2 ) return 3.7;
+      if( pt>25 && pt<30  && drbin==3 ) return 1.4;
+      //
+      if( pt>30 && pt<50  && drbin==1 ) return 1.6;
+      if( pt>30 && pt<50  && drbin==2 ) return 1.8;
+      if( pt>30 && pt<50  && drbin==3 ) return 1.5;
+      //
+      if( pt>50 && pt<100 && drbin==1 ) return 1.4;
+      if( pt>50 && pt<100 && drbin==2 ) return 1.2;
+      if( pt>50 && pt<100 && drbin==3 ) return 1.1;
+      //
+      if( pt>100          && drbin==1 ) return 1.0;
+      if( pt>100          && drbin==2 ) return 1.0;
+      if( pt>100          && drbin==3 ) return 1.1;
+    }
+    if( st>400 && st<800 ){
+      if( pt>25 && pt<30  && drbin==1 ) return 2.1;
+      if( pt>25 && pt<30  && drbin==2 ) return 6.4;
+      if( pt>25 && pt<30  && drbin==3 ) return 3.1;
+      //
+      if( pt>30 && pt<50  && drbin==1 ) return 3.0;
+      if( pt>30 && pt<50  && drbin==2 ) return 2.8;
+      if( pt>30 && pt<50  && drbin==3 ) return 2.1;
+      //
+      if( pt>50 && pt<100 && drbin==1 ) return 1.0;
+      if( pt>50 && pt<100 && drbin==2 ) return 1.0;
+      if( pt>50 && pt<100 && drbin==3 ) return 1.1;
+      //
+      if( pt>100          && drbin==1 ) return 1.0;
+      if( pt>100          && drbin==2 ) return 1.0;
+      if( pt>100          && drbin==3 ) return 1.0;
+    }
+    if( st>800           ){
+      if( pt>25 && pt<30  && drbin==1 ) return 1.0;
+      if( pt>25 && pt<30  && drbin==2 ) return 1.0;
+      if( pt>25 && pt<30  && drbin==3 ) return 1.0;
+      //
+      if( pt>30 && pt<50  && drbin==1 ) return 3.2;
+      if( pt>30 && pt<50  && drbin==2 ) return 4.9;
+      if( pt>30 && pt<50  && drbin==3 ) return 4.1;
+      //
+      if( pt>50 && pt<100 && drbin==1 ) return 1.2;
+      if( pt>50 && pt<100 && drbin==2 ) return 1.2;
+      if( pt>50 && pt<100 && drbin==3 ) return 1.0;
+      //
+      if( pt>100          && drbin==1 ) return 1.0;
+      if( pt>100          && drbin==2 ) return 1.1;
+      if( pt>100          && drbin==3 ) return 1.4;
+    }
+  }
+  //
+}
+// // //
 double analysisClass::muPRE( unsigned int iMuR ){
   double muJetDeltaRmin_=muJetDeltaRmin(iMuR);
   double muPt=muPtcorr(iMuR);
@@ -1538,21 +1794,31 @@ double analysisClass::muPRE( unsigned int iMuR ){
   if( fabs(MuonEta->at(iMuR))<1.5 ) isBarrel_=true;
   double RateErr=0;
   double aveRate=0;
+  double ST_=ST();
   //
   //BARREL
   if( muJetDeltaRmin_>=1.00 && isBarrel_ ){   // W rate - 1/2*(W rate + LQ3 rate), oplus Error on Correction Factor
     aveRate=AvePromptRate( Wdr3Bpar1, Wdr3Bpar2, Wdr3Bpar3, muPt, LQdr3Bpar1, LQdr3Bpar2, LQdr3Bpar3 );
     RateErr=ErrPromptRate( Wdr3Bpar1, Wdr3Bpar2, Wdr3Bpar3, muPt, LQdr3Bpar1, LQdr3Bpar2, LQdr3Bpar3 );
+    cout<<"Before muPRE STcorr: "<<RateErr<<endl;
+    RateErr=RateErr*muPRE_STcorrection( MuonEta->at(iMuR), muJetDeltaRmin_, muPt, ST_ );   
+    cout<<"After muPRE STcorr: "<<RateErr<<"  "<<muPRE_STcorrection( MuonEta->at(iMuR), muJetDeltaRmin_, muPt, ST_ )<<endl;
     return QuadSum(RateErr/aveRate,muPRdR3B_SFerr/muPRdR3B_SF)*aveRate*muPRdR3B_SF;
   }
   if( muJetDeltaRmin_<1.00 && muJetDeltaRmin_>=0.70 && isBarrel_ ){
     aveRate=AvePromptRate( Wdr2Bpar1, Wdr2Bpar2, Wdr2Bpar3, muPt, LQdr2Bpar1, LQdr2Bpar2, LQdr2Bpar3 );
     RateErr=ErrPromptRate( Wdr2Bpar1, Wdr2Bpar2, Wdr2Bpar3, muPt, LQdr2Bpar1, LQdr2Bpar2, LQdr2Bpar3 );
+    cout<<"Before muPRE STcorr: "<<RateErr<<endl;
+    RateErr=RateErr*muPRE_STcorrection( MuonEta->at(iMuR), muJetDeltaRmin_, muPt, ST_ );
+    cout<<"After muPRE STcorr: "<<RateErr<<"  "<<muPRE_STcorrection( MuonEta->at(iMuR), muJetDeltaRmin_, muPt, ST_ )<<endl;
     return QuadSum(RateErr/aveRate,muPRdR2B_SFerr/muPRdR2B_SF)*aveRate*muPRdR2B_SF;
   }
   if( muJetDeltaRmin_<0.70 && muJetDeltaRmin_>=0.50 && isBarrel_ ){
     aveRate=AvePromptRate( Wdr1Bpar1, Wdr1Bpar2, Wdr1Bpar3, muPt, LQdr1Bpar1, LQdr1Bpar2, LQdr1Bpar3 );
     RateErr=ErrPromptRate( Wdr1Bpar1, Wdr1Bpar2, Wdr1Bpar3, muPt, LQdr1Bpar1, LQdr1Bpar2, LQdr1Bpar3 );
+    cout<<"Before muPRE STcorr: "<<RateErr<<endl;
+    RateErr=RateErr*muPRE_STcorrection( MuonEta->at(iMuR), muJetDeltaRmin_, muPt, ST_ );
+    cout<<"After muPRE STcorr: "<<RateErr<<"  "<<muPRE_STcorrection( MuonEta->at(iMuR), muJetDeltaRmin_, muPt, ST_ )<<endl;
     return QuadSum(RateErr/aveRate,muPRdR1B_SFerr/muPRdR1B_SF)*aveRate*muPRdR1B_SF;
   }
   //
@@ -1560,16 +1826,25 @@ double analysisClass::muPRE( unsigned int iMuR ){
   if( muJetDeltaRmin_>=1.00 && !isBarrel_ ){
     aveRate=AvePromptRate( Wdr3Epar1, Wdr3Epar2, Wdr3Epar3, muPt, LQdr3Epar1, LQdr3Epar2, LQdr3Epar3 );
     RateErr=ErrPromptRate( Wdr3Epar1, Wdr3Epar2, Wdr3Epar3, muPt, LQdr3Epar1, LQdr3Epar2, LQdr3Epar3 );
+    cout<<"Before muPRE STcorr: "<<RateErr<<endl;
+    RateErr=RateErr*muPRE_STcorrection( MuonEta->at(iMuR), muJetDeltaRmin_, muPt, ST_ );
+    cout<<"After muPRE STcorr: "<<RateErr<<"  "<<muPRE_STcorrection( MuonEta->at(iMuR), muJetDeltaRmin_, muPt, ST_ )<<endl;
     return QuadSum(RateErr/aveRate,muPRdR3E_SFerr/muPRdR3E_SF)*aveRate*muPRdR3E_SF;
   }
   if( muJetDeltaRmin_<1.00 && muJetDeltaRmin_>=0.70 && !isBarrel_ ){
     aveRate=AvePromptRate( Wdr2Epar1, Wdr2Epar2, Wdr2Epar3, muPt, LQdr2Epar1, LQdr2Epar2, LQdr2Epar3 );
     RateErr=ErrPromptRate( Wdr2Epar1, Wdr2Epar2, Wdr2Epar3, muPt, LQdr2Epar1, LQdr2Epar2, LQdr2Epar3 );
+    cout<<"Before muPRE STcorr: "<<RateErr<<endl;
+    RateErr=RateErr*muPRE_STcorrection( MuonEta->at(iMuR), muJetDeltaRmin_, muPt, ST_ );
+    cout<<"After muPRE STcorr: "<<RateErr<<"  "<<muPRE_STcorrection( MuonEta->at(iMuR), muJetDeltaRmin_, muPt, ST_ )<<endl;
     return QuadSum(RateErr/aveRate,muPRdR2E_SFerr/muPRdR2E_SF)*aveRate*muPRdR2E_SF;
   }
   if( muJetDeltaRmin_<0.70 && muJetDeltaRmin_>=0.50 && !isBarrel_ ){
     aveRate=AvePromptRate( Wdr1Epar1, Wdr1Epar2, Wdr1Epar3, muPt, LQdr1Epar1, LQdr1Epar2, LQdr1Epar3 );
     RateErr=ErrPromptRate( Wdr1Epar1, Wdr1Epar2, Wdr1Epar3, muPt, LQdr1Epar1, LQdr1Epar2, LQdr1Epar3 );
+    cout<<"Before muPRE STcorr: "<<RateErr<<endl;
+    RateErr=RateErr*muPRE_STcorrection( MuonEta->at(iMuR), muJetDeltaRmin_, muPt, ST_ );
+    cout<<"After muPRE STcorr: "<<RateErr<<"  "<<muPRE_STcorrection( MuonEta->at(iMuR), muJetDeltaRmin_, muPt, ST_ )<<endl;
     return QuadSum(RateErr/aveRate,muPRdR1E_SFerr/muPRdR1E_SF)*aveRate*muPRdR1E_SF;
   }
   //

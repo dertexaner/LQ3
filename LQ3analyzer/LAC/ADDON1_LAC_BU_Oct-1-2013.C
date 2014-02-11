@@ -20,29 +20,16 @@ using namespace std;
 //
 // // //
 bool analysisClass::tauRCheck(unsigned int iTauR){
-  if( ObjDef == "LI_VLIforTau"  ) return tauRVLooseCheck(iTauR);
-  if( ObjDef == "LI"            ) return tauRLooseCheck(iTauR);
-  if( ObjDef == "TI"            ) return tauRTightCheck(iTauR);
+  if( ObjDef == "LI"         ) return tauRLooseCheck(iTauR);
+  if( ObjDef == "TI"         ) return tauRTightCheck(iTauR);
   else{
     cout<<"ERROR: WRONG Object Definition at tauRCheck!"<<endl; return false; 
   }
 }
 // // //
-bool analysisClass::tauRVLooseCheck(unsigned int iTauR){
-  //
-  if( tauPtcorr(iTauR)<=TauPtCut                                        ) return false;
-  if( fabs(HPSTauEta->at(iTauR))>2.1                                    ) return false;
-  //if( HPSTauAgainstElectronTightMVA3Discr->at(iTauR)!=1                 ) return false;
-  //if( HPSTauAgainstMuonTight2Discr->at(iTauR)!=1                        ) return false;
-  //if( HPSTauDecayModeFindingDiscr->at(iTauR)!=1                         ) return false;
-  if( tauJetDeltaRmin(iTauR)<0.7 ) return false;//jul-31-2013 (loose-tight) //---Taken out temporarily, Seem to affect yields in control region.. Sep-5-2013
-  //
-  return true;
-}
-// // //
 bool analysisClass::tauRLooseCheck(unsigned int iTauR){
   //
-  if( tauPtcorr(iTauR)<=TauPtCut                                        ) return false;
+  if( HPSTauPt->at(iTauR)<=TauPtCut                                     ) return false;
   if( fabs(HPSTauEta->at(iTauR))>2.1                                    ) return false;
   if( HPSTauAgainstElectronTightMVA3Discr->at(iTauR)!=1                 ) return false;
   if( HPSTauAgainstMuonTight2Discr->at(iTauR)!=1                        ) return false;
@@ -136,8 +123,8 @@ bool analysisClass::elRLooseCheck(unsigned int iElR){
     //switch to dR:0.3
     double pfIso= ElectronPFChargedHadronIso03->at(iElR) + TMath::Max( 0.0 , ElectronPFNeutralHadronIso03->at(iElR) + ElectronPFPhotonIso03->at(iElR)
 								       - rhoJets*elISOEffectiveAreaCone03( ElectronEta->at(iElR) ) );
-    if( ElectronPtHeep->at(iElR)<20 && isEndCap_ && pfIso/elPtcorr(iElR) > 0.10 ) return false;
-    if( pfIso/elPtcorr(iElR) > 0.15 ) return false;
+    if( ElectronPtHeep->at(iElR)<20 && isEndCap_ && pfIso/ElectronPt->at(iElR) > 0.10 ) return false;
+    if( pfIso/ElectronPt->at(iElR) > 0.15 ) return false;
     //
   }
   // --- --- --- ---  
@@ -201,7 +188,7 @@ bool analysisClass::elRLooseCheck(unsigned int iElR){
     //switch to dR:0.3
     double pfIso= ElectronPFChargedHadronIso03->at(iElR) + TMath::Max( 0.0 , ElectronPFNeutralHadronIso03->at(iElR) + ElectronPFPhotonIso03->at(iElR)
 								       - rhoJets*elISOEffectiveAreaCone03( ElectronEta->at(iElR) ) );
-    if( pfIso/elPtcorr(iElR) > 0.15 ) return false;
+    if( pfIso/ElectronPt->at(iElR) > 0.15 ) return false;
     //
   }
   // --- --- --- ---
@@ -236,7 +223,7 @@ bool analysisClass::elRTightCheck(unsigned int iElR){
     //switch to dR:0.3
     double pfIso= ElectronPFChargedHadronIso03->at(iElR) + TMath::Max( 0.0 , ElectronPFNeutralHadronIso03->at(iElR) + ElectronPFPhotonIso03->at(iElR)
 								       - rhoJets*elISOEffectiveAreaCone03( ElectronEta->at(iElR) ) );
-    if( pfIso/elPtcorr(iElR) > 0.15 ) return false;
+    if( pfIso/ElectronPt->at(iElR) > 0.15 ) return false;
     //
     return true;
   }
@@ -244,9 +231,8 @@ bool analysisClass::elRTightCheck(unsigned int iElR){
 }
 // // //
 bool analysisClass::muRCheck(unsigned int iMuR){     
-  if( ObjDef == "LI_VLIforTau" ){ return muRLooseCheck(iMuR);      }
-  if( ObjDef == "LI"           ){ return muRLooseCheck(iMuR);      }
-  if( ObjDef == "TI"           ){ return muRTightCheck(iMuR);      }
+  if( ObjDef == "LI"         ){ return muRLooseCheck(iMuR);      }
+  if( ObjDef == "TI"         ){ return muRTightCheck(iMuR);      }
   else{
     cout<<"ERROR: WRONG Object Definition at muRCheck !"<<endl; return false;
   }
@@ -254,7 +240,7 @@ bool analysisClass::muRCheck(unsigned int iMuR){
 // // //
 bool analysisClass::muRLooseCheck(unsigned int iMuR){
   //
-  if( muPtcorr(iMuR)<=MuonPtCut                 ) return false;
+  if( MuonPt->at(iMuR)<=MuonPtCut                 ) return false;
   if( fabs(MuonEta->at(iMuR))>MuonEtaCut          ) return false;
   //
   //For Loose ID -- not compatible with the trigger (global is needed)
@@ -284,18 +270,13 @@ bool analysisClass::muRTightCheck(unsigned int iMuR){
   // PF Rel Isolation:  I = [sumChargedHadronPt+ max(0.,sumNeutralHadronPt+sumPhotonPt-0.5sumPUPt)]/pt
   double pfIso = 0;
   pfIso = MuonPFIsoR04ChargedHadron->at(iMuR) + TMath::Max( 0.0 , (MuonPFIsoR04NeutralHadron->at(iMuR)+MuonPFIsoR04Photon->at(iMuR)-0.5*MuonPFIsoR04PU->at(iMuR)) );
-  //if( pfIso/muPtcorr(iMuR) > 0.20 ) return false;//loose WP
-  if( pfIso/muPtcorr(iMuR) > 0.12 ) return false;//tight WP
+  //if( pfIso/MuonPt->at(iMuR) > 0.20 ) return false;//loose WP
+  if( pfIso/MuonPt->at(iMuR) > 0.12 ) return false;//tight WP
   //
   return true;
 }
 // // //
-/*
 double analysisClass::jetPtMCcorr(unsigned int iJetR){
-  // 
-  if( isData ) return PFJetPt->at(iJetR); // This resolution correction only applied to MC jets..
-  //
-  // Jet Energy Resolution Matching
   // https://twiki.cern.ch/twiki/bin/view/CMS/JetResolution#Recommendations_for_7_and_8_TeV
   //  Eta  | RATIO |     ERROR
   //0.0-0.5 1.052+-0.012+0.062-0.061
@@ -305,7 +286,6 @@ double analysisClass::jetPtMCcorr(unsigned int iJetR){
   //2.3-5.0 1.288+-0.127+0.155-0.153
   // Formula: jetPt+MAX(0,c*(jetPt-jetPtGEN)
   //------------------------------------------//
-  //
   TLorentzVector jetReco;
   TLorentzVector jetGen;
   jetReco.SetPtEtaPhiM( PFJetPt->at(iJetR),  PFJetEta->at(iJetR),  PFJetPhi->at(iJetR), 0 );
@@ -317,20 +297,19 @@ double analysisClass::jetPtMCcorr(unsigned int iJetR){
   if( fabs(jetReco.Eta())<2.3 ) SF=1.134;
   if( fabs(jetReco.Eta())<5.0 ) SF=1.288;
   //
-  double deltaR_ = 9999;
-  double jetGenPt=0;
-  for(unsigned int iJetT=0; iJetT<GenJetPt->size(); iJetT++){
+  bool isJetMatched_ = false;
+  for(unsigned int iJetT=0 iJetT<GenJetPt->size(); iJetT++){
     jetGen.SetPtEtaPhiM( GenJetPt->at(iJetT),  GenJetEta->at(iJetT),  GenJetPhi->at(iJetT), 0 );
-    if( jetReco.DeltaR(jetGen)<deltaR_ ){ deltaR_=jetReco.DeltaR(jetGen); jetGenPt=jetGen.Pt(); }
+    if( jetReco.DeltaR(jetGen)<0.5 ){
+      cout<<"jetReco.DeltaR(jetGen): "<<jetReco.DeltaR(jetGen)<<endl;;
+      isJetMatched_=true;
+      break;
+    }
   }
-  if( deltaR_<0.5 && fabs(jetReco.Eta())<5.0 && jetReco.Pt()>10 && SF>0 && jetGenPt>0 ){
-    //cout<<"RECO/GEN: "<<jetReco.Pt()/jetGenPt<<endl;
-    return jetGenPt+SF*(jetReco.Pt()-jetGenPt);
-  }
+  if( !isJetMatched_ || fabs(jetReco.Eta())>=5.0 || jetReco.Pt()<10 || SF==0 ) return -9999;
   else
-    return jetReco.Pt();
+    return jetReco.Pt()+TMath::Max(0,SF*(jetReco.Pt()-jetGen.Pt()));
 }
-*/
 // // //
 bool analysisClass::jetRCheck(unsigned int iJetR){
     return jetRLooseCheck(iJetR);
@@ -349,8 +328,8 @@ bool analysisClass::jetRLooseCheck(unsigned int iJetR){
     if( PFJetChargedEmEnergyFraction->at(iJetR)>=0.99   ) return false;
   }
   //
-  //if( jetPtcorr(iJetR)<=35    ) return false;
-  if( jetPtcorr(iJetR)<=40      ) return false;
+  //if( PFJetPt->at(iJetR)<=35    ) return false;
+  if( PFJetPt->at(iJetR)<=40      ) return false;
   if( fabs(PFJetEta->at(iJetR))>3 ) return false;
   //
   return true;
@@ -370,12 +349,12 @@ bool analysisClass::Wpeak_jetRCheck(unsigned int iJetR){
   if( !jetRCheck(iJetR) ) return false;
   //
   TLorentzVector Dijet; TLorentzVector jet1;  TLorentzVector jet2;  float Wmass=80.4; float Wwidth=2.1;
-  jet1.SetPtEtaPhiM( jetPtcorr(iJetR), PFJetEta->at(iJetR), PFJetPhi->at(iJetR), 0 );
+  jet1.SetPtEtaPhiM( PFJetPt->at(iJetR), PFJetEta->at(iJetR), PFJetPhi->at(iJetR), 0 );
   //
   for(unsigned int ijet=0; ijet<PFJetPt->size(); ijet++){
     if( ijet==iJetR ) continue;
     if( jetRCheck(ijet) ){
-      jet2.SetPtEtaPhiM( jetPtcorr(ijet), PFJetEta->at(ijet), PFJetPhi->at(ijet), 0 );
+      jet2.SetPtEtaPhiM( PFJetPt->at(ijet), PFJetEta->at(ijet), PFJetPhi->at(ijet), 0 );
       Dijet=jet1+jet2;
       if( fabs(Dijet.M()-Wmass)<(Wwidth*3) ) return true;
     }
@@ -435,12 +414,12 @@ bool analysisClass::muRisoCheck(unsigned int iMuR){
   if( !removeOverlaps ) return true;
   //  
   TLorentzVector MuonCand;
-  MuonCand.SetPtEtaPhiM(  muPtcorr(iMuR), MuonEta->at(iMuR), MuonPhi->at(iMuR), 0  );
+  MuonCand.SetPtEtaPhiM(  MuonPt->at(iMuR), MuonEta->at(iMuR), MuonPhi->at(iMuR), 0  );
   //    
   for(unsigned int ireco=0; ireco<ElectronPt->size(); ireco++){
     if(  elRCheck(ireco)  ){
       TLorentzVector ElectronCand;
-      ElectronCand.SetPtEtaPhiM(  elPtcorr(ireco), ElectronEta->at(ireco), ElectronPhi->at(ireco), 0  );
+      ElectronCand.SetPtEtaPhiM(  ElectronPt->at(ireco), ElectronEta->at(ireco), ElectronPhi->at(ireco), 0  );
       if( MuonCand.DeltaR(ElectronCand)<0.3 ) return false;
     }
   }
@@ -453,12 +432,12 @@ bool analysisClass::elRisoCheck(unsigned int iElR){
   if( !removeOverlaps ) return true;
   //
   TLorentzVector ElectronCand;
-  ElectronCand.SetPtEtaPhiM(  elPtcorr(iElR), ElectronEta->at(iElR), ElectronPhi->at(iElR), 0  );
+  ElectronCand.SetPtEtaPhiM(  ElectronPt->at(iElR), ElectronEta->at(iElR), ElectronPhi->at(iElR), 0  );
   // 
   for(unsigned int ireco=0; ireco<MuonPt->size(); ireco++){
     if( muRCheck(ireco) ){
       TLorentzVector MuonCand;
-      MuonCand.SetPtEtaPhiM(    muPtcorr(ireco),    MuonEta->at(ireco),    MuonPhi->at(ireco),    0);
+      MuonCand.SetPtEtaPhiM(    MuonPt->at(ireco),    MuonEta->at(ireco),    MuonPhi->at(ireco),    0);
       if( ElectronCand.DeltaR(MuonCand)<0.3 ) return false;
     }
   }
@@ -471,12 +450,12 @@ bool analysisClass::jetRisoCheck(unsigned int iJetR){
   if( !removeOverlaps ) return true;
   //
   TLorentzVector JetCand;
-  JetCand.SetPtEtaPhiM( jetPtcorr(iJetR), PFJetEta->at(iJetR), PFJetPhi->at(iJetR), 0  );
+  JetCand.SetPtEtaPhiM( PFJetPt->at(iJetR), PFJetEta->at(iJetR), PFJetPhi->at(iJetR), 0  );
   //
   for(unsigned int ireco=0; ireco<HPSTauPt->size(); ireco++){
     if( tauRisoCheck(ireco) ){
       TLorentzVector TauCand;
-      TauCand.SetPtEtaPhiM(  tauPtcorr(ireco), HPSTauEta->at(ireco), HPSTauPhi->at(ireco), 0  ); 
+      TauCand.SetPtEtaPhiM(  HPSTauPt->at(ireco), HPSTauEta->at(ireco), HPSTauPhi->at(ireco), 0  ); 
       if( JetCand.DeltaR(TauCand)<0.5 ) return false;
     }
   }
@@ -484,7 +463,7 @@ bool analysisClass::jetRisoCheck(unsigned int iJetR){
   for(unsigned int ireco=0; ireco<MuonPt->size(); ireco++){
     if( muRisoCheck(ireco) ){
       TLorentzVector MuonCand;
-      MuonCand.SetPtEtaPhiM(  muPtcorr(ireco), MuonEta->at(ireco), MuonPhi->at(ireco), 0  );
+      MuonCand.SetPtEtaPhiM(  MuonPt->at(ireco), MuonEta->at(ireco), MuonPhi->at(ireco), 0  );
       if( JetCand.DeltaR(MuonCand)<0.5 ) return false;
     }
   }
@@ -492,44 +471,12 @@ bool analysisClass::jetRisoCheck(unsigned int iJetR){
   for(unsigned int ireco=0; ireco<ElectronPt->size(); ireco++){
     if( elRisoCheck(ireco) ){
       TLorentzVector ElectronCand;
-      ElectronCand.SetPtEtaPhiM(  elPtcorr(ireco), ElectronEta->at(ireco), ElectronPhi->at(ireco), 0  );
+      ElectronCand.SetPtEtaPhiM(  ElectronPt->at(ireco), ElectronEta->at(ireco), ElectronPhi->at(ireco), 0  );
       if( JetCand.DeltaR(ElectronCand)<0.5 ) return false;
     }
   }
   //
   return true;
-}
-// // //
-bool analysisClass::jetROverlapCheck(unsigned int iJetR){
-  //
-  TLorentzVector JetCand;
-  JetCand.SetPtEtaPhiM( jetPtcorr(iJetR), PFJetEta->at(iJetR), PFJetPhi->at(iJetR), 0  );
-  //
-  for(unsigned int ireco=0; ireco<HPSTauPt->size(); ireco++){
-    if( tauRisoCheck(ireco) ){
-      TLorentzVector TauCand;
-      TauCand.SetPtEtaPhiM(  tauPtcorr(ireco), HPSTauEta->at(ireco), HPSTauPhi->at(ireco), 0  ); 
-      if( JetCand.DeltaR(TauCand)<0.5 ) return false;//overlap with a tau
-    }
-  }
-  //
-  for(unsigned int ireco=0; ireco<MuonPt->size(); ireco++){
-    if( muRisoCheck(ireco) ){
-      TLorentzVector MuonCand;
-      MuonCand.SetPtEtaPhiM(  muPtcorr(ireco), MuonEta->at(ireco), MuonPhi->at(ireco), 0  );
-      if( JetCand.DeltaR(MuonCand)<0.5 ) return false;//overlap with a mu
-    }
-  }
-  //
-  for(unsigned int ireco=0; ireco<ElectronPt->size(); ireco++){
-    if( elRisoCheck(ireco) ){
-      TLorentzVector ElectronCand;
-      ElectronCand.SetPtEtaPhiM(  elPtcorr(ireco), ElectronEta->at(ireco), ElectronPhi->at(ireco), 0  );
-      if( JetCand.DeltaR(ElectronCand)<0.5 ) return false;//overlap with an electron
-    }
-  }
-  //
-  return true;//no overlap
 }
 // // //
 bool analysisClass::tauRisoCheck(unsigned int iTauR){
@@ -540,19 +487,19 @@ bool analysisClass::tauRisoCheck(unsigned int iTauR){
   // All charged hadrons and strips are required to be contained within a cone of size  DeltaR = 2.8GeV / pT
   //
   TLorentzVector TauCand;
-  TauCand.SetPtEtaPhiM(  tauPtcorr(iTauR), HPSTauEta->at(iTauR), HPSTauPhi->at(iTauR), 0  ); 
+  TauCand.SetPtEtaPhiM(  HPSTauPt->at(iTauR), HPSTauEta->at(iTauR), HPSTauPhi->at(iTauR), 0  ); 
   //
   for(unsigned int ireco=0; ireco<MuonPt->size(); ireco++){
     if( muRisoCheck(ireco) ){
       TLorentzVector MuonCand;
-      MuonCand.SetPtEtaPhiM(  muPtcorr(ireco), MuonEta->at(ireco), MuonPhi->at(ireco), 0  );
+      MuonCand.SetPtEtaPhiM(  MuonPt->at(ireco), MuonEta->at(ireco), MuonPhi->at(ireco), 0  );
       if( TauCand.DeltaR(MuonCand)<0.3 ) return false;
     }
   }
   for(unsigned int ireco=0; ireco<ElectronPt->size(); ireco++){
     if( elRisoCheck(ireco) ){
       TLorentzVector ElectronCand;
-      ElectronCand.SetPtEtaPhiM(  elPtcorr(ireco), ElectronEta->at(ireco), ElectronPhi->at(ireco), 0  );
+      ElectronCand.SetPtEtaPhiM(  ElectronPt->at(ireco), ElectronEta->at(ireco), ElectronPhi->at(ireco), 0  );
       if( TauCand.DeltaR(ElectronCand)<0.3 ) return false;
     }
   }
@@ -643,8 +590,8 @@ bool analysisClass::isMuTauDR0p35() //uses given Definition, including DeltaR se
     if(!muRisoCheck(iMuR)       ) continue;
     for(unsigned int iTauR=0; iTauR<HPSTauPt->size(); iTauR++){
       if(!tauRisoCheck(iTauR)) continue;
-      Mu.SetPtEtaPhiM( muPtcorr(iMuR), MuonEta->at(iMuR), MuonPhi->at(iMuR), 0 );
-      Tau.SetPtEtaPhiM( tauPtcorr(iTauR), HPSTauEta->at(iTauR), HPSTauPhi->at(iTauR), 0 );
+      Mu.SetPtEtaPhiM( MuonPt->at(iMuR), MuonEta->at(iMuR), MuonPhi->at(iMuR), 0 );
+      Tau.SetPtEtaPhiM( HPSTauPt->at(iTauR), HPSTauEta->at(iTauR), HPSTauPhi->at(iTauR), 0 );
       if( Mu.DeltaR(Tau)>0.35 ) return true;
     }
   }
@@ -661,8 +608,8 @@ bool analysisClass::isMuTauDR0p30() //uses given Definition, including DeltaR se
     if(!muRisoCheck(iMuR)       ) continue;
     for(unsigned int iTauR=0; iTauR<HPSTauPt->size(); iTauR++){
       if(!tauRisoCheck(iTauR)) continue;
-      Mu.SetPtEtaPhiM( muPtcorr(iMuR), MuonEta->at(iMuR), MuonPhi->at(iMuR), 0 );
-      Tau.SetPtEtaPhiM( tauPtcorr(iTauR), HPSTauEta->at(iTauR), HPSTauPhi->at(iTauR), 0 );
+      Mu.SetPtEtaPhiM( MuonPt->at(iMuR), MuonEta->at(iMuR), MuonPhi->at(iMuR), 0 );
+      Tau.SetPtEtaPhiM( HPSTauPt->at(iTauR), HPSTauEta->at(iTauR), HPSTauPhi->at(iTauR), 0 );
       if( Mu.DeltaR(Tau)>0.30 ) return true;
     }
   }
@@ -679,8 +626,8 @@ bool analysisClass::isMuMuDR0p30() //uses given Definition, including DeltaR sep
     if( !muRisoCheck(iMuR)       ) continue;
     for(unsigned int iMuR2=(iMuR+1);  iMuR2<MuonPt->size();     iMuR2++){
       if( !muRisoCheck(iMuR2)       ) continue;
-      Mu1.SetPtEtaPhiM( muPtcorr(iMuR),  MuonEta->at(iMuR),  MuonPhi->at(iMuR), 0 );
-      Mu2.SetPtEtaPhiM( muPtcorr(iMuR2), MuonEta->at(iMuR2), MuonPhi->at(iMuR2), 0 );
+      Mu1.SetPtEtaPhiM( MuonPt->at(iMuR),  MuonEta->at(iMuR),  MuonPhi->at(iMuR), 0 );
+      Mu2.SetPtEtaPhiM( MuonPt->at(iMuR2), MuonEta->at(iMuR2), MuonPhi->at(iMuR2), 0 );
       if( Mu1.DeltaR(Mu2)>0.30 ) return true;
     }
   }
@@ -700,8 +647,8 @@ bool analysisClass::isMuEl_NoTau_DR0p30() //uses given Definition, including Del
     if(!muRisoCheck(iMuR)       ) continue;
     for(unsigned int iElR=0; iElR<ElectronPt->size(); iElR++){
       if(!elRisoCheck(iElR)) continue;
-      Mu.SetPtEtaPhiM( muPtcorr(iMuR), MuonEta->at(iMuR), MuonPhi->at(iMuR), 0 );
-      El.SetPtEtaPhiM( elPtcorr(iElR), ElectronEta->at(iElR), ElectronPhi->at(iElR), 0 );
+      Mu.SetPtEtaPhiM( MuonPt->at(iMuR), MuonEta->at(iMuR), MuonPhi->at(iMuR), 0 );
+      El.SetPtEtaPhiM( ElectronPt->at(iElR), ElectronEta->at(iElR), ElectronPhi->at(iElR), 0 );
       if( Mu.DeltaR(El)>0.30 ) return true;
     }
   }
@@ -719,13 +666,13 @@ bool analysisClass::isZToMuMu(){
   //
   for(unsigned int iMu1=0; iMu1<MuonPt->size(); iMu1++){//loop over all mu1
     if( !muRisoCheck( iMu1 )  ) continue;
-    Mu1.SetPtEtaPhiM( muPtcorr(iMu1), MuonEta->at(iMu1), MuonPhi->at(iMu1), 0 );
+    Mu1.SetPtEtaPhiM( MuonPt->at(iMu1), MuonEta->at(iMu1), MuonPhi->at(iMu1), 0 );
     //
     for(unsigned int iMu2=0; iMu2<MuonPt->size(); iMu2++){//loop over all mu2
       if(  iMu2 == iMu1                                     ) continue;
       if(  MuonCharge->at( iMu2 ) == MuonCharge->at( iMu1 ) ) continue;
       if( !muRisoCheck( iMu2 )                   ) continue;
-      Mu2.SetPtEtaPhiM( muPtcorr(iMu2), MuonEta->at(iMu2), MuonPhi->at(iMu2), 0 );
+      Mu2.SetPtEtaPhiM( MuonPt->at(iMu2), MuonEta->at(iMu2), MuonPhi->at(iMu2), 0 );
       //
       //if( fabs((Mu1+Mu2).M()-Zmass)<5 ) return true; //check if Mu-Mu Mass is within 5 GeV of Zmass.
       if( fabs((Mu1+Mu2).M()-Zmass)<Zmass*0.10 ) return true; //check if Mu-Mu Mass is within 10% of Zmass.
@@ -744,13 +691,13 @@ bool analysisClass::isZToTauTau(){
   //
   for(unsigned int iTau1=0; iTau1<HPSTauPt->size(); iTau1++){//loop over all tau1
     if( !tauRisoCheck( iTau1 )  ) continue;
-    Tau1.SetPtEtaPhiM( tauPtcorr(iTau1), HPSTauEta->at(iTau1), HPSTauPhi->at(iTau1), 0 );
+    Tau1.SetPtEtaPhiM( HPSTauPt->at(iTau1), HPSTauEta->at(iTau1), HPSTauPhi->at(iTau1), 0 );
     //
     for(unsigned int iTau2=0; iTau2<HPSTauPt->size(); iTau2++){//loop over all tau2
       if(  iTau2 == iTau1                                         ) continue;
       if(  HPSTauCharge->at( iTau2 ) == HPSTauCharge->at( iTau1 ) ) continue;
       if( !tauRisoCheck( iTau2 )                 ) continue;
-      Tau2.SetPtEtaPhiM( tauPtcorr(iTau2), HPSTauEta->at(iTau2), HPSTauPhi->at(iTau2), 0 );
+      Tau2.SetPtEtaPhiM( HPSTauPt->at(iTau2), HPSTauEta->at(iTau2), HPSTauPhi->at(iTau2), 0 );
       //
       if( fabs((Tau1+Tau2).M()-Zmass)<5 ) return true; //check if Tau-Tau Mass is within 5 GeV of Zmass.
     }
@@ -790,7 +737,7 @@ double analysisClass::SingleMu_TriggerEfficiencyWeights(){
   if( isData             ) return 1;
   if( ltemMuTau.size()<2 ) return 0;
   //
-  return IsoMu24e2p1_Eff( muPtcorr(ltemMuTau[0]), MuonEta->at(ltemMuTau[0]) );
+  return IsoMu24e2p1_Eff( MuonPt->at(ltemMuTau[0]), MuonEta->at(ltemMuTau[0]) );
 }
 // // //
 double analysisClass::IsoMu24e2p1_Eff_Preselection( ){
@@ -800,8 +747,8 @@ double analysisClass::IsoMu24e2p1_Eff_Preselection( ){
   for(unsigned int iMuR=0;  iMuR<MuonPt->size();     iMuR++){
     if( !muRisoCheck(iMuR) ) continue;
     if( RecoHLTdeltaRmin_SingleMuTrigger(iMuR)<0.15 ){
-      allFail_MC*=(1-IsoMu24e2p1_Eff_MC( muPtcorr(iMuR), MuonEta->at(iMuR) ));
-      allFail_Data*=(1-IsoMu24e2p1_Eff_Data( muPtcorr(iMuR), MuonEta->at(iMuR) ));
+      allFail_MC*=(1-IsoMu24e2p1_Eff_MC( MuonPt->at(iMuR), MuonEta->at(iMuR) ));
+      allFail_Data*=(1-IsoMu24e2p1_Eff_Data( MuonPt->at(iMuR), MuonEta->at(iMuR) ));
     }
   }
   //
@@ -966,8 +913,8 @@ double analysisClass::DoubleMu_TriggerEfficiencyWeights(){
   if( ltemMuMu.size()<2 ) return 0;
   //
   double TotalSF=1;
-  double SFmu1=Mu17_Mu8_Eff( muPtcorr(ltemMuMu[0]), MuonEta->at(ltemMuMu[0]) );
-  double SFmu2=Mu17_Mu8_Eff( muPtcorr(ltemMuMu[1]), MuonEta->at(ltemMuMu[1]) );
+  double SFmu1=Mu17_Mu8_Eff( MuonPt->at(ltemMuMu[0]), MuonEta->at(ltemMuMu[0]) );
+  double SFmu2=Mu17_Mu8_Eff( MuonPt->at(ltemMuMu[1]), MuonEta->at(ltemMuMu[1]) );
   TotalSF=SFmu1*SFmu2;
   //
   return TotalSF;
@@ -994,9 +941,9 @@ bool  analysisClass::muRMigrationCheck( unsigned int x){};
 double analysisClass::muJetDeltaRmin( unsigned int iMuR ){
   TLorentzVector mucand, jetcand;
   double muJetDeltaRmin=9999.0;
-  mucand.SetPtEtaPhiM( muPtcorr(iMuR), MuonEta->at(iMuR), MuonPhi->at(iMuR), 0 );
+  mucand.SetPtEtaPhiM( MuonPt->at(iMuR), MuonEta->at(iMuR), MuonPhi->at(iMuR), 0 );
   for(unsigned int iJetR=0; iJetR<PFJetPt->size(); iJetR++){
-    jetcand.SetPtEtaPhiM( jetPtcorr(iJetR),  PFJetEta->at(iJetR),  PFJetPhi->at(iJetR),  0 );
+    jetcand.SetPtEtaPhiM( PFJetPt->at(iJetR),  PFJetEta->at(iJetR),  PFJetPhi->at(iJetR),  0 );
     if( mucand.DeltaR(jetcand)<0.05 || (PFJetMuonEnergyFraction->at(iJetR)>0.70 && mucand.DeltaR(jetcand)<0.5) )  continue;
     if( mucand.DeltaR(jetcand)<0.5 ){
       jetcand=(jetcand-mucand);
@@ -1012,59 +959,15 @@ double analysisClass::muJetDeltaRmin( unsigned int iMuR ){
 double analysisClass::tauJetDeltaRmin( unsigned int iTauR ){
   TLorentzVector taucand, jetcand;
   double tauJetDeltaRmin=9999.0;
-  taucand.SetPtEtaPhiM( tauPtcorr(iTauR), HPSTauEta->at(iTauR), HPSTauPhi->at(iTauR), 0 );
+  taucand.SetPtEtaPhiM( HPSTauPt->at(iTauR), HPSTauEta->at(iTauR), HPSTauPhi->at(iTauR), 0 );
   for(unsigned int iJetR=0; iJetR<PFJetPt->size(); iJetR++){
-    if( jetPtcorr(iJetR)<20       ) continue;
+    if( PFJetPt->at(iJetR)<20       ) continue;
     if( fabs(PFJetEta->at(iJetR))>4 ) continue;
-    jetcand.SetPtEtaPhiM( jetPtcorr(iJetR),  PFJetEta->at(iJetR),  PFJetPhi->at(iJetR),  0 );
+    jetcand.SetPtEtaPhiM( PFJetPt->at(iJetR),  PFJetEta->at(iJetR),  PFJetPhi->at(iJetR),  0 );
     if( taucand.DeltaR(jetcand)<tauJetDeltaRmin && taucand.DeltaR(jetcand)>0.2 ){ tauJetDeltaRmin=taucand.DeltaR(jetcand);}
   }
   //
   return tauJetDeltaRmin;
-}
-// // //
-void analysisClass::ResetAllSFs_KEEPERROR(){
-  //muon prompt rate scale factors (none for muon fake rate)
-  if( muPRdR3B_SF>1.0 ){ muPRdR3B_SFerr = muPRdR3B_SFerr*(1.0/muPRdR3B_SF); } 
-  muPRdR3B_SF    = 1; 
-  if( muPRdR2B_SF>1.0 ){ muPRdR2B_SFerr = muPRdR2B_SFerr*(1.0/muPRdR2B_SF); } 
-  muPRdR2B_SF    = 1;
-  if( muPRdR1B_SF>1.0 ){ muPRdR1B_SFerr = muPRdR1B_SFerr*(1.0/muPRdR1B_SF); } 
-  muPRdR1B_SF    = 1;
-  if( muPRdR3E_SF>1.0 ){ muPRdR3E_SFerr = muPRdR3E_SFerr*(1.0/muPRdR3E_SF); } 
-  muPRdR3E_SF    = 1;
-  if( muPRdR2E_SF>1.0 ){ muPRdR2E_SFerr = muPRdR2E_SFerr*(1.0/muPRdR2E_SF); } 
-  muPRdR2E_SF    = 1;
-  if( muPRdR1E_SF>1.0 ){ muPRdR1E_SFerr = muPRdR2E_SFerr*(1.0/muPRdR1E_SF); } 
-  muPRdR1E_SF    = 1;
-  //
-  //tau prompt rate scale factors
-  if( tauPRdR3B_SF>1.0 ){ tauPRdR3B_SFerr = tauPRdR3B_SFerr*(1.0/tauPRdR3B_SF); }
-  tauPRdR3B_SF    = 1;
-  if( tauPRdR2B_SF>1.0 ){ tauPRdR2B_SFerr = tauPRdR2B_SFerr*(1.0/tauPRdR2B_SF); }
-  tauPRdR2B_SF    = 1;
-  if( tauPRdR1B_SF>1.0 ){ tauPRdR1B_SFerr = tauPRdR1B_SFerr*(1.0/tauPRdR1B_SF); }
-  tauPRdR1B_SF    = 1;
-  if( tauPRdR3E_SF>1.0 ){ tauPRdR3E_SFerr = tauPRdR3E_SFerr*(1.0/tauPRdR3E_SF); }
-  tauPRdR3E_SF    = 1;
-  if( tauPRdR2E_SF>1.0 ){ tauPRdR2E_SFerr = tauPRdR2E_SFerr*(1.0/tauPRdR2E_SF); }
-  tauPRdR2E_SF    = 1;
-  if( tauPRdR1E_SF>1.0 ){ tauPRdR1E_SFerr = tauPRdR1E_SFerr*(1.0/tauPRdR1E_SF); }
-  tauPRdR1E_SF    = 1;
-  //
-  //tau fake rate scale factors
-  if( tauFRdR3B_SF>1.0 ){ tauFRdR3B_SFerr = tauFRdR3B_SFerr*(1.0/tauFRdR3B_SF); }
-  tauFRdR3B_SF    = 1;
-  if( tauFRdR2B_SF>1.0 ){ tauFRdR2B_SFerr = tauFRdR2B_SFerr*(1.0/tauFRdR2B_SF); }
-  tauFRdR2B_SF    = 1;
-  if( tauFRdR1B_SF>1.0 ){ tauFRdR1B_SFerr = tauFRdR1B_SFerr*(1.0/tauFRdR1B_SF); }
-  tauFRdR1B_SF    = 1;
-  if( tauFRdR3E_SF>1.0 ){ tauFRdR3E_SFerr = tauFRdR3E_SFerr*(1.0/tauFRdR3E_SF); }
-  tauFRdR3E_SF    = 1;
-  if( tauFRdR2E_SF>1.0 ){ tauFRdR2E_SFerr = tauFRdR2E_SFerr*(1.0/tauFRdR2E_SF); }
-  tauFRdR2E_SF    = 1;
-  if( tauFRdR1E_SF>1.0 ){ tauFRdR1E_SFerr = tauFRdR1E_SFerr*(1.0/tauFRdR1E_SF); }
-  tauFRdR1E_SF    = 1;
 }
 // // //
 void analysisClass::ResetAllSFs(){
@@ -1092,8 +995,8 @@ void analysisClass::ResetAllSFs(){
 // // //
 void analysisClass::InitMuonSFs(unsigned int ltemMu){
   InitMuonFunctionParameters();
-  //double muPt=muPtcorr(ltemMuTau[0]);
-  double muPt=muPtcorr(ltemMu);
+  //double muPt=MuonPt->at(ltemMuTau[0]);
+  double muPt=MuonPt->at(ltemMu);
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
   // CorrFactor( double A0, double A1, double A2, double pt, double B0, double B1, double B2 ){  //
   // CorrFactor=DATA/Wjets                                                                       //
@@ -1139,72 +1042,13 @@ void analysisClass::InitTauSFs(){
 }
 // // //
 double analysisClass::tauFR_STcorrection( unsigned int iTauR ){
-  double ST_ = ST();
-  if( ST_<400 ) return 0;
-  bool   isBarrel_=false;
-  if( fabs(HPSTauEta->at(iTauR))<1.5 ) isBarrel_=true;
   double tauJetDeltaRmin_=tauJetDeltaRmin(iTauR);
-  double slope_=0;
-  //Barrel
-  //3) %decrease:  1.04937916111 +/- 1.96913214217 : slope:  1.44995439579 +/- 2.72080093757 e-05
-  //2) %decrease:  3.76629993651 +/- 2.97441820927 : slope:  4.64899405799 +/- 3.67152186867 e-05
-  //1) %decrease:  1.61859936226 +/- 4.2575632317  : slope:  1.72144823901 +/- 4.52809688337 e-05
-  //Endcap
-  //1) N/A
-  //2) %decrease:  8.48449655111 +/- 7.15889810989
-  //3) N/A
-  if( tauJetDeltaRmin_>=0.7 && isBarrel_ ) slope_=1.5e-5;
-  return slope_*(ST_-400.0);
-}
-// // //
-double analysisClass::tauFR_STcorrectionError( unsigned int iTauR ){
-  return tauFR_STcorrection( iTauR ); //100% on the slope
-}
-// // //
-double analysisClass::tauPR_STcorrection( unsigned int iTauR ){
-  double ST_ = ST();
-  if( ST_<400 ) return 0;
-  bool   isBarrel_=false;
-  if( fabs(HPSTauEta->at(iTauR))<1.5 ) isBarrel_=true;
-  double tauJetDeltaRmin_=tauJetDeltaRmin(iTauR);
-  double slope_=0;
-  //dr3) %decrease:  1.31878004647 +/- 0.114942769887  : slope:  7.98897373973 +/- 0.696306235944 e-05
-  //dr2) %decrease:  1.64741377278 +/- 0.206149830536  : slope:  8.73170447916 +/- 1.09264559299 e-05
-  //dr1) %decrease:  2.53529667149 +/- 0.34006408606   : slope:  11.2601614215 +/- 1.51034651911 e-05
-  if(                          tauJetDeltaRmin_>=1.0 && isBarrel_ ) slope_=8.0e-5;
-  if( tauJetDeltaRmin_< 1.0 && tauJetDeltaRmin_>=0.8 && isBarrel_ ) slope_=8.7e-5;
-  if( tauJetDeltaRmin_< 0.8 && tauJetDeltaRmin_>=0.7 && isBarrel_ ) slope_=11.3e-5;
-  //
-  //3) %decrease:  0.663781078609 +/- 0.383807341426        : slope:  4.28354916833 +/- 2.47680699427 e-05
-  //2) %decrease:  N/A (0.00487712462848 +/- 31.5495380986) : slope:  0.02893124009 +/- 187.152744902 e-05
-  //1) %decrease:  2.94732920613 +/- 1.21800191413          : slope:  14.953039925  +/- 6.17943567784 e-05
-  if(                          tauJetDeltaRmin_>=1.0 && !isBarrel_ ) slope_=4.3e-5;
-  if( tauJetDeltaRmin_< 1.0 && tauJetDeltaRmin_>=0.8 && !isBarrel_ ) slope_=4.3e-5;
-  if( tauJetDeltaRmin_< 0.8 && tauJetDeltaRmin_>=0.7 && !isBarrel_ ) slope_=15.0e-5;
-  return slope_*(ST_-400.0);
-}
-// // //
-double analysisClass::tauPR_STcorrectionError( unsigned int iTauR ){
-  double ST_ = ST();
-  if( ST_<400 ) return 0;
-  bool   isBarrel_=false;
-  if( fabs(HPSTauEta->at(iTauR))<1.5 ) isBarrel_=true;
-  double tauJetDeltaRmin_=tauJetDeltaRmin(iTauR);
-  double slope_=0;
-  //dr3) %decrease:  1.31878004647 +/- 0.114942769887  : slope:  7.98897373973 +/- 0.696306235944 e-05
-  //dr2) %decrease:  1.64741377278 +/- 0.206149830536  : slope:  8.73170447916 +/- 1.09264559299 e-05
-  //dr1) %decrease:  2.53529667149 +/- 0.34006408606   : slope:  11.2601614215 +/- 1.51034651911 e-05
-  if(                          tauJetDeltaRmin_>=1.0 && isBarrel_ ) slope_=0.7e-5;
-  if( tauJetDeltaRmin_< 1.0 && tauJetDeltaRmin_>=0.8 && isBarrel_ ) slope_=1.1e-5;
-  if( tauJetDeltaRmin_< 0.8 && tauJetDeltaRmin_>=0.7 && isBarrel_ ) slope_=1.5e-5;
-  //
-  //3) %decrease:  0.663781078609 +/- 0.383807341426        : slope:  4.28354916833 +/- 2.47680699427 e-05
-  //2) %decrease:  N/A (0.00487712462848 +/- 31.5495380986) : slope:  0.02893124009 +/- 187.152744902 e-05
-  //1) %decrease:  2.94732920613 +/- 1.21800191413          : slope:  14.953039925  +/- 6.17943567784 e-05
-  if(                          tauJetDeltaRmin_>=1.0 && !isBarrel_ ) slope_=2.5e-5;
-  if( tauJetDeltaRmin_< 1.0 && tauJetDeltaRmin_>=0.8 && !isBarrel_ ) slope_=2.5e-5;
-  if( tauJetDeltaRmin_< 0.8 && tauJetDeltaRmin_>=0.7 && !isBarrel_ ) slope_=6.2e-5;
-  return slope_*(ST_-400.0);
+  double st_=ST();
+  return  -0.000025*st_;                   
+  //pure fit tt:  0.13805332837  +/-  0.00487078668181   prob: 0.743815371759
+  //pure fit tt:  -4.72384240869e-06  +/-  1.36541955415e-05
+  //pure fit w:  0.133074288233  +/-  0.00451223921048   prob: 0.0510241740179
+  //pure fit w:  -6.1679880111e-06  +/-  2.1570939223e-05
 }
 // // //
 double analysisClass::tauFR( unsigned int iTauR ){
@@ -1212,17 +1056,52 @@ double analysisClass::tauFR( unsigned int iTauR ){
   bool   isBarrel_=false;
   if( fabs(HPSTauEta->at(iTauR))<1.5 ) isBarrel_=true;
   //
-  double tauFR_  = 0;
-  double stcorr_ = tauFR_STcorrection(iTauR);//this is currently set to zero!
-  if(                          tauJetDeltaRmin_>=1.0 && isBarrel_ ) tauFR_=(0.132-stcorr_)*tauFRdR3B_SF;
-  if( tauJetDeltaRmin_< 1.0 && tauJetDeltaRmin_>=0.8 && isBarrel_ ) tauFR_=(0.121-stcorr_)*tauFRdR2B_SF;
-  if( tauJetDeltaRmin_< 0.8 && tauJetDeltaRmin_>=0.7 && isBarrel_ ) tauFR_=(0.113-stcorr_)*tauFRdR1B_SF;
+  //Vloose-Tight (BARREL) -- data MC mix values
+  //if( tauJetDeltaRmin_>1.0 && isBarrel_ ) return 0.142;
+  //if( tauJetDeltaRmin_>0.8 && isBarrel_ ) return 0.141;
+  //if( tauJetDeltaRmin_>0.7 && isBarrel_ ) return 0.140;
+  // MC only
+  //if( tauJetDeltaRmin_>1.0 && isBarrel_ ) return 0.131;
+  //if( tauJetDeltaRmin_>0.8 && isBarrel_ ) return 0.120;
+  //if( tauJetDeltaRmin_>0.7 && isBarrel_ ) return 0.106;
   //
-  if(                          tauJetDeltaRmin_>=1.0 && !isBarrel_ ) tauFR_=(0.163-stcorr_)*tauFRdR3E_SF;
-  if( tauJetDeltaRmin_< 1.0 && tauJetDeltaRmin_>=0.8 && !isBarrel_ ) tauFR_=(0.153-stcorr_)*tauFRdR2E_SF;
-  if( tauJetDeltaRmin_< 0.8 && tauJetDeltaRmin_>=0.7 && !isBarrel_ ) tauFR_=(0.133-stcorr_)*tauFRdR1E_SF;
+  // MC mix, Data corr. 
+  // for different values of lambda, use the Excel worksheet (PromptAndFakeRates.xlsx)
+  // lambda=0.75 +\- 0.25
+  //if( tauJetDeltaRmin_>=1.0 && isBarrel_ ) return 0.135*tauFRdR3B_SF;
+  //if( tauJetDeltaRmin_>=0.8 && isBarrel_ ) return 0.122*tauFRdR2B_SF;
+  //if( tauJetDeltaRmin_>=0.7 && isBarrel_ ) return 0.106*tauFRdR1B_SF;
   //
-  return tauFR_;
+  // lambda=0.5 +\- 0.5
+  //if( tauJetDeltaRmin_>=1.0 && isBarrel_ ) return 0.134*tauFRdR3B_SF;
+  //if( tauJetDeltaRmin_>=0.8 && isBarrel_ ) return 0.124*tauFRdR2B_SF;
+  //if( tauJetDeltaRmin_>=0.7 && isBarrel_ ) return 0.108*tauFRdR1B_SF;
+  // tau pt > 35
+  if( tauJetDeltaRmin_>=1.0 && isBarrel_ ) return 0.132*tauFRdR3B_SF;
+  if( tauJetDeltaRmin_>=0.8 && isBarrel_ ) return 0.121*tauFRdR2B_SF;
+  if( tauJetDeltaRmin_>=0.7 && isBarrel_ ) return 0.113*tauFRdR1B_SF;
+  //
+  //Vloose-Tight (ENDCAP) -- data MC mix values
+  //if( tauJetDeltaRmin_>1.0 && !isBarrel_ ) return 0.178;
+  //if( tauJetDeltaRmin_>0.8 && !isBarrel_ ) return 0.175;
+  //if( tauJetDeltaRmin_>0.7 && !isBarrel_ ) return 0.172;
+  // MC only
+  //if( tauJetDeltaRmin_>1.0 && !isBarrel_ ) return 0.163;
+  //if( tauJetDeltaRmin_>0.8 && !isBarrel_ ) return 0.149;
+  //if( tauJetDeltaRmin_>0.7 && !isBarrel_ ) return 0.130;
+  //
+  // MC mix, Data corr.
+  // for different values of lambda, use the Excel worksheet (PromptAndFakeRates.xlsx)
+  // lambda=0.75 +\- 0.25
+  //if( tauJetDeltaRmin_>=1.0 && !isBarrel_ ) return 0.163*tauFRdR3E_SF;
+  //if( tauJetDeltaRmin_>=0.8 && !isBarrel_ ) return 0.147*tauFRdR2E_SF;
+  //if( tauJetDeltaRmin_>=0.7 && !isBarrel_ ) return 0.123*tauFRdR1E_SF;
+  // lambda=0.5 +\- 0.5
+  if( tauJetDeltaRmin_>=1.0 && !isBarrel_ ) return 0.163*tauFRdR3E_SF;
+  if( tauJetDeltaRmin_>=0.8 && !isBarrel_ ) return 0.153*tauFRdR2E_SF;
+  if( tauJetDeltaRmin_>=0.7 && !isBarrel_ ) return 0.133*tauFRdR1E_SF;
+  //
+  return 0;
 }
 // // //
 double analysisClass::QuadSum( double A, double B ){
@@ -1233,78 +1112,92 @@ double analysisClass::tauFRE( unsigned int iTauR ){
   double tauJetDeltaRmin_=tauJetDeltaRmin(iTauR);
   bool   isBarrel_=false;
   if( fabs(HPSTauEta->at(iTauR))<1.5 ) isBarrel_=true;
+  //-- data MC mix values
+  //if( tauJetDeltaRmin_>1.0 && isBarrel_ ) return 0.008;
+  //if( tauJetDeltaRmin_>0.8 && isBarrel_ ) return 0.013;
+  //if( tauJetDeltaRmin_>0.7 && isBarrel_ ) return 0.012;
+  // MC only
+  //if( tauJetDeltaRmin_>1.0 && isBarrel_ ) return QuadSum(0.014,0.002);
+  //if( tauJetDeltaRmin_>0.8 && isBarrel_ ) return QuadSum(0.030,0.005);
+  //if( tauJetDeltaRmin_>0.7 && isBarrel_ ) return QuadSum(0.023,0.007);
   //
-  double tauFRE_=0;
-  double stcorr_    = tauFR_STcorrection(iTauR);
-  double stcorrErr_ = tauFR_STcorrectionError(iTauR);
-  double stcorrErrRatio_=0;
-  if( stcorr_>0 ) stcorrErrRatio_=stcorrErr_/stcorr_;
+  // MC mix, Data corr.
+  // for different values of lambda, use the Excel worksheet (PromptAndFakeRates.xlsx)
+  //lambda=0.75 +\- 0.25
+  //if( tauJetDeltaRmin_>=1.0 && isBarrel_ ) return QuadSum( 0.002/0.135, tauFRdR3B_SFerr/tauFRdR3B_SF )*tauFR(iTauR);
+  //if( tauJetDeltaRmin_>=0.8 && isBarrel_ ) return QuadSum( 0.003/0.122, tauFRdR2B_SFerr/tauFRdR2B_SF )*tauFR(iTauR);
+  //if( tauJetDeltaRmin_>=0.7 && isBarrel_ ) return QuadSum( 0.004/0.106, tauFRdR1B_SFerr/tauFRdR1B_SF )*tauFR(iTauR);
+  //lambda=0.5 +\- 0.5
+  //if( tauJetDeltaRmin_>=1.0 && isBarrel_ ) return QuadSum( 0.003/0.134, tauFRdR3B_SFerr/tauFRdR3B_SF )*tauFR(iTauR);
+  //if( tauJetDeltaRmin_>=0.8 && isBarrel_ ) return QuadSum( 0.004/0.124, tauFRdR2B_SFerr/tauFRdR2B_SF )*tauFR(iTauR);
+  //if( tauJetDeltaRmin_>=0.7 && isBarrel_ ) return QuadSum( 0.006/0.108, tauFRdR1B_SFerr/tauFRdR1B_SF )*tauFR(iTauR);
+  // tau pt > 35
+  if( tauJetDeltaRmin_>=1.0 && isBarrel_ ) return QuadSum( 0.008/0.132, tauFRdR3B_SFerr/tauFRdR3B_SF )*tauFR(iTauR);
+  if( tauJetDeltaRmin_>=0.8 && isBarrel_ ) return QuadSum( 0.010/0.121, tauFRdR2B_SFerr/tauFRdR2B_SF )*tauFR(iTauR);
+  if( tauJetDeltaRmin_>=0.7 && isBarrel_ ) return QuadSum( 0.007/0.113, tauFRdR1B_SFerr/tauFRdR1B_SF )*tauFR(iTauR);
   //
-  // rate = ( ptPART + stPART )*SF = ptPART*SF + stPART*SF =  OLD +  stPART*SF
-  if(                          tauJetDeltaRmin_>=1.0 && isBarrel_ ){
-    //tauFRE_=QuadSum( 0.008/0.132, tauFRdR3B_SFerr/tauFRdR3B_SF )*tauFR(iTauR);
-    tauFRE_=QuadSum( QuadSum( 0.008/0.132, tauFRdR3B_SFerr/tauFRdR3B_SF )*0.132*tauFRdR3B_SF,
-		     QuadSum( stcorrErrRatio_, tauFRdR3B_SFerr/tauFRdR3B_SF )*stcorr_*tauFRdR3B_SF );
-  }
-  if( tauJetDeltaRmin_< 1.0 && tauJetDeltaRmin_>=0.8 && isBarrel_ ){
-    //tauFRE_=QuadSum( 0.010/0.121, tauFRdR2B_SFerr/tauFRdR2B_SF )*tauFR(iTauR);
-    tauFRE_=QuadSum( QuadSum( 0.010/0.121, tauFRdR2B_SFerr/tauFRdR2B_SF )*0.121*tauFRdR2B_SF,
-		     QuadSum( stcorrErrRatio_, tauFRdR2B_SFerr/tauFRdR2B_SF )*stcorr_*tauFRdR2B_SF );
-  }
-  if( tauJetDeltaRmin_< 0.8 && tauJetDeltaRmin_>=0.7 && isBarrel_ ){
-    //tauFRE_=QuadSum( 0.007/0.113, tauFRdR1B_SFerr/tauFRdR1B_SF )*tauFR(iTauR);
-    tauFRE_=QuadSum( QuadSum( 0.007/0.113, tauFRdR1B_SFerr/tauFRdR1B_SF )*0.113*tauFRdR1B_SF,
-		     QuadSum( stcorrErrRatio_, tauFRdR1B_SFerr/tauFRdR1B_SF )*stcorr_*tauFRdR1B_SF );
-  }
+  //-- data MC mix values
+  //if( tauJetDeltaRmin_>1.0 && !isBarrel_ ) return 0.012;
+  //if( tauJetDeltaRmin_>0.8 && !isBarrel_ ) return 0.025;
+  //if( tauJetDeltaRmin_>0.7 && !isBarrel_ ) return 0.052;
+  // MC only
+  //if( tauJetDeltaRmin_>1.0 && !isBarrel_ ) return QuadSum(0.018,0.004);
+  //if( tauJetDeltaRmin_>0.8 && !isBarrel_ ) return QuadSum(0.014,0.011);
+  //if( tauJetDeltaRmin_>0.7 && !isBarrel_ ) return QuadSum(0.025,0.015);
   //
-  if(                          tauJetDeltaRmin_>=1.0 && !isBarrel_ ){
-    //tauFRE_=QuadSum( 0.008/0.163, tauFRdR3E_SFerr/tauFRdR3E_SF )*tauFR(iTauR);
-    tauFRE_=QuadSum( QuadSum( 0.008/0.163, tauFRdR3E_SFerr/tauFRdR3E_SF )*0.163*tauFRdR3E_SF,
-		     QuadSum( stcorrErrRatio_, tauFRdR3E_SFerr/tauFRdR3E_SF )*stcorr_*tauFRdR3E_SF );
-  }
-  if( tauJetDeltaRmin_< 1.0 && tauJetDeltaRmin_>=0.8 && !isBarrel_ ){
-    //tauFRE_=QuadSum( 0.030/0.153, tauFRdR2E_SFerr/tauFRdR2E_SF )*tauFR(iTauR);
-    tauFRE_=QuadSum( QuadSum( 0.030/0.153, tauFRdR2E_SFerr/tauFRdR2E_SF )*0.153*tauFRdR2E_SF,
-		     QuadSum( stcorrErrRatio_, tauFRdR2E_SFerr/tauFRdR2E_SF )*stcorr_*tauFRdR2E_SF );
-  }
-  if( tauJetDeltaRmin_< 0.8 && tauJetDeltaRmin_>=0.7 && !isBarrel_ ){
-    //tauFRE_=QuadSum( 0.024/0.133, tauFRdR1E_SFerr/tauFRdR1E_SF )*tauFR(iTauR);
-    tauFRE_=QuadSum( QuadSum( 0.024/0.133, tauFRdR1E_SFerr/tauFRdR1E_SF )*0.133*tauFRdR1E_SF,
-		     QuadSum( stcorrErrRatio_, tauFRdR1E_SFerr/tauFRdR1E_SF )*stcorr_*tauFRdR1E_SF );
-  }
+  // MC mix, Data corr.
+  // for different values of lambda, use the Excel worksheet (PromptAndFakeRates.xlsx)
+  //lambda=0.75 +\- 0.25
+  //if( tauJetDeltaRmin_>=1.0 && !isBarrel_ ) return QuadSum( 0.003/0.163, tauFRdR3E_SFerr/tauFRdR3E_SF )*tauFR(iTauR);
+  //if( tauJetDeltaRmin_>=0.8 && !isBarrel_ ) return QuadSum( 0.008/0.147, tauFRdR2E_SFerr/tauFRdR2E_SF )*tauFR(iTauR);
+  //if( tauJetDeltaRmin_>=0.7 && !isBarrel_ ) return QuadSum( 0.014/0.123, tauFRdR1E_SFerr/tauFRdR1E_SF )*tauFR(iTauR);
+  //lambda=0.5 +\- 0.5
+  if( tauJetDeltaRmin_>=1.0 && !isBarrel_ ) return QuadSum( 0.008/0.163, tauFRdR3E_SFerr/tauFRdR3E_SF )*tauFR(iTauR);
+  if( tauJetDeltaRmin_>=0.8 && !isBarrel_ ) return QuadSum( 0.030/0.153, tauFRdR2E_SFerr/tauFRdR2E_SF )*tauFR(iTauR);
+  if( tauJetDeltaRmin_>=0.7 && !isBarrel_ ) return QuadSum( 0.024/0.133, tauFRdR1E_SFerr/tauFRdR1E_SF )*tauFR(iTauR);
   //
-  return tauFRE_;
+  return 0;
 }
 // // //
 double analysisClass::tauPR( unsigned int iTauR ){
   double tauJetDeltaRmin_=tauJetDeltaRmin(iTauR);
   bool   isBarrel_=false;
   if( fabs(HPSTauEta->at(iTauR))<1.5 ) isBarrel_=true;
-  double TauPt=tauPtcorr(iTauR);
+  double TauPt=HPSTauPt->at(iTauR);
   double Slambda=0.5;
   double lambda=0.5;
   //
-  double tauPR_=0;
-  double stcorr_ = tauPR_STcorrection(iTauR);
-  if(                          tauJetDeltaRmin_>=1.0 && isBarrel_ ) tauPR_=tauPRdR3B_SF*((0.672*(1-lambda)+(0.618-0.00018*TauPt)*(lambda))-stcorr_);
-  if( tauJetDeltaRmin_< 1.0 && tauJetDeltaRmin_>=0.8 && isBarrel_ ) tauPR_=tauPRdR2B_SF*((0.598*(1-lambda)+(0.539-0.00018*TauPt)*(lambda))-stcorr_);
-  if( tauJetDeltaRmin_< 0.8 && tauJetDeltaRmin_>=0.7 && isBarrel_ ) tauPR_=tauPRdR1B_SF*((0.525*(1-lambda)+(0.463-0.00032*TauPt)*(lambda))-stcorr_);
+  //Vloose-Tight (BARREL) 
+  // MC only
+  //if( tauJetDeltaRmin_>1.0 && isBarrel_ ) return 0.641;
+  //if( tauJetDeltaRmin_>0.8 && isBarrel_ ) return 0.564;
+  //if( tauJetDeltaRmin_>0.7 && isBarrel_ ) return 0.484;
+  // MC mix, Data corr.
+  if( tauJetDeltaRmin_>=1.0 && isBarrel_ ) return tauPRdR3B_SF*(0.672*(1-lambda)+(0.618-0.00018*TauPt)*(lambda));
+  if( tauJetDeltaRmin_>=0.8 && isBarrel_ ) return tauPRdR2B_SF*(0.598*(1-lambda)+(0.539-0.00018*TauPt)*(lambda));
+  if( tauJetDeltaRmin_>=0.7 && isBarrel_ ) return tauPRdR1B_SF*(0.525*(1-lambda)+(0.463-0.00032*TauPt)*(lambda));
   //
-  if(                          tauJetDeltaRmin_>=1.0 && !isBarrel_ ) tauPR_=tauPRdR3E_SF*(((0.692+0.00018*TauPt)*(1-lambda)+0.650*(lambda))-stcorr_);
-  if( tauJetDeltaRmin_< 1.0 && tauJetDeltaRmin_>=0.8 && !isBarrel_ ) tauPR_=tauPRdR2E_SF*((0.634*(1-lambda)+0.587*(lambda))-stcorr_);
-  if( tauJetDeltaRmin_< 0.8 && tauJetDeltaRmin_>=0.7 && !isBarrel_ ) tauPR_=tauPRdR1E_SF*((0.559*(1-lambda)+0.507*(lambda))-stcorr_);
+  //Vloose-Tight (ENDCAP)
+  // MC only
+  //if( tauJetDeltaRmin_>1.0 && !isBarrel_ ) return 0.676;
+  //if( tauJetDeltaRmin_>0.8 && !isBarrel_ ) return 0.612;
+  //if( tauJetDeltaRmin_>0.7 && !isBarrel_ ) return 0.534;
+  // MC mix, Data corr.
+  if( tauJetDeltaRmin_>=1.0 && !isBarrel_ ) return tauPRdR3E_SF*((0.692+0.00018*TauPt)*(1-lambda)+0.650*(lambda));
+  if( tauJetDeltaRmin_>=0.8 && !isBarrel_ ) return tauPRdR2E_SF*(0.634*(1-lambda)+0.587*(lambda));
+  if( tauJetDeltaRmin_>=0.7 && !isBarrel_ ) return tauPRdR1E_SF*(0.559*(1-lambda)+0.507*(lambda));
   //
-  return tauPR_;
+  return 0;
 }
 // // //
 double analysisClass::pol0w_pol1tt_Err( double c1, double Sc1, double c2, double Sc2, double m2, double Sm2, double sf, double Ssf, unsigned int iTauR){
   double Slambda=0.5;
   double lambda=0.5;
-  double TauPt=tauPtcorr(iTauR);
+  double TauPt=HPSTauPt->at(iTauR);
   double c1e2=TMath::Power( Sc1*(1-lambda), 2);
   double c2e2=TMath::Power( Sc2*(lambda), 2);
   double m2e2=TMath::Power( Sm2*(lambda)*TauPt, 2);
-  double lambdae2=TMath::Power( Slambda*(-c1+c2+m2*tauPtcorr(iTauR)), 2);
+  double lambdae2=TMath::Power( Slambda*(-c1+c2+m2*HPSTauPt->at(iTauR)), 2);
   double sfe2=TMath::Power( (c1*(1-lambda)+(c2+m2*TauPt)*lambda)*Ssf, 2);
   return TMath::Power( c1e2+c2e2+m2e2+lambdae2+sfe2, 0.5 );
 }
@@ -1312,11 +1205,11 @@ double analysisClass::pol0w_pol1tt_Err( double c1, double Sc1, double c2, double
 double analysisClass::pol0tt_pol1w_Err( double c1, double Sc1, double c2, double Sc2, double m2, double Sm2, double sf, double Ssf, unsigned int iTauR){
   double Slambda=0.5;
   double lambda=0.5;
-  double TauPt=tauPtcorr(iTauR);
+  double TauPt=HPSTauPt->at(iTauR);
   double c1e2=TMath::Power( Sc1*(lambda), 2);
   double c2e2=TMath::Power( Sc2*(1-lambda), 2);
   double m2e2=TMath::Power( Sm2*(1-lambda)*TauPt, 2);
-  double lambdae2=TMath::Power( Slambda*(c1-c2-m2*tauPtcorr(iTauR)), 2);
+  double lambdae2=TMath::Power( Slambda*(c1-c2-m2*HPSTauPt->at(iTauR)), 2);
   double sfe2=TMath::Power( (c1*lambda+(c2+m2*TauPt)*(1-lambda))*Ssf, 2);
   return TMath::Power( c1e2+c2e2+m2e2+lambdae2+sfe2, 0.5 );
 }
@@ -1325,41 +1218,25 @@ double analysisClass::tauPRE( unsigned int iTauR ){
   double tauJetDeltaRmin_=tauJetDeltaRmin(iTauR);
   bool   isBarrel_=false;
   if( fabs(HPSTauEta->at(iTauR))<1.5 ) isBarrel_=true;
+  // MC only
+  //if( tauJetDeltaRmin_>1.0 && isBarrel_ ) return QuadSum(0.039,0.001);
+  //if( tauJetDeltaRmin_>0.8 && isBarrel_ ) return QuadSum(0.055,0.003);
+  //if( tauJetDeltaRmin_>0.7 && isBarrel_ ) return QuadSum(0.090,0.004);
+  // MC mix, Data corr
+  if( tauJetDeltaRmin_>=1.0 && isBarrel_ ) return pol0w_pol1tt_Err( 0.672,0.001, 0.618,0.001,-0.00018,0.00003, tauPRdR3B_SF,tauPRdR3B_SFerr, iTauR );
+  if( tauJetDeltaRmin_>=0.8 && isBarrel_ ) return pol0w_pol1tt_Err( 0.598,0.003, 0.539,0.002,-0.00018,0.00004, tauPRdR2B_SF,tauPRdR2B_SFerr, iTauR );
+  if( tauJetDeltaRmin_>=0.7 && isBarrel_ ) return pol0w_pol1tt_Err( 0.525,0.005, 0.463,0.002,-0.00032,0.00005, tauPRdR1B_SF,tauPRdR1B_SFerr, iTauR );
   //
-  double tauPRE_=0;
-  double stcorr_    = tauPR_STcorrection(iTauR);
-  double stcorrErr_ = tauPR_STcorrectionError(iTauR);
-  double stcorrErrRatio_=0;
-  if( stcorr_>0 ) stcorrErrRatio_=stcorrErr_/stcorr_;
+  // MC only
+  //if( tauJetDeltaRmin_>1.0 && !isBarrel_ ) return QuadSum(0.033,0.002);
+  //if( tauJetDeltaRmin_>0.8 && !isBarrel_ ) return QuadSum(0.155,0.006);
+  //if( tauJetDeltaRmin_>0.7 && !isBarrel_ ) return QuadSum(0.145,0.011);
+  // MC mix, Data corr
+  if( tauJetDeltaRmin_>=1.0 && !isBarrel_ ) return pol0tt_pol1w_Err( 0.650,0.002, 0.692,0.002,0.00018,0.00005, tauPRdR3E_SF,tauPRdR3E_SFerr, iTauR );
+  if( tauJetDeltaRmin_>=0.8 && !isBarrel_ ) return pol0tt_pol1w_Err( 0.587,0.005, 0.634,0.007,0,0,             tauPRdR2E_SF,tauPRdR2E_SFerr, iTauR );
+  if( tauJetDeltaRmin_>=0.7 && !isBarrel_ ) return pol0tt_pol1w_Err( 0.507,0.009, 0.559,0.012,0,0,             tauPRdR1E_SF,tauPRdR1E_SFerr, iTauR );
   //
-  // rate = ( ptPART + stPART )*SF = ptPART*SF + stPART*SF =  OLD +  stPART*SF
-  if(                          tauJetDeltaRmin_>=1.0 && isBarrel_ ){
-    tauPRE_=QuadSum( pol0w_pol1tt_Err( 0.672,0.001, 0.618,0.001,-0.00018,0.00003, tauPRdR3B_SF,tauPRdR3B_SFerr, iTauR ),
-		     QuadSum( stcorrErrRatio_, tauPRdR3B_SFerr/tauPRdR3B_SF )*stcorr_*tauPRdR3B_SF );
-  }
-  if( tauJetDeltaRmin_< 1.0 && tauJetDeltaRmin_>=0.8 && isBarrel_ ){
-    tauPRE_=QuadSum( pol0w_pol1tt_Err( 0.598,0.003, 0.539,0.002,-0.00018,0.00004, tauPRdR2B_SF,tauPRdR2B_SFerr, iTauR ),
-		     QuadSum( stcorrErrRatio_, tauPRdR2B_SFerr/tauPRdR2B_SF )*stcorr_*tauPRdR2B_SF );
-  }
-  if( tauJetDeltaRmin_< 0.8 && tauJetDeltaRmin_>=0.7 && isBarrel_ ){
-    tauPRE_=QuadSum( pol0w_pol1tt_Err( 0.525,0.005, 0.463,0.002,-0.00032,0.00005, tauPRdR1B_SF,tauPRdR1B_SFerr, iTauR ),
-		     QuadSum( stcorrErrRatio_, tauPRdR1B_SFerr/tauPRdR1B_SF )*stcorr_*tauPRdR1B_SF );
-  }
-  //
-  if(                          tauJetDeltaRmin_>=1.0 && !isBarrel_ ){
-    tauPRE_=QuadSum( pol0tt_pol1w_Err( 0.650,0.002, 0.692,0.002,0.00018,0.00005, tauPRdR3E_SF,tauPRdR3E_SFerr, iTauR ),
-		     QuadSum( stcorrErrRatio_, tauPRdR3E_SFerr/tauPRdR3E_SF )*stcorr_*tauPRdR3E_SF );
-  }
-  if( tauJetDeltaRmin_< 1.0 && tauJetDeltaRmin_>=0.8 && !isBarrel_ ){
-    tauPRE_=QuadSum( pol0tt_pol1w_Err( 0.587,0.005, 0.634,0.007,0,0,             tauPRdR2E_SF,tauPRdR2E_SFerr, iTauR ),
-		     QuadSum( stcorrErrRatio_, tauPRdR2E_SFerr/tauPRdR2E_SF )*stcorr_*tauPRdR2E_SF );
-  }
-  if( tauJetDeltaRmin_< 0.8 && tauJetDeltaRmin_>=0.7 && !isBarrel_ ){
-    tauPRE_=QuadSum( pol0tt_pol1w_Err( 0.507,0.009, 0.559,0.012,0,0,             tauPRdR1E_SF,tauPRdR1E_SFerr, iTauR ),
-		     QuadSum( stcorrErrRatio_, tauPRdR1E_SFerr/tauPRdR1E_SF )*stcorr_*tauPRdR1E_SF );
-  }
-  //
-  return tauPRE_;
+  return 0;
 }
 double analysisClass::muFR( unsigned int iMuR ){
   //return 0.005;
@@ -1489,7 +1366,7 @@ void analysisClass::InitMuonFunctionParameters(){
 // // //
 double analysisClass::muPR( unsigned int iMuR ){
   double muJetDeltaRmin_=muJetDeltaRmin(iMuR);
-  double muPt=muPtcorr(iMuR);
+  double muPt=MuonPt->at(iMuR);
   bool   isBarrel_=false;
   if( fabs(MuonEta->at(iMuR))<1.5 ) isBarrel_=true;
   double aveRate=0;
@@ -1533,7 +1410,7 @@ double analysisClass::muPR( unsigned int iMuR ){
 // // //
 double analysisClass::muPRE( unsigned int iMuR ){
   double muJetDeltaRmin_=muJetDeltaRmin(iMuR);
-  double muPt=muPtcorr(iMuR);
+  double muPt=MuonPt->at(iMuR);
   bool   isBarrel_=false;
   if( fabs(MuonEta->at(iMuR))<1.5 ) isBarrel_=true;
   double RateErr=0;

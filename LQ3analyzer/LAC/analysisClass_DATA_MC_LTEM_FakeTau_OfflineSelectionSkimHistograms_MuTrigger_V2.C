@@ -2,6 +2,7 @@
 #include "analysisClass.h"
 #include <TH1.h>
 #include <TH2.h>
+#include <TH3.h>
 #include <TH1F.h>
 #include <TStyle.h>
 #include <TCanvas.h>
@@ -34,6 +35,8 @@ void analysisClass::Loop()
 
    ////////// Enable Sumw2
    TH1::SetDefaultSumw2();
+   TH2::SetDefaultSumw2();
+   TH3::SetDefaultSumw2();
 
    ////////// Set analysis Object ID variables here
    ObjDef  = "LI";
@@ -77,6 +80,7 @@ void analysisClass::Loop()
    //
    TH1D* METmuTransMasshisto  = new TH1D("METmuTransMasshisto", "METmuTransMasshisto",500,0,1000);
    TH1D* METtauTransMasshisto = new TH1D("METtauTransMasshisto","METtauTransMasshisto",500,0,1000);
+   TH1D* JetLepMetVectorPthisto = new TH1D("JetLepMetVectorPthisto","JetLepMetVectorPthisto",1000,0,1000);
    //
    TH1D* METtauDeltaPhihisto = new TH1D("METtauDeltaPhihisto","METtauDeltaPhihisto",800,-4,4);
    TH1D* METmuDeltaPhihisto  = new TH1D("METmuDeltaPhihisto", "METmuDeltaPhihisto", 800,-4,4);
@@ -174,6 +178,132 @@ void analysisClass::Loop()
    TH1D* LoosePromptTauMuInvMasshisto = new TH1D("LoosePromptTauMuInvMasshisto","LoosePromptTauMuInvMasshisto",200,0,200);
    TH1D* TightPromptTauMuInvMasshisto = new TH1D("TightPromptTauMuInvMasshisto","TightPromptTauMuInvMasshisto",200,0,200);
    //
+   //
+   TH3D* LooseTauPt3Dhisto        = new TH3D("LooseTauPt3Dhisto",       "LooseTauPt3Dhisto",       1000,0,1000,200,0,10,2,0,3);
+   TH3D* TightTauPt3Dhisto        = new TH3D("TightTauPt3Dhisto",       "TightTauPt3Dhisto",       1000,0,1000,200,0,10,2,0,3);
+   TH3D* LooseFakeTauPt3Dhisto    = new TH3D("LooseFakeTauPt3Dhisto",   "LooseFakeTauPt3Dhisto",   1000,0,1000,200,0,10,2,0,3);
+   TH3D* TightFakeTauPt3Dhisto    = new TH3D("TightFakeTauPt3Dhisto",   "TightFakeTauPt3Dhisto",   1000,0,1000,200,0,10,2,0,3);
+   TH3D* LoosePromptTauPt3Dhisto  = new TH3D("LoosePromptTauPt3Dhisto", "LoosePromptTauPt3Dhisto", 1000,0,1000,200,0,10,2,0,3);
+   TH3D* TightPromptTauPt3Dhisto  = new TH3D("TightPromptTauPt3Dhisto", "TightPromptTauPt3Dhisto", 1000,0,1000,200,0,10,2,0,3);
+   //
+   TH1D* LooseTauPtDr0Bhisto  = new TH1D("LooseTauPtDr0Bhisto", "LooseTauPtDr0Bhisto", 1000,0,1000);
+   TH1D* TightTauPtDr0Bhisto  = new TH1D("TightTauPtDr0Bhisto", "TightTauPtDr0Bhisto", 1000,0,1000);
+   TH1D* LooseTauPtDr1Bhisto  = new TH1D("LooseTauPtDr1Bhisto", "LooseTauPtDr1Bhisto", 1000,0,1000);
+   TH1D* TightTauPtDr1Bhisto  = new TH1D("TightTauPtDr1Bhisto", "TightTauPtDr1Bhisto", 1000,0,1000);
+   TH1D* LooseTauPtDr2Bhisto  = new TH1D("LooseTauPtDr2Bhisto", "LooseTauPtDr2Bhisto", 1000,0,1000);
+   TH1D* TightTauPtDr2Bhisto  = new TH1D("TightTauPtDr2Bhisto", "TightTauPtDr2Bhisto", 1000,0,1000);
+   TH1D* LooseTauPtDr3Bhisto  = new TH1D("LooseTauPtDr3Bhisto", "LooseTauPtDr3Bhisto", 1000,0,1000);
+   TH1D* TightTauPtDr3Bhisto  = new TH1D("TightTauPtDr3Bhisto", "TightTauPtDr3Bhisto", 1000,0,1000);
+   //
+   TH1D* LooseFakeTauPtDr0Bhisto  = new TH1D("LooseFakeTauPtDr0Bhisto", "LooseFakeTauPtDr0Bhisto", 1000,0,1000);
+   TH1D* TightFakeTauPtDr0Bhisto  = new TH1D("TightFakeTauPtDr0Bhisto", "TightFakeTauPtDr0Bhisto", 1000,0,1000);
+   TH1D* LooseFakeTauPtDr1Bhisto  = new TH1D("LooseFakeTauPtDr1Bhisto", "LooseFakeTauPtDr1Bhisto", 1000,0,1000);
+   TH1D* TightFakeTauPtDr1Bhisto  = new TH1D("TightFakeTauPtDr1Bhisto", "TightFakeTauPtDr1Bhisto", 1000,0,1000);
+   TH1D* LooseFakeTauPtDr2Bhisto  = new TH1D("LooseFakeTauPtDr2Bhisto", "LooseFakeTauPtDr2Bhisto", 1000,0,1000);
+   TH1D* TightFakeTauPtDr2Bhisto  = new TH1D("TightFakeTauPtDr2Bhisto", "TightFakeTauPtDr2Bhisto", 1000,0,1000);
+   TH1D* LooseFakeTauPtDr3Bhisto  = new TH1D("LooseFakeTauPtDr3Bhisto", "LooseFakeTauPtDr3Bhisto", 1000,0,1000);
+   TH1D* TightFakeTauPtDr3Bhisto  = new TH1D("TightFakeTauPtDr3Bhisto", "TightFakeTauPtDr3Bhisto", 1000,0,1000);
+   //
+   TH1D* LoosePromptTauPtDr0Bhisto  = new TH1D("LoosePromptTauPtDr0Bhisto", "LoosePromptTauPtDr0Bhisto", 1000,0,1000);
+   TH1D* TightPromptTauPtDr0Bhisto  = new TH1D("TightPromptTauPtDr0Bhisto", "TightPromptTauPtDr0Bhisto", 1000,0,1000);
+   TH1D* LoosePromptTauPtDr1Bhisto  = new TH1D("LoosePromptTauPtDr1Bhisto", "LoosePromptTauPtDr1Bhisto", 1000,0,1000);
+   TH1D* TightPromptTauPtDr1Bhisto  = new TH1D("TightPromptTauPtDr1Bhisto", "TightPromptTauPtDr1Bhisto", 1000,0,1000);
+   TH1D* LoosePromptTauPtDr2Bhisto  = new TH1D("LoosePromptTauPtDr2Bhisto", "LoosePromptTauPtDr2Bhisto", 1000,0,1000);
+   TH1D* TightPromptTauPtDr2Bhisto  = new TH1D("TightPromptTauPtDr2Bhisto", "TightPromptTauPtDr2Bhisto", 1000,0,1000);
+   TH1D* LoosePromptTauPtDr3Bhisto  = new TH1D("LoosePromptTauPtDr3Bhisto", "LoosePromptTauPtDr3Bhisto", 1000,0,1000);
+   TH1D* TightPromptTauPtDr3Bhisto  = new TH1D("TightPromptTauPtDr3Bhisto", "TightPromptTauPtDr3Bhisto", 1000,0,1000);
+   //
+   TH1D* LooseTauPtDr0Ehisto  = new TH1D("LooseTauPtDr0Ehisto", "LooseTauPtDr0Ehisto", 1000,0,1000);
+   TH1D* TightTauPtDr0Ehisto  = new TH1D("TightTauPtDr0Ehisto", "TightTauPtDr0Ehisto", 1000,0,1000);
+   TH1D* LooseTauPtDr1Ehisto  = new TH1D("LooseTauPtDr1Ehisto", "LooseTauPtDr1Ehisto", 1000,0,1000);
+   TH1D* TightTauPtDr1Ehisto  = new TH1D("TightTauPtDr1Ehisto", "TightTauPtDr1Ehisto", 1000,0,1000);
+   TH1D* LooseTauPtDr2Ehisto  = new TH1D("LooseTauPtDr2Ehisto", "LooseTauPtDr2Ehisto", 1000,0,1000);
+   TH1D* TightTauPtDr2Ehisto  = new TH1D("TightTauPtDr2Ehisto", "TightTauPtDr2Ehisto", 1000,0,1000);
+   TH1D* LooseTauPtDr3Ehisto  = new TH1D("LooseTauPtDr3Ehisto", "LooseTauPtDr3Ehisto", 1000,0,1000);
+   TH1D* TightTauPtDr3Ehisto  = new TH1D("TightTauPtDr3Ehisto", "TightTauPtDr3Ehisto", 1000,0,1000);
+   //
+   TH1D* LooseFakeTauPtDr0Ehisto  = new TH1D("LooseFakeTauPtDr0Ehisto", "LooseFakeTauPtDr0Ehisto", 1000,0,1000);
+   TH1D* TightFakeTauPtDr0Ehisto  = new TH1D("TightFakeTauPtDr0Ehisto", "TightFakeTauPtDr0Ehisto", 1000,0,1000);
+   TH1D* LooseFakeTauPtDr1Ehisto  = new TH1D("LooseFakeTauPtDr1Ehisto", "LooseFakeTauPtDr1Ehisto", 1000,0,1000);
+   TH1D* TightFakeTauPtDr1Ehisto  = new TH1D("TightFakeTauPtDr1Ehisto", "TightFakeTauPtDr1Ehisto", 1000,0,1000);
+   TH1D* LooseFakeTauPtDr2Ehisto  = new TH1D("LooseFakeTauPtDr2Ehisto", "LooseFakeTauPtDr2Ehisto", 1000,0,1000);
+   TH1D* TightFakeTauPtDr2Ehisto  = new TH1D("TightFakeTauPtDr2Ehisto", "TightFakeTauPtDr2Ehisto", 1000,0,1000);
+   TH1D* LooseFakeTauPtDr3Ehisto  = new TH1D("LooseFakeTauPtDr3Ehisto", "LooseFakeTauPtDr3Ehisto", 1000,0,1000);
+   TH1D* TightFakeTauPtDr3Ehisto  = new TH1D("TightFakeTauPtDr3Ehisto", "TightFakeTauPtDr3Ehisto", 1000,0,1000);
+   //
+   TH1D* LoosePromptTauPtDr0Ehisto  = new TH1D("LoosePromptTauPtDr0Ehisto", "LoosePromptTauPtDr0Ehisto", 1000,0,1000);
+   TH1D* TightPromptTauPtDr0Ehisto  = new TH1D("TightPromptTauPtDr0Ehisto", "TightPromptTauPtDr0Ehisto", 1000,0,1000);
+   TH1D* LoosePromptTauPtDr1Ehisto  = new TH1D("LoosePromptTauPtDr1Ehisto", "LoosePromptTauPtDr1Ehisto", 1000,0,1000);
+   TH1D* TightPromptTauPtDr1Ehisto  = new TH1D("TightPromptTauPtDr1Ehisto", "TightPromptTauPtDr1Ehisto", 1000,0,1000);
+   TH1D* LoosePromptTauPtDr2Ehisto  = new TH1D("LoosePromptTauPtDr2Ehisto", "LoosePromptTauPtDr2Ehisto", 1000,0,1000);
+   TH1D* TightPromptTauPtDr2Ehisto  = new TH1D("TightPromptTauPtDr2Ehisto", "TightPromptTauPtDr2Ehisto", 1000,0,1000);
+   TH1D* LoosePromptTauPtDr3Ehisto  = new TH1D("LoosePromptTauPtDr3Ehisto", "LoosePromptTauPtDr3Ehisto", 1000,0,1000);
+   TH1D* TightPromptTauPtDr3Ehisto  = new TH1D("TightPromptTauPtDr3Ehisto", "TightPromptTauPtDr3Ehisto", 1000,0,1000);
+   //
+   // Replace Pt with PileUp, PT CUT >35 GeV
+   TH3D* LooseTauPU3Dhisto        = new TH3D("LooseTauPU3Dhisto",       "LooseTauPU3Dhisto",       62,-0.5,61.5,200,0,10,2,0,3);
+   TH3D* TightTauPU3Dhisto        = new TH3D("TightTauPU3Dhisto",       "TightTauPU3Dhisto",       62,-0.5,61.5,200,0,10,2,0,3);
+   TH3D* LooseFakeTauPU3Dhisto    = new TH3D("LooseFakeTauPU3Dhisto",   "LooseFakeTauPU3Dhisto",   62,-0.5,61.5,200,0,10,2,0,3);
+   TH3D* TightFakeTauPU3Dhisto    = new TH3D("TightFakeTauPU3Dhisto",   "TightFakeTauPU3Dhisto",   62,-0.5,61.5,200,0,10,2,0,3);
+   TH3D* LoosePromptTauPU3Dhisto  = new TH3D("LoosePromptTauPU3Dhisto", "LoosePromptTauPU3Dhisto", 62,-0.5,61.5,200,0,10,2,0,3);
+   TH3D* TightPromptTauPU3Dhisto  = new TH3D("TightPromptTauPU3Dhisto", "TightPromptTauPU3Dhisto", 62,-0.5,61.5,200,0,10,2,0,3);
+   //
+   TH1D* LooseTauPUDr0Bhisto  = new TH1D("LooseTauPUDr0Bhisto", "LooseTauPUDr0Bhisto", 62,-0.5,61.5);
+   TH1D* TightTauPUDr0Bhisto  = new TH1D("TightTauPUDr0Bhisto", "TightTauPUDr0Bhisto", 62,-0.5,61.5);
+   TH1D* LooseTauPUDr1Bhisto  = new TH1D("LooseTauPUDr1Bhisto", "LooseTauPUDr1Bhisto", 62,-0.5,61.5);
+   TH1D* TightTauPUDr1Bhisto  = new TH1D("TightTauPUDr1Bhisto", "TightTauPUDr1Bhisto", 62,-0.5,61.5);
+   TH1D* LooseTauPUDr2Bhisto  = new TH1D("LooseTauPUDr2Bhisto", "LooseTauPUDr2Bhisto", 62,-0.5,61.5);
+   TH1D* TightTauPUDr2Bhisto  = new TH1D("TightTauPUDr2Bhisto", "TightTauPUDr2Bhisto", 62,-0.5,61.5);
+   TH1D* LooseTauPUDr3Bhisto  = new TH1D("LooseTauPUDr3Bhisto", "LooseTauPUDr3Bhisto", 62,-0.5,61.5);
+   TH1D* TightTauPUDr3Bhisto  = new TH1D("TightTauPUDr3Bhisto", "TightTauPUDr3Bhisto", 62,-0.5,61.5);
+   //
+   TH1D* LooseFakeTauPUDr0Bhisto  = new TH1D("LooseFakeTauPUDr0Bhisto", "LooseFakeTauPUDr0Bhisto", 62,-0.5,61.5);
+   TH1D* TightFakeTauPUDr0Bhisto  = new TH1D("TightFakeTauPUDr0Bhisto", "TightFakeTauPUDr0Bhisto", 62,-0.5,61.5);
+   TH1D* LooseFakeTauPUDr1Bhisto  = new TH1D("LooseFakeTauPUDr1Bhisto", "LooseFakeTauPUDr1Bhisto", 62,-0.5,61.5);
+   TH1D* TightFakeTauPUDr1Bhisto  = new TH1D("TightFakeTauPUDr1Bhisto", "TightFakeTauPUDr1Bhisto", 62,-0.5,61.5);
+   TH1D* LooseFakeTauPUDr2Bhisto  = new TH1D("LooseFakeTauPUDr2Bhisto", "LooseFakeTauPUDr2Bhisto", 62,-0.5,61.5);
+   TH1D* TightFakeTauPUDr2Bhisto  = new TH1D("TightFakeTauPUDr2Bhisto", "TightFakeTauPUDr2Bhisto", 62,-0.5,61.5);
+   TH1D* LooseFakeTauPUDr3Bhisto  = new TH1D("LooseFakeTauPUDr3Bhisto", "LooseFakeTauPUDr3Bhisto", 62,-0.5,61.5);
+   TH1D* TightFakeTauPUDr3Bhisto  = new TH1D("TightFakeTauPUDr3Bhisto", "TightFakeTauPUDr3Bhisto", 62,-0.5,61.5);
+   //
+   TH1D* LoosePromptTauPUDr0Bhisto  = new TH1D("LoosePromptTauPUDr0Bhisto", "LoosePromptTauPUDr0Bhisto", 62,-0.5,61.5);
+   TH1D* TightPromptTauPUDr0Bhisto  = new TH1D("TightPromptTauPUDr0Bhisto", "TightPromptTauPUDr0Bhisto", 62,-0.5,61.5);
+   TH1D* LoosePromptTauPUDr1Bhisto  = new TH1D("LoosePromptTauPUDr1Bhisto", "LoosePromptTauPUDr1Bhisto", 62,-0.5,61.5);
+   TH1D* TightPromptTauPUDr1Bhisto  = new TH1D("TightPromptTauPUDr1Bhisto", "TightPromptTauPUDr1Bhisto", 62,-0.5,61.5);
+   TH1D* LoosePromptTauPUDr2Bhisto  = new TH1D("LoosePromptTauPUDr2Bhisto", "LoosePromptTauPUDr2Bhisto", 62,-0.5,61.5);
+   TH1D* TightPromptTauPUDr2Bhisto  = new TH1D("TightPromptTauPUDr2Bhisto", "TightPromptTauPUDr2Bhisto", 62,-0.5,61.5);
+   TH1D* LoosePromptTauPUDr3Bhisto  = new TH1D("LoosePromptTauPUDr3Bhisto", "LoosePromptTauPUDr3Bhisto", 62,-0.5,61.5);
+   TH1D* TightPromptTauPUDr3Bhisto  = new TH1D("TightPromptTauPUDr3Bhisto", "TightPromptTauPUDr3Bhisto", 62,-0.5,61.5);
+   //
+   TH1D* LooseTauPUDr0Ehisto  = new TH1D("LooseTauPUDr0Ehisto", "LooseTauPUDr0Ehisto", 62,-0.5,61.5);
+   TH1D* TightTauPUDr0Ehisto  = new TH1D("TightTauPUDr0Ehisto", "TightTauPUDr0Ehisto", 62,-0.5,61.5);
+   TH1D* LooseTauPUDr1Ehisto  = new TH1D("LooseTauPUDr1Ehisto", "LooseTauPUDr1Ehisto", 62,-0.5,61.5);
+   TH1D* TightTauPUDr1Ehisto  = new TH1D("TightTauPUDr1Ehisto", "TightTauPUDr1Ehisto", 62,-0.5,61.5);
+   TH1D* LooseTauPUDr2Ehisto  = new TH1D("LooseTauPUDr2Ehisto", "LooseTauPUDr2Ehisto", 62,-0.5,61.5);
+   TH1D* TightTauPUDr2Ehisto  = new TH1D("TightTauPUDr2Ehisto", "TightTauPUDr2Ehisto", 62,-0.5,61.5);
+   TH1D* LooseTauPUDr3Ehisto  = new TH1D("LooseTauPUDr3Ehisto", "LooseTauPUDr3Ehisto", 62,-0.5,61.5);
+   TH1D* TightTauPUDr3Ehisto  = new TH1D("TightTauPUDr3Ehisto", "TightTauPUDr3Ehisto", 62,-0.5,61.5);
+   //
+   TH1D* LooseFakeTauPUDr0Ehisto  = new TH1D("LooseFakeTauPUDr0Ehisto", "LooseFakeTauPUDr0Ehisto", 62,-0.5,61.5);
+   TH1D* TightFakeTauPUDr0Ehisto  = new TH1D("TightFakeTauPUDr0Ehisto", "TightFakeTauPUDr0Ehisto", 62,-0.5,61.5);
+   TH1D* LooseFakeTauPUDr1Ehisto  = new TH1D("LooseFakeTauPUDr1Ehisto", "LooseFakeTauPUDr1Ehisto", 62,-0.5,61.5);
+   TH1D* TightFakeTauPUDr1Ehisto  = new TH1D("TightFakeTauPUDr1Ehisto", "TightFakeTauPUDr1Ehisto", 62,-0.5,61.5);
+   TH1D* LooseFakeTauPUDr2Ehisto  = new TH1D("LooseFakeTauPUDr2Ehisto", "LooseFakeTauPUDr2Ehisto", 62,-0.5,61.5);
+   TH1D* TightFakeTauPUDr2Ehisto  = new TH1D("TightFakeTauPUDr2Ehisto", "TightFakeTauPUDr2Ehisto", 62,-0.5,61.5);
+   TH1D* LooseFakeTauPUDr3Ehisto  = new TH1D("LooseFakeTauPUDr3Ehisto", "LooseFakeTauPUDr3Ehisto", 62,-0.5,61.5);
+   TH1D* TightFakeTauPUDr3Ehisto  = new TH1D("TightFakeTauPUDr3Ehisto", "TightFakeTauPUDr3Ehisto", 62,-0.5,61.5);
+   //
+   TH1D* LoosePromptTauPUDr0Ehisto  = new TH1D("LoosePromptTauPUDr0Ehisto", "LoosePromptTauPUDr0Ehisto", 62,-0.5,61.5);
+   TH1D* TightPromptTauPUDr0Ehisto  = new TH1D("TightPromptTauPUDr0Ehisto", "TightPromptTauPUDr0Ehisto", 62,-0.5,61.5);
+   TH1D* LoosePromptTauPUDr1Ehisto  = new TH1D("LoosePromptTauPUDr1Ehisto", "LoosePromptTauPUDr1Ehisto", 62,-0.5,61.5);
+   TH1D* TightPromptTauPUDr1Ehisto  = new TH1D("TightPromptTauPUDr1Ehisto", "TightPromptTauPUDr1Ehisto", 62,-0.5,61.5);
+   TH1D* LoosePromptTauPUDr2Ehisto  = new TH1D("LoosePromptTauPUDr2Ehisto", "LoosePromptTauPUDr2Ehisto", 62,-0.5,61.5);
+   TH1D* TightPromptTauPUDr2Ehisto  = new TH1D("TightPromptTauPUDr2Ehisto", "TightPromptTauPUDr2Ehisto", 62,-0.5,61.5);
+   TH1D* LoosePromptTauPUDr3Ehisto  = new TH1D("LoosePromptTauPUDr3Ehisto", "LoosePromptTauPUDr3Ehisto", 62,-0.5,61.5);
+   TH1D* TightPromptTauPUDr3Ehisto  = new TH1D("TightPromptTauPUDr3Ehisto", "TightPromptTauPUDr3Ehisto", 62,-0.5,61.5);
+
+
+   //
    TH1D* AllGenhisto  = new TH1D("AllGenhisto","AllGenhisto",4,0.5,4.5);//MuTau
    TH1D* TTGenhisto   = new TH1D("TTGenhisto","TTGenhisto",4,0.5,4.5);//LL LT TL TT
    //
@@ -252,31 +382,21 @@ void analysisClass::Loop()
      // ---- pileup
      double safePileupWeights_=0;
      safePileupWeights_=safePileupWeights();
-     // ---- event type
-     // need to decide if this is a SS event or just a preselection events (OS)
-     //bool isSS_=false;
-     //if( ltemMuTau.size()==2 ) isSS_=true;
-     // ---- trigger type
-     // need to decide if this is a Mu40 event or Mu24 events
-     // also pick trigger muon
+
      unsigned int triggerMuon=99;
-     //bool isMu40_=false;
-     //if( isSS_ && MuonPt->at(ltemMuTau[0])>45 ){
-     //isMu40_=true;
-     //}
-     // if( !isSS_ ){
+
      for(unsigned int iMuR=0;  iMuR<MuonPt->size();     iMuR++){
        if( !muRisoCheck(iMuR) ) continue;
        //
        // edit
-       /**/
+       /*
        bool isLooseNotTight_=false;
        double pfIso = 0;
        pfIso = MuonPFIsoR04ChargedHadron->at(iMuR) +
          TMath::Max( 0.0 , (MuonPFIsoR04NeutralHadron->at(iMuR)+MuonPFIsoR04Photon->at(iMuR)-0.5*MuonPFIsoR04PU->at(iMuR)) );
        if( muRisoCheck(iMuR) && (pfIso/MuonPt->at(iMuR))<0.20 && (pfIso/MuonPt->at(iMuR))>0.12 ) isLooseNotTight_=true;
        if( !isLooseNotTight_    ) continue; // Loose-not-tight PFiso (for QCD estimation)
-       /**/
+       */
        //
        triggerMuon=iMuR;
        //if( MuonPt->at(iMuR)>45 ){ isMu40_=true; }
@@ -287,14 +407,12 @@ void analysisClass::Loop()
      // ---- trigger
      int usedTrigger_=-5;
      usedTrigger_ = SingleMu_passTrigger();
-     //if(  isMu40_ ) usedTrigger_ = SingleMu40_passTrigger();
-     //if( !isMu40_ ) usedTrigger_ = HLT_MuPT_eta2p1_passTrigger();
      double TriggerEfficiencyWeights_;
-     // use same weights for Mu24 and Mu40 triggers
-     TriggerEfficiencyWeights_=IsoMu24e2p1_Eff( MuonPt->at(triggerMuon), MuonEta->at(triggerMuon) );
-     //if(  isMu40_ ) TriggerEfficiencyWeights_=Mu40e2p1_ScaleFactor( 50, MuonEta->at(triggerMuon) );
-     //if( !isMu40_ ) TriggerEfficiencyWeights_=Mu40e2p1_ScaleFactor( 50, MuonEta->at(triggerMuon) );
-     AppliedTrigEffWeightshisto->Fill( TriggerEfficiencyWeights_ );
+     //
+     if( triggerMuon!=99 ){
+       TriggerEfficiencyWeights_=IsoMu24e2p1_Eff( MuonPt->at(triggerMuon), MuonEta->at(triggerMuon) );
+       AppliedTrigEffWeightshisto->Fill( TriggerEfficiencyWeights_ );
+     }
      // ---- total = pileup x trigger
      double w = 0;
      w=safePileupWeights_*TriggerEfficiencyWeights_;
@@ -332,7 +450,7 @@ void analysisClass::Loop()
      // -- HLT MATCHING SKIM
      int passAllMuHLTmatching_=0;
      //passAllMuHLTmatching_=1; // this is done in the skimming step already.
-     if(  RecoHLTdeltaRmin_SingleMuTrigger(triggerMuon)<0.15              ) passAllMuHLTmatching_=1;
+     if(  triggerMuon!=99 && RecoHLTdeltaRmin_SingleMuTrigger(triggerMuon)<0.15              ) passAllMuHLTmatching_=1;
      //if(  isMu40_ && RecoHLTdeltaRmin_SingleMu40Trigger(triggerMuon)<0.15 ) passAllMuHLTmatching_=1;
      //if( !isMu40_ && RecoHLTdeltaRmin_SingleMu24Trigger(triggerMuon)<0.15 ) passAllMuHLTmatching_=1;
      fillVariableWithValue("PassAllMuHLTmatching",passAllMuHLTmatching_);
@@ -366,10 +484,11 @@ void analysisClass::Loop()
        break;//can be more than one tau, pick the highest Pt one.
      }
      //
-     // SKIP EVENTS WITH NO GOOD TAU
-     if( probeTau==99 ) continue;
+     // SKIP EVENTS WITH NO GOOD TAU or GOOD MUON
+     if( probeTau==99 || tagMuon==99 ) continue;
      //
      //
+     //computing pZeta
      TLorentzVector muTransVector, tauTransVector, metTransVector;
      muTransVector.SetPtEtaPhiM(  MuonPt->at(tagMuon),     0, MuonPhi->at(tagMuon),       0 );
      tauTransVector.SetPtEtaPhiM( HPSTauPt->at(probeTau),  0, HPSTauPhi->at(probeTau),    0 );
@@ -386,6 +505,19 @@ void analysisClass::Loop()
      zeta2D.SetMagPhi(  1,                                                  zTransVector.Phi()                                  );
      //
      double pZeta=((pz2D.Mod())*(zeta2D.Mod())*TMath::Cos(pz2D.DeltaPhi(zeta2D)))-1.5*((pzvis2D.Mod())*(zeta2D.Mod())*TMath::Cos(pzvis2D.DeltaPhi(zeta2D)));
+
+     //computing JetSys+Mu+Tau Pt
+     TLorentzVector jetVector, jetSysVector, muVector, tauVector, metVector;
+     muVector.SetPtEtaPhiM(  MuonPt->at(tagMuon),     MuonEta->at(tagMuon),    MuonPhi->at(tagMuon),       0 );
+     tauVector.SetPtEtaPhiM( HPSTauPt->at(probeTau),  HPSTauEta->at(probeTau), HPSTauPhi->at(probeTau),    0 );
+     metVector.SetPtEtaPhiM( PFMETType01XYCor->at(0), 0,                       PFMETPhiType01XYCor->at(0), 0 );
+     jetSysVector.SetPtEtaPhiM( 0 , 0 , 0 , 0 );
+     for(unsigned int iJetR=0; iJetR<PFJetPt->size(); iJetR++){
+       jetVector.SetPtEtaPhiM( PFJetPt->at(iJetR), PFJetEta->at(iJetR), PFJetPhi->at(iJetR), 0 );
+       jetSysVector+=jetVector;
+     }
+     double JetLepMetVectorPt = (jetSysVector+muVector+tauVector+metVector).Pt();
+
      //---------------------------------------------------------------------------------------------------------------------------------------------------//
      int OfflineCuts_=0;
      int LTEM_MuTau_ = LTEM_MuTau(); 
@@ -396,19 +528,19 @@ void analysisClass::Loop()
      double mutauInvMass_=(tagMuonVector+probeTauVector).M();
      // need to select one of these:
      // edit 
-     if( MuCounter()==1 && ElCounter()==0 
-	 && TauCounter()>0 && probeTau!=99
-	 && JetCounter()<3 && pZeta>-20 
-	 //&& JetCounter()>0
-   	 && mutauInvMass_>40 && mutauInvMass_<85
-	 //&& tauJetDeltaRmin(probeTau)>1.0
-	 //&& tauJetDeltaRmin(probeTau)>=0.70  && tauJetDeltaRmin(probeTau)<=1.00
-	 && tauJetDeltaRmin(probeTau)>0.7
-	 //&& fabs(HPSTauEta->at(probeTau))<1.5 //BARREL
-	 //&& fabs(HPSTauEta->at(probeTau))>=1.5 //ENDCAP
-	 && METlepMT("Mu",triggerMuon)<40 //&& METlepMT("Mu",triggerMuon)<130 //&& tauJetDeltaRmin(probeTau)<0.8
-	 && fabs(HPSTauCharge->at(probeTau)+MuonCharge->at(tagMuon))==0//OS selection   -- also check above for tag mu selection
-	 //&& fabs(HPSTauCharge->at(probeTau)+MuonCharge->at(tagMuon))==2//SS selection   -- also check above for tag mu selection
+     if( triggerMuon!=99 
+	 && tagMuon!=99  
+	 && MuCounter()==1 
+	 && TauCounter()==1 
+	 && ElCounter()==0 
+	 && probeTau!=99
+	 && JetCounter()<2 && ST()>100
+	 //&& JetCounter()<2 && JetCounter()>0 && ST()>100
+	 && pZeta<-10 
+	 && METlepMT("Mu",triggerMuon)>50
+	 //&& METlepMT("Mu",triggerMuon)<40 //&& METlepMT("Mu",triggerMuon)<130 //&& tauJetDeltaRmin(probeTau)<0.8
+	 //&& fabs(HPSTauCharge->at(probeTau)+MuonCharge->at(tagMuon))==0//OS selection
+	 && fabs(HPSTauCharge->at(probeTau)+MuonCharge->at(tagMuon))==2//SS selection
 	 ) OfflineCuts_=1;
      fillVariableWithValue("PassOfflineCuts", OfflineCuts_ );// returns 0, 1 
 
@@ -425,6 +557,7 @@ void analysisClass::Loop()
        AppliedPileUpWeightshisto->Fill( safePileupWeights_ );
        AppliedTotalWeightshisto->Fill( w );
 
+       /*
        if( ltemMuTau.size()==2 ){
 	 bool isMuTight_=false;
 	 if( muRTightCheck(ltemMuTau[0])  ) isMuTight_=true;
@@ -500,7 +633,6 @@ void analysisClass::Loop()
 	   if( GenTau.DeltaR(RecoTau)<0.15 ) isRecoTauPrompt_ = true;
 	 }
 	 //
-	 /**/
 	 //Check RecoMu  ( Z )
 	 for( unsigned int iMuT=0; iMuT<GenZMuPt->size(); iMuT++){
 	   GenMu.SetPtEtaPhiM( GenZMuPt->at(iMuT),     GenZMuEta->at(iMuT),   GenZMuPhi->at(iMuT), 0 );
@@ -512,9 +644,7 @@ void analysisClass::Loop()
 	   GenTau.SetPtEtaPhiM( GenZTauTauVisiblePt->at(iTauT),     GenZTauTauVisibleEta->at(iTauT),   GenZTauTauVisiblePhi->at(iTauT), 0 );
 	   if( GenTau.DeltaR(RecoTau)<0.15 ) isRecoTauPrompt_ = true;
 	 }
-	 /**/
 	 //
-	 /*
 	 // This part checks leptons to be prompt in signal 
 	 //Check RecoMu  (LQ3->Tau)
 	 for( unsigned int iMuT=0; iMuT<GenLQTauMuonPt->size(); iMuT++){
@@ -527,7 +657,6 @@ void analysisClass::Loop()
  	   GenTau.SetPtEtaPhiM( GenLQTauTauTauVisiblePt->at(iTauT),     GenLQTauTauTauVisibleEta->at(iTauT),   GenLQTauTauTauVisiblePhi->at(iTauT), 0 );
 	   if( GenTau.DeltaR(RecoTau)<0.15 ) isRecoTauPrompt_ = true;
 	 }
-	 */
 
 	 if( !isRecoMuPrompt_ && !isRecoTauPrompt_ ) AllGenhisto->Fill( 1, w );//FF
 	 if( !isRecoMuPrompt_ &&  isRecoTauPrompt_ ) AllGenhisto->Fill( 2, w );//FP
@@ -539,9 +668,10 @@ void analysisClass::Loop()
 	   if( !isRecoMuPrompt_ &&  isRecoTauPrompt_ ) TTGenhisto->Fill( 2, w );//FP
 	   if(  isRecoMuPrompt_ && !isRecoTauPrompt_ ) TTGenhisto->Fill( 3, w );//PF
 	   if(  isRecoMuPrompt_ &&  isRecoTauPrompt_ ) TTGenhisto->Fill( 4, w );//PP
-	 }
-	 
+	 }	
+ 
        }
+       */
        //
        //
 
@@ -797,49 +927,83 @@ void analysisClass::Loop()
        probeTauVec.SetPtEtaPhiM( HPSTauPt ->at(probeTau), HPSTauEta->at(probeTau), HPSTauPhi->at(probeTau), 0 );
        double mutauInvMass=(tagMuonVec+probeTauVec).M();
 
-       // Loose - Tight Tau Histograms
+       // Loose - Tight Tau Histograms -- 1D
+       /*
        LooseTauPthisto->Fill(  HPSTauPt ->at(probeTau), w );
        LooseTauEtahisto->Fill( fabs(HPSTauEta->at(probeTau)), w );
-       LooseTauPhihisto->Fill( HPSTauPhi->at(probeTau), w );
-       LooseTauJetDeltaRminhisto->Fill( tauJetDeltaRmin_, w );
-       LooseTauMuInvMasshisto->Fill( mutauInvMass, w );
+       //LooseTauPhihisto->Fill( HPSTauPhi->at(probeTau), w );
+       //LooseTauJetDeltaRminhisto->Fill( tauJetDeltaRmin_, w );
+       //LooseTauMuInvMasshisto->Fill( mutauInvMass, w );
        if( tauRTightCheck(probeTau) ){
 	 TightTauPthisto->Fill(  HPSTauPt ->at(probeTau), w );
 	 TightTauEtahisto->Fill( fabs(HPSTauEta->at(probeTau)), w );
-	 TightTauPhihisto->Fill( HPSTauPhi->at(probeTau), w );
-	 TightTauJetDeltaRminhisto->Fill( tauJetDeltaRmin_, w );
-	 TightTauMuInvMasshisto->Fill( mutauInvMass, w );
+	 //TightTauPhihisto->Fill( HPSTauPhi->at(probeTau), w );
+	 //TightTauJetDeltaRminhisto->Fill( tauJetDeltaRmin_, w );
+	 //TightTauMuInvMasshisto->Fill( mutauInvMass, w );
        }
        // Fake Tau
        if( isRecoTauFake(probeTau) ){
 	 LooseFakeTauPthisto->Fill(  HPSTauPt ->at(probeTau), w );
 	 LooseFakeTauEtahisto->Fill( fabs(HPSTauEta->at(probeTau)), w );
-	 LooseFakeTauPhihisto->Fill( HPSTauPhi->at(probeTau), w );
-	 LooseFakeTauJetDeltaRminhisto->Fill( tauJetDeltaRmin_, w );
-	 LooseFakeTauMuInvMasshisto->Fill( mutauInvMass, w );
+	 //LooseFakeTauPhihisto->Fill( HPSTauPhi->at(probeTau), w );
+	 //LooseFakeTauJetDeltaRminhisto->Fill( tauJetDeltaRmin_, w );
+	 //LooseFakeTauMuInvMasshisto->Fill( mutauInvMass, w );
 	 if( tauRTightCheck(probeTau) ){
 	   TightFakeTauPthisto->Fill(  HPSTauPt ->at(probeTau), w );
 	   TightFakeTauEtahisto->Fill( fabs(HPSTauEta->at(probeTau)), w );
-	   TightFakeTauPhihisto->Fill( HPSTauPhi->at(probeTau), w );
-	   TightFakeTauJetDeltaRminhisto->Fill( tauJetDeltaRmin_, w );
-	   TightFakeTauMuInvMasshisto->Fill( mutauInvMass, w );
+	   //TightFakeTauPhihisto->Fill( HPSTauPhi->at(probeTau), w );
+	   //TightFakeTauJetDeltaRminhisto->Fill( tauJetDeltaRmin_, w );
+	   //TightFakeTauMuInvMasshisto->Fill( mutauInvMass, w );
 	 }
        }
        // Prompt Tau
        if( !isRecoTauFake(probeTau) ){
 	 LoosePromptTauPthisto->Fill(  HPSTauPt ->at(probeTau), w );
 	 LoosePromptTauEtahisto->Fill( fabs(HPSTauEta->at(probeTau)), w );
-	 LoosePromptTauPhihisto->Fill( HPSTauPhi->at(probeTau), w );
-         LoosePromptTauJetDeltaRminhisto->Fill( tauJetDeltaRmin_, w );
-	 LoosePromptTauMuInvMasshisto->Fill( mutauInvMass, w );
+	 //LoosePromptTauPhihisto->Fill( HPSTauPhi->at(probeTau), w );
+         //LoosePromptTauJetDeltaRminhisto->Fill( tauJetDeltaRmin_, w );
+	 //LoosePromptTauMuInvMasshisto->Fill( mutauInvMass, w );
 	 if( tauRTightCheck(probeTau) ){
 	   TightPromptTauPthisto->Fill(  HPSTauPt ->at(probeTau), w );
 	   TightPromptTauEtahisto->Fill( fabs(HPSTauEta->at(probeTau)), w );
-	   TightPromptTauPhihisto->Fill( HPSTauPhi->at(probeTau), w );
-	   TightPromptTauJetDeltaRminhisto->Fill( tauJetDeltaRmin_, w );
-	   TightPromptTauMuInvMasshisto->Fill( mutauInvMass, w );
+	   //TightPromptTauPhihisto->Fill( HPSTauPhi->at(probeTau), w );
+	   //TightPromptTauJetDeltaRminhisto->Fill( tauJetDeltaRmin_, w );
+	   //TightPromptTauMuInvMasshisto->Fill( mutauInvMass, w );
 	 }
        }
+       */
+
+       double probeTauPt_    = HPSTauPt->at(probeTau);
+       double probeTauAbsEta_= fabs(HPSTauEta->at(probeTau));
+       double probeTauPU_    = (double)(VertexX->size());
+       // Loose - Tight Tau Histograms -- 3D
+       LooseTauPt3Dhisto->Fill( probeTauPt_, tauJetDeltaRmin_, probeTauAbsEta_, w );
+       if( probeTauPt_>35 ) LooseTauPU3Dhisto->Fill( probeTauPU_, tauJetDeltaRmin_, probeTauAbsEta_, w );
+       if( tauRTightCheck(probeTau) ){
+	 TightTauPt3Dhisto->Fill( probeTauPt_, tauJetDeltaRmin_, probeTauAbsEta_, w );
+	 if( probeTauPt_>35 ) TightTauPU3Dhisto->Fill( probeTauPU_, tauJetDeltaRmin_, probeTauAbsEta_, w );
+       }
+       // Fake Tau
+       if( isRecoTauFake(probeTau) ){
+	 LooseFakeTauPt3Dhisto->Fill( probeTauPt_, tauJetDeltaRmin_, probeTauAbsEta_, w );
+	 if( probeTauPt_>35 ) LooseFakeTauPU3Dhisto->Fill( probeTauPU_, tauJetDeltaRmin_, probeTauAbsEta_, w );
+	 if( tauRTightCheck(probeTau) ){
+	   TightFakeTauPt3Dhisto->Fill( probeTauPt_, tauJetDeltaRmin_, probeTauAbsEta_, w );
+	   if( probeTauPt_>35 ) TightFakeTauPU3Dhisto->Fill( probeTauPU_, tauJetDeltaRmin_, probeTauAbsEta_, w );
+	 }
+       }
+       // Prompt Tau
+       if( !isRecoTauFake(probeTau) ){
+	 LoosePromptTauPt3Dhisto->Fill( probeTauPt_, tauJetDeltaRmin_, probeTauAbsEta_, w );
+	 if( probeTauPt_>35 ) LoosePromptTauPU3Dhisto->Fill( probeTauPU_, tauJetDeltaRmin_, probeTauAbsEta_, w );
+	 if( tauRTightCheck(probeTau) ){
+	   TightPromptTauPt3Dhisto->Fill( probeTauPt_, tauJetDeltaRmin_, probeTauAbsEta_, w );
+	   if( probeTauPt_>35 ) TightPromptTauPU3Dhisto->Fill( probeTauPU_, tauJetDeltaRmin_, probeTauAbsEta_, w );
+	 }
+       }
+       
+       JetLepMetVectorPthisto->Fill( JetLepMetVectorPt, w );
+
        //--------------------------------------------------------------
        //
 
@@ -879,6 +1043,7 @@ void analysisClass::Loop()
    LeadMuTauDeltaRhisto->Write();
    PZetahisto->Write();
    TauJetDeltaRminhisto->Write();
+   JetLepMetVectorPthisto->Write();
    //
    METtauDeltaPhihisto->Write();
    METmuDeltaPhihisto ->Write();
@@ -937,6 +1102,7 @@ void analysisClass::Loop()
    AllGenhisto->Write();
    TTGenhisto->Write();
    //
+   /*
    LooseTauJetPthisto->Write();
    LooseTauPthisto->Write();
    LooseTauEtahisto->Write();
@@ -976,6 +1142,181 @@ void analysisClass::Loop()
    TightFakeTauJetDeltaRminhisto->Write();
    LoosePromptTauJetDeltaRminhisto->Write();
    TightPromptTauJetDeltaRminhisto->Write();
+   */
+   //LooseTauPt3Dhisto->ProjectionX("LooseTauPtDr1Bhisto",11,14, 1,1, "e");//0.5-0.7
+   //LooseTauPt3Dhisto->ProjectionX("LooseTauPtDr2Bhisto",15,20, 1,1, "e");//0.7-1.0
+   //LooseTauPt3Dhisto->ProjectionX("LooseTauPtDr3Bhisto",21,200,1,1, "e");//1.0>
+   //
+   //
+   LooseTauPt3Dhisto->ProjectionX("LooseTauPtDr0Bhisto",1, 200,1,1, "e");//All
+   LooseTauPt3Dhisto->ProjectionX("LooseTauPtDr1Bhisto",15,16, 1,1, "e");//0.7-0.8
+   LooseTauPt3Dhisto->ProjectionX("LooseTauPtDr2Bhisto",17,20, 1,1, "e");//0.8-1.0
+   LooseTauPt3Dhisto->ProjectionX("LooseTauPtDr3Bhisto",21,200,1,1, "e");//1.0>
+   TightTauPt3Dhisto->ProjectionX("TightTauPtDr0Bhisto",1, 200,1,1, "e");
+   TightTauPt3Dhisto->ProjectionX("TightTauPtDr1Bhisto",15,16, 1,1, "e");
+   TightTauPt3Dhisto->ProjectionX("TightTauPtDr2Bhisto",17,20, 1,1, "e");
+   TightTauPt3Dhisto->ProjectionX("TightTauPtDr3Bhisto",21,200,1,1, "e");
+   //
+   LooseFakeTauPt3Dhisto->ProjectionX("LooseFakeTauPtDr0Bhisto",1, 200,1,1, "e");
+   LooseFakeTauPt3Dhisto->ProjectionX("LooseFakeTauPtDr1Bhisto",15,16, 1,1, "e");
+   LooseFakeTauPt3Dhisto->ProjectionX("LooseFakeTauPtDr2Bhisto",17,20, 1,1, "e");
+   LooseFakeTauPt3Dhisto->ProjectionX("LooseFakeTauPtDr3Bhisto",21,200,1,1, "e");
+   TightFakeTauPt3Dhisto->ProjectionX("TightFakeTauPtDr0Bhisto",1, 200,1,1, "e");
+   TightFakeTauPt3Dhisto->ProjectionX("TightFakeTauPtDr1Bhisto",15,16, 1,1, "e");
+   TightFakeTauPt3Dhisto->ProjectionX("TightFakeTauPtDr2Bhisto",17,20, 1,1, "e");
+   TightFakeTauPt3Dhisto->ProjectionX("TightFakeTauPtDr3Bhisto",21,200,1,1, "e");
+   //
+   LoosePromptTauPt3Dhisto->ProjectionX("LoosePromptTauPtDr0Bhisto",1, 200,1,1, "e");
+   LoosePromptTauPt3Dhisto->ProjectionX("LoosePromptTauPtDr1Bhisto",15,16, 1,1, "e");
+   LoosePromptTauPt3Dhisto->ProjectionX("LoosePromptTauPtDr2Bhisto",17,20, 1,1, "e");
+   LoosePromptTauPt3Dhisto->ProjectionX("LoosePromptTauPtDr3Bhisto",21,200,1,1, "e");
+   TightPromptTauPt3Dhisto->ProjectionX("TightPromptTauPtDr0Bhisto",1, 200,1,1, "e");
+   TightPromptTauPt3Dhisto->ProjectionX("TightPromptTauPtDr1Bhisto",15,16, 1,1, "e");
+   TightPromptTauPt3Dhisto->ProjectionX("TightPromptTauPtDr2Bhisto",17,20, 1,1, "e");
+   TightPromptTauPt3Dhisto->ProjectionX("TightPromptTauPtDr3Bhisto",21,200,1,1, "e");
+   //
+   LooseTauPt3Dhisto->ProjectionX("LooseTauPtDr0Ehisto",1, 200,2,2, "e");//All
+   LooseTauPt3Dhisto->ProjectionX("LooseTauPtDr1Ehisto",15,16, 2,2, "e");//0.7-0.8
+   LooseTauPt3Dhisto->ProjectionX("LooseTauPtDr2Ehisto",17,20, 2,2, "e");//0.8-1.0
+   LooseTauPt3Dhisto->ProjectionX("LooseTauPtDr3Ehisto",21,200,2,2, "e");//1.0>
+   TightTauPt3Dhisto->ProjectionX("TightTauPtDr0Ehisto",1, 200,2,2, "e");
+   TightTauPt3Dhisto->ProjectionX("TightTauPtDr1Ehisto",15,16, 2,2, "e");
+   TightTauPt3Dhisto->ProjectionX("TightTauPtDr2Ehisto",17,20, 2,2, "e");
+   TightTauPt3Dhisto->ProjectionX("TightTauPtDr3Ehisto",21,200,2,2, "e");
+   //
+   LooseFakeTauPt3Dhisto->ProjectionX("LooseFakeTauPtDr0Ehisto",1, 200,2,2, "e");
+   LooseFakeTauPt3Dhisto->ProjectionX("LooseFakeTauPtDr1Ehisto",15,16, 2,2, "e");
+   LooseFakeTauPt3Dhisto->ProjectionX("LooseFakeTauPtDr2Ehisto",17,20, 2,2, "e");
+   LooseFakeTauPt3Dhisto->ProjectionX("LooseFakeTauPtDr3Ehisto",21,200,2,2, "e");
+   TightFakeTauPt3Dhisto->ProjectionX("TightFakeTauPtDr0Ehisto",1, 200,2,2, "e");
+   TightFakeTauPt3Dhisto->ProjectionX("TightFakeTauPtDr1Ehisto",15,16, 2,2, "e");
+   TightFakeTauPt3Dhisto->ProjectionX("TightFakeTauPtDr2Ehisto",17,20, 2,2, "e");
+   TightFakeTauPt3Dhisto->ProjectionX("TightFakeTauPtDr3Ehisto",21,200,2,2, "e");
+   //
+   LoosePromptTauPt3Dhisto->ProjectionX("LoosePromptTauPtDr0Ehisto",1, 200,2,2, "e");
+   LoosePromptTauPt3Dhisto->ProjectionX("LoosePromptTauPtDr1Ehisto",15,16, 2,2, "e");
+   LoosePromptTauPt3Dhisto->ProjectionX("LoosePromptTauPtDr2Ehisto",17,20, 2,2, "e");
+   LoosePromptTauPt3Dhisto->ProjectionX("LoosePromptTauPtDr3Ehisto",21,200,2,2, "e");
+   TightPromptTauPt3Dhisto->ProjectionX("TightPromptTauPtDr0Ehisto",1, 200,2,2, "e");
+   TightPromptTauPt3Dhisto->ProjectionX("TightPromptTauPtDr1Ehisto",15,16, 2,2, "e");
+   TightPromptTauPt3Dhisto->ProjectionX("TightPromptTauPtDr2Ehisto",17,20, 2,2, "e");
+   TightPromptTauPt3Dhisto->ProjectionX("TightPromptTauPtDr3Ehisto",21,200,2,2, "e");
+   //
+   //
+   // Change Pt to PileUp -- PT CUT >35 GeV
+   LooseTauPU3Dhisto->ProjectionX("LooseTauPUDr0Bhisto",1, 200,1,1, "e");//All
+   LooseTauPU3Dhisto->ProjectionX("LooseTauPUDr1Bhisto",15,16, 1,1, "e");//0.7-0.8
+   LooseTauPU3Dhisto->ProjectionX("LooseTauPUDr2Bhisto",17,20, 1,1, "e");//0.8-1.0
+   LooseTauPU3Dhisto->ProjectionX("LooseTauPUDr3Bhisto",21,200,1,1, "e");//1.0>
+   TightTauPU3Dhisto->ProjectionX("TightTauPUDr0Bhisto",1, 200,1,1, "e");
+   TightTauPU3Dhisto->ProjectionX("TightTauPUDr1Bhisto",15,16, 1,1, "e");
+   TightTauPU3Dhisto->ProjectionX("TightTauPUDr2Bhisto",17,20, 1,1, "e");
+   TightTauPU3Dhisto->ProjectionX("TightTauPUDr3Bhisto",21,200,1,1, "e");
+   //
+   LooseFakeTauPU3Dhisto->ProjectionX("LooseFakeTauPUDr0Bhisto",1, 200,1,1, "e");
+   LooseFakeTauPU3Dhisto->ProjectionX("LooseFakeTauPUDr1Bhisto",15,16, 1,1, "e");
+   LooseFakeTauPU3Dhisto->ProjectionX("LooseFakeTauPUDr2Bhisto",17,20, 1,1, "e");
+   LooseFakeTauPU3Dhisto->ProjectionX("LooseFakeTauPUDr3Bhisto",21,200,1,1, "e");
+   TightFakeTauPU3Dhisto->ProjectionX("TightFakeTauPUDr0Bhisto",1, 200,1,1, "e");
+   TightFakeTauPU3Dhisto->ProjectionX("TightFakeTauPUDr1Bhisto",15,16, 1,1, "e");
+   TightFakeTauPU3Dhisto->ProjectionX("TightFakeTauPUDr2Bhisto",17,20, 1,1, "e");
+   TightFakeTauPU3Dhisto->ProjectionX("TightFakeTauPUDr3Bhisto",21,200,1,1, "e");
+   //
+   LoosePromptTauPU3Dhisto->ProjectionX("LoosePromptTauPUDr0Bhisto",1, 200,1,1, "e");
+   LoosePromptTauPU3Dhisto->ProjectionX("LoosePromptTauPUDr1Bhisto",15,16, 1,1, "e");
+   LoosePromptTauPU3Dhisto->ProjectionX("LoosePromptTauPUDr2Bhisto",17,20, 1,1, "e");
+   LoosePromptTauPU3Dhisto->ProjectionX("LoosePromptTauPUDr3Bhisto",21,200,1,1, "e");
+   TightPromptTauPU3Dhisto->ProjectionX("TightPromptTauPUDr0Bhisto",1, 200,1,1, "e");
+   TightPromptTauPU3Dhisto->ProjectionX("TightPromptTauPUDr1Bhisto",15,16, 1,1, "e");
+   TightPromptTauPU3Dhisto->ProjectionX("TightPromptTauPUDr2Bhisto",17,20, 1,1, "e");
+   TightPromptTauPU3Dhisto->ProjectionX("TightPromptTauPUDr3Bhisto",21,200,1,1, "e");
+   //
+   LooseTauPU3Dhisto->ProjectionX("LooseTauPUDr0Ehisto",1, 200,2,2, "e");//All
+   LooseTauPU3Dhisto->ProjectionX("LooseTauPUDr1Ehisto",15,16, 2,2, "e");//0.7-0.8
+   LooseTauPU3Dhisto->ProjectionX("LooseTauPUDr2Ehisto",17,20, 2,2, "e");//0.8-1.0
+   LooseTauPU3Dhisto->ProjectionX("LooseTauPUDr3Ehisto",21,200,2,2, "e");//1.0>
+   TightTauPU3Dhisto->ProjectionX("TightTauPUDr0Ehisto",1, 200,2,2, "e");
+   TightTauPU3Dhisto->ProjectionX("TightTauPUDr1Ehisto",15,16, 2,2, "e");
+   TightTauPU3Dhisto->ProjectionX("TightTauPUDr2Ehisto",17,20, 2,2, "e");
+   TightTauPU3Dhisto->ProjectionX("TightTauPUDr3Ehisto",21,200,2,2, "e");
+   //
+   LooseFakeTauPU3Dhisto->ProjectionX("LooseFakeTauPUDr0Ehisto",1, 200,2,2, "e");
+   LooseFakeTauPU3Dhisto->ProjectionX("LooseFakeTauPUDr1Ehisto",15,16, 2,2, "e");
+   LooseFakeTauPU3Dhisto->ProjectionX("LooseFakeTauPUDr2Ehisto",17,20, 2,2, "e");
+   LooseFakeTauPU3Dhisto->ProjectionX("LooseFakeTauPUDr3Ehisto",21,200,2,2, "e");
+   TightFakeTauPU3Dhisto->ProjectionX("TightFakeTauPUDr0Ehisto",1, 200,2,2, "e");
+   TightFakeTauPU3Dhisto->ProjectionX("TightFakeTauPUDr1Ehisto",15,16, 2,2, "e");
+   TightFakeTauPU3Dhisto->ProjectionX("TightFakeTauPUDr2Ehisto",17,20, 2,2, "e");
+   TightFakeTauPU3Dhisto->ProjectionX("TightFakeTauPUDr3Ehisto",21,200,2,2, "e");
+   //
+   LoosePromptTauPU3Dhisto->ProjectionX("LoosePromptTauPUDr0Ehisto",1, 200,2,2, "e");
+   LoosePromptTauPU3Dhisto->ProjectionX("LoosePromptTauPUDr1Ehisto",15,16, 2,2, "e");
+   LoosePromptTauPU3Dhisto->ProjectionX("LoosePromptTauPUDr2Ehisto",17,20, 2,2, "e");
+   LoosePromptTauPU3Dhisto->ProjectionX("LoosePromptTauPUDr3Ehisto",21,200,2,2, "e");
+   TightPromptTauPU3Dhisto->ProjectionX("TightPromptTauPUDr0Ehisto",1, 200,2,2, "e");
+   TightPromptTauPU3Dhisto->ProjectionX("TightPromptTauPUDr1Ehisto",15,16, 2,2, "e");
+   TightPromptTauPU3Dhisto->ProjectionX("TightPromptTauPUDr2Ehisto",17,20, 2,2, "e");
+   TightPromptTauPU3Dhisto->ProjectionX("TightPromptTauPUDr3Ehisto",21,200,2,2, "e");
+   //
+   //
+
+   // ------------------------------------------
+   cout<<"LooseTauPtDr0123Bhisto PRINT"<<endl;
+   LooseTauPtDr0Bhisto->Print();
+   LooseTauPtDr1Bhisto->Print();
+   LooseTauPtDr2Bhisto->Print();
+   LooseTauPtDr3Bhisto->Print();
+   cout<<"LooseTauPtDr0123Bhisto PRINT END"<<endl;
+   cout<<"LooseTauPtDr0123Ehisto PRINT"<<endl;
+   LooseTauPtDr0Ehisto->Print();
+   LooseTauPtDr1Ehisto->Print();
+   LooseTauPtDr2Ehisto->Print();
+   LooseTauPtDr3Ehisto->Print();
+   cout<<"LooseTauPtDr0123Ehisto PRINT END"<<endl;
+   //
+   cout<<"LooseTauPUDr0123Bhisto PRINT"<<endl;
+   LooseTauPUDr0Bhisto->Print();
+   LooseTauPUDr1Bhisto->Print();
+   LooseTauPUDr2Bhisto->Print();
+   LooseTauPUDr3Bhisto->Print();
+   cout<<"LooseTauPUDr0123Bhisto PRINT END"<<endl;
+   cout<<"LooseTauPUDr0123Ehisto PRINT"<<endl;
+   LooseTauPUDr0Ehisto->Print();
+   LooseTauPUDr1Ehisto->Print();
+   LooseTauPUDr2Ehisto->Print();
+   LooseTauPUDr3Ehisto->Print();
+   cout<<"LooseTauPUDr0123Ehisto PRINT END"<<endl;
+   // ------------------------------------------
+
+   LooseTauPtDr0Bhisto->Write();        LooseTauPtDr1Bhisto->Write();        LooseTauPtDr2Bhisto->Write();        LooseTauPtDr3Bhisto->Write();
+   TightTauPtDr0Bhisto->Write();        TightTauPtDr1Bhisto->Write();        TightTauPtDr2Bhisto->Write();        TightTauPtDr3Bhisto->Write();
+   LooseFakeTauPtDr0Bhisto->Write();    LooseFakeTauPtDr1Bhisto->Write();    LooseFakeTauPtDr2Bhisto->Write();    LooseFakeTauPtDr3Bhisto->Write();
+   TightFakeTauPtDr0Bhisto->Write();    TightFakeTauPtDr1Bhisto->Write();    TightFakeTauPtDr2Bhisto->Write();    TightFakeTauPtDr3Bhisto->Write();
+   LoosePromptTauPtDr0Bhisto->Write();  LoosePromptTauPtDr1Bhisto->Write();  LoosePromptTauPtDr2Bhisto->Write();  LoosePromptTauPtDr3Bhisto->Write();
+   TightPromptTauPtDr0Bhisto->Write();  TightPromptTauPtDr1Bhisto->Write();  TightPromptTauPtDr2Bhisto->Write();  TightPromptTauPtDr3Bhisto->Write();
+   //
+   LooseTauPtDr0Ehisto->Write();        LooseTauPtDr1Ehisto->Write();        LooseTauPtDr2Ehisto->Write();        LooseTauPtDr3Ehisto->Write();
+   TightTauPtDr0Ehisto->Write();        TightTauPtDr1Ehisto->Write();        TightTauPtDr2Ehisto->Write();        TightTauPtDr3Ehisto->Write();
+   LooseFakeTauPtDr0Ehisto->Write();    LooseFakeTauPtDr1Ehisto->Write();    LooseFakeTauPtDr2Ehisto->Write();    LooseFakeTauPtDr3Ehisto->Write();
+   TightFakeTauPtDr0Ehisto->Write();    TightFakeTauPtDr1Ehisto->Write();    TightFakeTauPtDr2Ehisto->Write();    TightFakeTauPtDr3Ehisto->Write();
+   LoosePromptTauPtDr0Ehisto->Write();  LoosePromptTauPtDr1Ehisto->Write();  LoosePromptTauPtDr2Ehisto->Write();  LoosePromptTauPtDr3Ehisto->Write();
+   TightPromptTauPtDr0Ehisto->Write();  TightPromptTauPtDr1Ehisto->Write();  TightPromptTauPtDr2Ehisto->Write();  TightPromptTauPtDr3Ehisto->Write();
+
+
+   LooseTauPUDr0Bhisto->Write();        LooseTauPUDr1Bhisto->Write();        LooseTauPUDr2Bhisto->Write();        LooseTauPUDr3Bhisto->Write();
+   TightTauPUDr0Bhisto->Write();        TightTauPUDr1Bhisto->Write();        TightTauPUDr2Bhisto->Write();        TightTauPUDr3Bhisto->Write();
+   LooseFakeTauPUDr0Bhisto->Write();    LooseFakeTauPUDr1Bhisto->Write();    LooseFakeTauPUDr2Bhisto->Write();    LooseFakeTauPUDr3Bhisto->Write();
+   TightFakeTauPUDr0Bhisto->Write();    TightFakeTauPUDr1Bhisto->Write();    TightFakeTauPUDr2Bhisto->Write();    TightFakeTauPUDr3Bhisto->Write();
+   LoosePromptTauPUDr0Bhisto->Write();  LoosePromptTauPUDr1Bhisto->Write();  LoosePromptTauPUDr2Bhisto->Write();  LoosePromptTauPUDr3Bhisto->Write();
+   TightPromptTauPUDr0Bhisto->Write();  TightPromptTauPUDr1Bhisto->Write();  TightPromptTauPUDr2Bhisto->Write();  TightPromptTauPUDr3Bhisto->Write();
+   //
+   LooseTauPUDr0Ehisto->Write();        LooseTauPUDr1Ehisto->Write();        LooseTauPUDr2Ehisto->Write();        LooseTauPUDr3Ehisto->Write();
+   TightTauPUDr0Ehisto->Write();        TightTauPUDr1Ehisto->Write();        TightTauPUDr2Ehisto->Write();        TightTauPUDr3Ehisto->Write();
+   LooseFakeTauPUDr0Ehisto->Write();    LooseFakeTauPUDr1Ehisto->Write();    LooseFakeTauPUDr2Ehisto->Write();    LooseFakeTauPUDr3Ehisto->Write();
+   TightFakeTauPUDr0Ehisto->Write();    TightFakeTauPUDr1Ehisto->Write();    TightFakeTauPUDr2Ehisto->Write();    TightFakeTauPUDr3Ehisto->Write();
+   LoosePromptTauPUDr0Ehisto->Write();  LoosePromptTauPUDr1Ehisto->Write();  LoosePromptTauPUDr2Ehisto->Write();  LoosePromptTauPUDr3Ehisto->Write();
+   TightPromptTauPUDr0Ehisto->Write();  TightPromptTauPUDr1Ehisto->Write();  TightPromptTauPUDr2Ehisto->Write();  TightPromptTauPUDr3Ehisto->Write();
+
 
    //////////
    std::cout << "analysisClass::Loop() ends" <<std::endl;   

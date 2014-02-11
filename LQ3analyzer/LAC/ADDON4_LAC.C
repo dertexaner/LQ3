@@ -22,7 +22,7 @@ double analysisClass::tauGenMatchDeltaR_LQ(unsigned int iTauR){
   TLorentzVector tauMgen;
   TLorentzVector taureco;
   tauMgen.SetPtEtaPhiM( 0 , 0 , 0 , 0 );
-  taureco.SetPtEtaPhiM( HPSTauPt->at(iTauR), HPSTauEta->at(iTauR), HPSTauPhi->at(iTauR), 0 );
+  taureco.SetPtEtaPhiM( tauPtcorr(iTauR), HPSTauEta->at(iTauR), HPSTauPhi->at(iTauR), 0 );
   //
   for( unsigned int iTauT=0; iTauT<GenLQTopTauPt->size(); iTauT++){
     if( GenLQTopTauTauDecayMode->at(iTauT)<3 ) continue;//skip leptonic taus
@@ -50,7 +50,7 @@ double analysisClass::elGenMatchDeltaR_LQ(unsigned int iElR){
   TLorentzVector elMgen;
   TLorentzVector elreco;
   elMgen.SetPtEtaPhiM( 0 , 0 , 0 , 0 );
-  elreco.SetPtEtaPhiM( ElectronPt->at(iElR), ElectronEta->at(iElR), ElectronPhi->at(iElR), 0 );
+  elreco.SetPtEtaPhiM( elPtcorr(iElR), ElectronEta->at(iElR), ElectronPhi->at(iElR), 0 );
   //
   for( unsigned int iElT=0; iElT<GenLQTopXElectronPt->size(); iElT++){
     elMgen.SetPtEtaPhiM( GenLQTopXElectronPt->at(iElT), GenLQTopXElectronEta->at(iElT), GenLQTopXElectronPhi->at(iElT), 0 );
@@ -76,7 +76,7 @@ double analysisClass::muGenMatchDeltaR_LQ(unsigned int iMuR){
   TLorentzVector muMgen;
   TLorentzVector mureco;
   muMgen.SetPtEtaPhiM( 0 , 0 , 0 , 0 );
-  mureco.SetPtEtaPhiM( MuonPt->at(iMuR), MuonEta->at(iMuR), MuonPhi->at(iMuR), 0 );
+  mureco.SetPtEtaPhiM( muPtcorr(iMuR), MuonEta->at(iMuR), MuonPhi->at(iMuR), 0 );
   //
   for( unsigned int iMuT=0; iMuT<GenLQTopXMuonPt->size(); iMuT++){
     muMgen.SetPtEtaPhiM( GenLQTopXMuonPt->at(iMuT), GenLQTopXMuonEta->at(iMuT), GenLQTopXMuonPhi->at(iMuT), 0 );

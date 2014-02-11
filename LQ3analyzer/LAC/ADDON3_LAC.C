@@ -37,14 +37,14 @@ bool analysisClass::PreSelection(TString Process){
   Tau.SetPtEtaPhiM(0,0,0,0);
   for(unsigned int iTauR=0; iTauR<HPSTauPt->size(); iTauR++){
     if( !tauRisoCheck(iTauR) )continue;
-    if( HPSTauPt->at(iTauR)>Tau.Pt() ){
-      Tau.SetPtEtaPhiM(HPSTauPt->at(iTauR), HPSTauEta->at(iTauR), HPSTauPhi->at(iTauR), 0);
+    if( tauPtcorr(iTauR)>Tau.Pt() ){
+      Tau.SetPtEtaPhiM(tauPtcorr(iTauR), HPSTauEta->at(iTauR), HPSTauPhi->at(iTauR), 0);
     }
   }
   for(unsigned int iMuR=0; iMuR<MuonPt->size(); iMuR++){
     if( !muRisoCheck(iMuR) )continue;
-    if( MuonPt->at(iMuR)>Mu.Pt() ){
-      Mu.SetPtEtaPhiM(MuonPt->at(iMuR), MuonEta->at(iMuR), MuonPhi->at(iMuR), 0);
+    if( muPtcorr(iMuR)>Mu.Pt() ){
+      Mu.SetPtEtaPhiM(muPtcorr(iMuR), MuonEta->at(iMuR), MuonPhi->at(iMuR), 0);
     }
   }
   if( TotalMu>0 && TotalTau>0 ) LeadMuTauDeltaR=Mu.DeltaR(Tau);
@@ -167,7 +167,7 @@ bool analysisClass::PreSelection(TString Process){
     if( LeadingJetPt_<50         ) return false;
     if( ST()<400                 ) return false;
     if( METlepMT("Mu")>20        ) return false;
-    if( PFMETType01XYCor->at(0)>20  ) return false;
+    if( METcorr("Pt")>20  ) return false;
     //if( TotalBJet>0              ) return false;
     if( abs(RecoSignalType())!=1010  ) return false;//this is one mu
   }
@@ -180,12 +180,12 @@ bool analysisClass::PreSelection(TString Process){
     //if( !isZToMuMu()             ) return false;
     //if( ST()>350                 ) return false;
     if( METlepMT("Mu")>20            ) return false;
-    if( PFMETType01XYCor->at(0)>20      ) return false;
+    if( METcorr("Pt")>20      ) return false;
     if( abs(RecoSignalType())!=1010  ) return false;//this is one mu
   }
   if( Process == "FakeMuonsV3" ){
     if( METlepMT("Mu")>10            ) return false;
-    if( PFMETType01XYCor->at(0)>10      ) return false;
+    if( METcorr("Pt")>10      ) return false;
     if( TotalJet<1                   ) return false;//
     if( abs(RecoSignalType())!=1010  ) return false;//this is one mu
     if( !isAllMuonsHLT()             ) return false;//mu has to match the trigger
@@ -193,7 +193,7 @@ bool analysisClass::PreSelection(TString Process){
     //--------- Veto on 2nd Global Muon ---------------------
     int nGlobalMuons=0;
     for(unsigned int iMuR=0;  iMuR<MuonPt->size();     iMuR++){
-      if( MuonPt->at(iMuR)>MuonPtCut && fabs(MuonEta->at(iMuR))<2.1 && MuonIsGlobal->at(iMuR)==1 ) nGlobalMuons++;
+      if( muPtcorr(iMuR)>MuonPtCut && fabs(MuonEta->at(iMuR))<2.1 && MuonIsGlobal->at(iMuR)==1 ) nGlobalMuons++;
     }
     if( nGlobalMuons>1               ) return false;
     //
@@ -203,10 +203,10 @@ bool analysisClass::PreSelection(TString Process){
     TLorentzVector Jet;
     for(unsigned int iMuR=0;  iMuR<MuonPt->size();     iMuR++){
       if( !muRisoCheck(iMuR)     ) continue;
-      Mu.SetPtEtaPhiM(MuonPt->at(iMuR), MuonEta->at(iMuR), MuonPhi->at(iMuR), 0);
+      Mu.SetPtEtaPhiM(muPtcorr(iMuR), MuonEta->at(iMuR), MuonPhi->at(iMuR), 0);
       for(unsigned int iJetR=0;  iJetR<PFJetPt->size();     iJetR++){
 	if( !jetRTightCheck(iJetR) ) continue;
-	Jet.SetPtEtaPhiM( PFJetPt->at(iJetR), PFJetEta->at(iJetR), PFJetPhi->at(iJetR), 0 );
+	Jet.SetPtEtaPhiM( jetPtcorr(iJetR), PFJetEta->at(iJetR), PFJetPhi->at(iJetR), 0 );
 	if( (fabs(fabs(Mu.DeltaPhi(Jet))-TMath::Pi())/TMath::Pi())<0.1 )  isBackToBackJet=true;
       }
     }
@@ -261,7 +261,7 @@ bool analysisClass::PreSelection(TString Process){
     if( MaxDiLepInvMass()<65       ) return false;
     if( LeadMuTauDeltaR>4          ) return false;
     if( TotalN<4                   ) return false;
-    if( PFMETType01XYCor->at(0)<30    ) return false;
+    if( METcorr("Pt")<30    ) return false;
     if( ST()<400             ) return false;
     if( RecoSignalType()<0   ) return false;
   }
@@ -292,14 +292,14 @@ bool analysisClass::DiscoverySelection( TString SignalChannel ){
   Tau.SetPtEtaPhiM(0,0,0,0);
   for(unsigned int iTauR=0; iTauR<HPSTauPt->size(); iTauR++){
     if( !tauRisoCheck(iTauR) )continue;
-    if( HPSTauPt->at(iTauR)>Tau.Pt() ){
-      Tau.SetPtEtaPhiM(HPSTauPt->at(iTauR), HPSTauEta->at(iTauR), HPSTauPhi->at(iTauR), 0);
+    if( tauPtcorr(iTauR)>Tau.Pt() ){
+      Tau.SetPtEtaPhiM(tauPtcorr(iTauR), HPSTauEta->at(iTauR), HPSTauPhi->at(iTauR), 0);
     }
   }
   for(unsigned int iMuR=0; iMuR<MuonPt->size(); iMuR++){
     if( !muRisoCheck(iMuR)        )continue;
-    if( MuonPt->at(iMuR)>Mu.Pt() ){
-      Mu.SetPtEtaPhiM(MuonPt->at(iMuR), MuonEta->at(iMuR), MuonPhi->at(iMuR), 0);
+    if( muPtcorr(iMuR)>Mu.Pt() ){
+      Mu.SetPtEtaPhiM(muPtcorr(iMuR), MuonEta->at(iMuR), MuonPhi->at(iMuR), 0);
     }
   }
   if( TotalMu>0 && TotalTau>0 ) LeadMuTauDeltaR=Mu.DeltaR(Tau);
@@ -336,8 +336,8 @@ void analysisClass::which_MuMu( std::vector<unsigned int>& mumuVector){
   //
   for(unsigned int iMuR=0; iMuR<MuonPt->size(); iMuR++){
     if( muRisoCheck(iMuR) ){
-      if( MuonCharge->at(iMuR)>0 ) loosePMuons.push_back( std::make_pair(MuonPt->at(iMuR),iMuR) );
-      if( MuonCharge->at(iMuR)<0 ) looseNMuons.push_back( std::make_pair(MuonPt->at(iMuR),iMuR) );
+      if( MuonCharge->at(iMuR)>0 ) loosePMuons.push_back( std::make_pair(muPtcorr(iMuR),iMuR) );
+      if( MuonCharge->at(iMuR)<0 ) looseNMuons.push_back( std::make_pair(muPtcorr(iMuR),iMuR) );
     }
   }
   //
@@ -393,15 +393,15 @@ void analysisClass::which_MuTau( std::vector<unsigned int>& mutauVector){
   //
   for(unsigned int iMuR=0; iMuR<MuonPt->size(); iMuR++){
     if( muRisoCheck(iMuR) ){
-      if( MuonCharge->at(iMuR)>0 ) loosePMuons.push_back( std::make_pair(MuonPt->at(iMuR),iMuR) );
-      if( MuonCharge->at(iMuR)<0 ) looseNMuons.push_back( std::make_pair(MuonPt->at(iMuR),iMuR) );
+      if( MuonCharge->at(iMuR)>0 ) loosePMuons.push_back( std::make_pair(muPtcorr(iMuR),iMuR) );
+      if( MuonCharge->at(iMuR)<0 ) looseNMuons.push_back( std::make_pair(muPtcorr(iMuR),iMuR) );
     }
   }
   //
   for(unsigned int iTauR=0; iTauR<HPSTauPt->size(); iTauR++){
     if( tauRisoCheck(iTauR) ){
-      if( HPSTauCharge->at(iTauR)>0 ) loosePTaus.push_back( std::make_pair(HPSTauPt->at(iTauR),iTauR) );
-      if( HPSTauCharge->at(iTauR)<0 ) looseNTaus.push_back( std::make_pair(HPSTauPt->at(iTauR),iTauR) );
+      if( HPSTauCharge->at(iTauR)>0 ) loosePTaus.push_back( std::make_pair(tauPtcorr(iTauR),iTauR) );
+      if( HPSTauCharge->at(iTauR)<0 ) looseNTaus.push_back( std::make_pair(tauPtcorr(iTauR),iTauR) );
     }
   }
   //
@@ -438,15 +438,15 @@ void analysisClass::which_MuTauOS( std::vector<unsigned int>& mutauVector){
   //
   for(unsigned int iMuR=0; iMuR<MuonPt->size(); iMuR++){
     if( muRisoCheck(iMuR) ){
-      if( MuonCharge->at(iMuR)>0 ) loosePMuons.push_back( std::make_pair(MuonPt->at(iMuR),iMuR) );
-      if( MuonCharge->at(iMuR)<0 ) looseNMuons.push_back( std::make_pair(MuonPt->at(iMuR),iMuR) );
+      if( MuonCharge->at(iMuR)>0 ) loosePMuons.push_back( std::make_pair(muPtcorr(iMuR),iMuR) );
+      if( MuonCharge->at(iMuR)<0 ) looseNMuons.push_back( std::make_pair(muPtcorr(iMuR),iMuR) );
     }
   }
   //
   for(unsigned int iTauR=0; iTauR<HPSTauPt->size(); iTauR++){
     if( tauRisoCheck(iTauR) ){
-      if( HPSTauCharge->at(iTauR)>0 ) loosePTaus.push_back( std::make_pair(HPSTauPt->at(iTauR),iTauR) );
-      if( HPSTauCharge->at(iTauR)<0 ) looseNTaus.push_back( std::make_pair(HPSTauPt->at(iTauR),iTauR) );
+      if( HPSTauCharge->at(iTauR)>0 ) loosePTaus.push_back( std::make_pair(tauPtcorr(iTauR),iTauR) );
+      if( HPSTauCharge->at(iTauR)<0 ) looseNTaus.push_back( std::make_pair(tauPtcorr(iTauR),iTauR) );
     }
   }
   //
@@ -499,7 +499,7 @@ bool analysisClass::isOneMuonSuperIso(){
     double pfIso = 0;
     pfIso = MuonPFIsoR04ChargedHadron->at(iMuR) + TMath::Max( 0.0 , (MuonPFIsoR04NeutralHadron->at(iMuR)+MuonPFIsoR04Photon->at(iMuR)-0.5*MuonPFIsoR04PU->at(iMuR)) );
     // Tight working point is 0.12 ( https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideMuonId )
-    if( pfIso/MuonPt->at(iMuR)<0.04 ) return true;
+    if( pfIso/muPtcorr(iMuR)<0.04 ) return true;
   }
   //
   return false;
@@ -520,11 +520,11 @@ double analysisClass::MuTaudeltaPzeta(){
 // // //
 double analysisClass::deltaPzeta( unsigned int iMuR, unsigned int iTauR ){
   TVector3 muT; TVector3 tauT; TVector3 unitmuT; TVector3 unittauT; TVector3 unitbisecT; TVector3 MET;
-  muT.SetPtEtaPhi(  MuonPt->at(iMuR),    0, MuonPhi->at(iMuR)    );
-  tauT.SetPtEtaPhi( HPSTauPt->at(iTauR), 0, HPSTauPhi->at(iTauR) );
+  muT.SetPtEtaPhi(  muPtcorr(iMuR),    0, MuonPhi->at(iMuR)    );
+  tauT.SetPtEtaPhi( tauPtcorr(iTauR), 0, HPSTauPhi->at(iTauR) );
   unitmuT=muT*(1./muT.Mag());  unittauT=tauT*(1./tauT.Mag());
   unitbisecT=(unitmuT+unittauT)*(1./((unitmuT+unittauT).Mag()));
-  MET.SetPtEtaPhi( PFMETType01XYCor->at(0), 0, PFMETPhiType01XYCor->at(0)  );
+  MET.SetPtEtaPhi( METcorr("Pt"), 0, METcorr("Phi")  );
   double pZeta;  double pZetaVis;
   pZeta    = unitbisecT.Dot( (muT+tauT+MET) );
   pZetaVis = unitbisecT.Dot( (muT+tauT)     );
@@ -539,11 +539,11 @@ double analysisClass::deltaPzeta( unsigned int iMuR, unsigned int iTauR ){
 // // //
 double analysisClass::Pzeta( unsigned int iMuR, unsigned int iTauR ){
   TVector3 muT; TVector3 tauT; TVector3 unitmuT; TVector3 unittauT; TVector3 unitbisecT; TVector3 MET;
-  muT.SetPtEtaPhi(  MuonPt->at(iMuR),    0, MuonPhi->at(iMuR)    );
-  tauT.SetPtEtaPhi( HPSTauPt->at(iTauR), 0, HPSTauPhi->at(iTauR) );
+  muT.SetPtEtaPhi(  muPtcorr(iMuR),    0, MuonPhi->at(iMuR)    );
+  tauT.SetPtEtaPhi( tauPtcorr(iTauR), 0, HPSTauPhi->at(iTauR) );
   unitmuT=muT*(1./muT.Mag());  unittauT=tauT*(1./tauT.Mag());
   unitbisecT=(unitmuT+unittauT)*(1./((unitmuT+unittauT).Mag()));
-  MET.SetPtEtaPhi( PFMETType01XYCor->at(0), 0, PFMETPhiType01XYCor->at(0)  );
+  MET.SetPtEtaPhi( METcorr("Pt"), 0, METcorr("Phi")  );
   double pZeta; 
   pZeta    = unitbisecT.Dot( (muT+tauT+MET) );
   return pZeta;
@@ -551,11 +551,11 @@ double analysisClass::Pzeta( unsigned int iMuR, unsigned int iTauR ){
 // // //
 double analysisClass::visPzeta( unsigned int iMuR, unsigned int iTauR ){
   TVector3 muT; TVector3 tauT; TVector3 unitmuT; TVector3 unittauT; TVector3 unitbisecT; TVector3 MET;
-  muT.SetPtEtaPhi(  MuonPt->at(iMuR),    0, MuonPhi->at(iMuR)    );
-  tauT.SetPtEtaPhi( HPSTauPt->at(iTauR), 0, HPSTauPhi->at(iTauR) );
+  muT.SetPtEtaPhi(  muPtcorr(iMuR),    0, MuonPhi->at(iMuR)    );
+  tauT.SetPtEtaPhi( tauPtcorr(iTauR), 0, HPSTauPhi->at(iTauR) );
   unitmuT=muT*(1./muT.Mag());  unittauT=tauT*(1./tauT.Mag());
   unitbisecT=(unitmuT+unittauT)*(1./((unitmuT+unittauT).Mag()));
-  MET.SetPtEtaPhi( PFMETType01XYCor->at(0), 0, PFMETPhiType01XYCor->at(0)  );
+  MET.SetPtEtaPhi( METcorr("Pt"), 0, METcorr("Phi")  );
   double pZetaVis;
   pZetaVis = unitbisecT.Dot( (muT+tauT)     );
   return pZetaVis;
@@ -567,7 +567,7 @@ double analysisClass::LeadingMuPt( ){
   //
   for(unsigned int iMuR=0;  iMuR<MuonPt->size();     iMuR++){
     if(!muRisoCheck(iMuR)       ) continue;
-    if( LeadLep.Pt()<MuonPt->at(iMuR)  ) LeadLep.SetPtEtaPhiM( MuonPt->at(iMuR), MuonEta->at(iMuR), MuonPhi->at(iMuR), 0 );
+    if( LeadLep.Pt()<muPtcorr(iMuR)  ) LeadLep.SetPtEtaPhiM( muPtcorr(iMuR), MuonEta->at(iMuR), MuonPhi->at(iMuR), 0 );
   }
   return LeadLep.Pt();
 }
@@ -578,7 +578,7 @@ double analysisClass::LeadingTauPt(){
   //
   for(unsigned int iTauR=0;  iTauR<HPSTauPt->size();     iTauR++){
     if(!tauRisoCheck(iTauR)       ) continue;
-    if( LeadLep.Pt()<HPSTauPt->at(iTauR)  ) LeadLep.SetPtEtaPhiM( HPSTauPt->at(iTauR), HPSTauEta->at(iTauR), HPSTauPhi->at(iTauR), 0 );
+    if( LeadLep.Pt()<tauPtcorr(iTauR)  ) LeadLep.SetPtEtaPhiM( tauPtcorr(iTauR), HPSTauEta->at(iTauR), HPSTauPhi->at(iTauR), 0 );
   }
   return LeadLep.Pt();
 }
@@ -589,7 +589,7 @@ double analysisClass::LeadingJetPt(){
   //
   for(unsigned int iJetR=0;  iJetR<PFJetPt->size();     iJetR++){
     if(!jetRisoCheck(iJetR)       ) continue;
-    if( LeadJet.Pt()<PFJetPt->at(iJetR)  ) LeadJet.SetPtEtaPhiM( PFJetPt->at(iJetR), PFJetEta->at(iJetR), PFJetPhi->at(iJetR), 0 );
+    if( LeadJet.Pt()<jetPtcorr(iJetR)  ) LeadJet.SetPtEtaPhiM( jetPtcorr(iJetR), PFJetEta->at(iJetR), PFJetPhi->at(iJetR), 0 );
   }
   return LeadJet.Pt();
 }
@@ -599,7 +599,7 @@ double analysisClass::tauGenMatchDeltaR(unsigned int iTauR){
   TLorentzVector taureco;
   if(HPSTauMatchedGenParticlePt->at(iTauR)<=0) return 9;
   tauMgen.SetPtEtaPhiM( HPSTauMatchedGenParticlePt->at(iTauR), HPSTauMatchedGenParticleEta->at(iTauR), HPSTauMatchedGenParticlePhi->at(iTauR), 0 );
-  taureco.SetPtEtaPhiM( HPSTauPt->at(iTauR), HPSTauEta->at(iTauR), HPSTauPhi->at(iTauR), 0 );
+  taureco.SetPtEtaPhiM( tauPtcorr(iTauR), HPSTauEta->at(iTauR), HPSTauPhi->at(iTauR), 0 );
   return taureco.DeltaR(tauMgen);
 }
 // // //
@@ -608,7 +608,7 @@ double analysisClass::muGenMatchDeltaR(unsigned int iMuR){
   TLorentzVector mureco;
   if(MuonMatchedGenParticlePt->at(iMuR)<=0) return 9;
   muMgen.SetPtEtaPhiM( MuonMatchedGenParticlePt->at(iMuR), MuonMatchedGenParticleEta->at(iMuR), MuonMatchedGenParticlePhi->at(iMuR), 0 );
-  mureco.SetPtEtaPhiM( MuonPt->at(iMuR), MuonEta->at(iMuR), MuonPhi->at(iMuR), 0 );
+  mureco.SetPtEtaPhiM( muPtcorr(iMuR), MuonEta->at(iMuR), MuonPhi->at(iMuR), 0 );
   return mureco.DeltaR(muMgen);
 }
 // // //
@@ -636,8 +636,8 @@ double analysisClass::MaxDiLepInvMass(){
     if( !muRisoCheck(iMuR) ) continue;
     for(unsigned int iMuR2=iMuR+1;  iMuR2<MuonPt->size();     iMuR2++){
       if( !muRisoCheck(iMuR2) ) continue;
-      lep1.SetPtEtaPhiM( MuonPt->at(iMuR),  MuonEta->at(iMuR),  MuonPhi->at(iMuR),  0);
-      lep2.SetPtEtaPhiM( MuonPt->at(iMuR2), MuonEta->at(iMuR2), MuonPhi->at(iMuR2), 0);
+      lep1.SetPtEtaPhiM( muPtcorr(iMuR),  MuonEta->at(iMuR),  MuonPhi->at(iMuR),  0);
+      lep2.SetPtEtaPhiM( muPtcorr(iMuR2), MuonEta->at(iMuR2), MuonPhi->at(iMuR2), 0);
       if( (lep2+lep1).M() > mass ) mass=(lep2+lep1).M();
     }
   }
@@ -647,8 +647,8 @@ double analysisClass::MaxDiLepInvMass(){
     if( !elRisoCheck(iElR) ) continue;
     for(unsigned int iElR2=iElR+1;  iElR2<ElectronPt->size(); iElR2++){
       if( !elRisoCheck(iElR2) ) continue;
-      lep1.SetPtEtaPhiM( ElectronPt->at(iElR),  ElectronEta->at(iElR),  ElectronPhi->at(iElR),  0);
-      lep2.SetPtEtaPhiM( ElectronPt->at(iElR2), ElectronEta->at(iElR2), ElectronPhi->at(iElR2), 0);
+      lep1.SetPtEtaPhiM( elPtcorr(iElR),  ElectronEta->at(iElR),  ElectronPhi->at(iElR),  0);
+      lep2.SetPtEtaPhiM( elPtcorr(iElR2), ElectronEta->at(iElR2), ElectronPhi->at(iElR2), 0);
       if( (lep2+lep1).M() > mass ) mass=(lep2+lep1).M();
     }
   }
@@ -658,8 +658,8 @@ double analysisClass::MaxDiLepInvMass(){
     if( !tauRisoCheck(iTauR) ) continue;
     for(unsigned int iTauR2=iTauR+1; iTauR2<HPSTauPt->size(); iTauR2++){
       if( !tauRisoCheck(iTauR2) ) continue;
-      lep1.SetPtEtaPhiM( HPSTauPt->at(iTauR),  HPSTauEta->at(iTauR),  HPSTauPhi->at(iTauR),  0);
-      lep2.SetPtEtaPhiM( HPSTauPt->at(iTauR2), HPSTauEta->at(iTauR2), HPSTauPhi->at(iTauR2), 0);
+      lep1.SetPtEtaPhiM( tauPtcorr(iTauR),  HPSTauEta->at(iTauR),  HPSTauPhi->at(iTauR),  0);
+      lep2.SetPtEtaPhiM( tauPtcorr(iTauR2), HPSTauEta->at(iTauR2), HPSTauPhi->at(iTauR2), 0);
       if( (lep2+lep1).M() > mass ) mass=(lep2+lep1).M();
     }
   }
@@ -668,8 +668,8 @@ double analysisClass::MaxDiLepInvMass(){
     if( !muRisoCheck(iMuR) ) continue;
     for(unsigned int iElR2=0;  iElR2<ElectronPt->size();     iElR2++){
       if( !elRisoCheck(iElR2) ) continue;
-      lep1.SetPtEtaPhiM( MuonPt->at(iMuR),      MuonEta->at(iMuR),      MuonPhi->at(iMuR),      0);
-      lep2.SetPtEtaPhiM( ElectronPt->at(iElR2), ElectronEta->at(iElR2), ElectronPhi->at(iElR2), 0);
+      lep1.SetPtEtaPhiM( muPtcorr(iMuR),      MuonEta->at(iMuR),      MuonPhi->at(iMuR),      0);
+      lep2.SetPtEtaPhiM( elPtcorr(iElR2), ElectronEta->at(iElR2), ElectronPhi->at(iElR2), 0);
       if( (lep2+lep1).M() > mass ) mass=(lep2+lep1).M();
     }
   }
@@ -679,8 +679,8 @@ double analysisClass::MaxDiLepInvMass(){
     if( !muRisoCheck(iMuR) ) continue ;
     for(unsigned int iTauR2=0;  iTauR2<HPSTauPt->size();     iTauR2++){
       if( !tauRisoCheck(iTauR2) ) continue;
-      lep1.SetPtEtaPhiM( MuonPt->at(iMuR),     MuonEta->at(iMuR),     MuonPhi->at(iMuR),     0);
-      lep2.SetPtEtaPhiM( HPSTauPt->at(iTauR2), HPSTauEta->at(iTauR2), HPSTauPhi->at(iTauR2), 0);
+      lep1.SetPtEtaPhiM( muPtcorr(iMuR),     MuonEta->at(iMuR),     MuonPhi->at(iMuR),     0);
+      lep2.SetPtEtaPhiM( tauPtcorr(iTauR2), HPSTauEta->at(iTauR2), HPSTauPhi->at(iTauR2), 0);
       if( (lep2+lep1).M() > mass ) mass=(lep2+lep1).M();
     }
   }
@@ -690,8 +690,8 @@ double analysisClass::MaxDiLepInvMass(){
     if( !elRisoCheck(iElR) ) continue;
     for(unsigned int iTauR2=0;  iTauR2<HPSTauPt->size();     iTauR2++){
       if( !tauRisoCheck(iTauR2) ) continue;
-      lep1.SetPtEtaPhiM( ElectronPt->at(iElR), ElectronEta->at(iElR), ElectronPhi->at(iElR), 0);
-      lep2.SetPtEtaPhiM( HPSTauPt->at(iTauR2), HPSTauEta->at(iTauR2), HPSTauPhi->at(iTauR2), 0);
+      lep1.SetPtEtaPhiM( elPtcorr(iElR), ElectronEta->at(iElR), ElectronPhi->at(iElR), 0);
+      lep2.SetPtEtaPhiM( tauPtcorr(iTauR2), HPSTauEta->at(iTauR2), HPSTauPhi->at(iTauR2), 0);
       if( (lep2+lep1).M() > mass ) mass=(lep2+lep1).M();
     }
   }
@@ -710,8 +710,8 @@ double analysisClass::MaxMuMuInvMass(){
     if( !muRisoCheck(iMuR) ) continue;
     for(unsigned int iMuR2=iMuR+1;  iMuR2<MuonPt->size();     iMuR2++){
       if( !muRisoCheck(iMuR2) ) continue;
-      lep1.SetPtEtaPhiM( MuonPt->at(iMuR),  MuonEta->at(iMuR),  MuonPhi->at(iMuR),  0);
-      lep2.SetPtEtaPhiM( MuonPt->at(iMuR2), MuonEta->at(iMuR2), MuonPhi->at(iMuR2), 0);
+      lep1.SetPtEtaPhiM( muPtcorr(iMuR),  MuonEta->at(iMuR),  MuonPhi->at(iMuR),  0);
+      lep2.SetPtEtaPhiM( muPtcorr(iMuR2), MuonEta->at(iMuR2), MuonPhi->at(iMuR2), 0);
       if( (lep2+lep1).M() > mass ) mass=(lep2+lep1).M();
     }
   }
@@ -730,8 +730,8 @@ double analysisClass::MaxMuTauInvMass(){
     if( !muRisoCheck(iMuR) ) continue;
     for(unsigned int iTauR=0;  iTauR<HPSTauPt->size();     iTauR++){
       if( !tauRisoCheck(iTauR) ) continue;
-      lep1.SetPtEtaPhiM( MuonPt->at(iMuR),  MuonEta->at(iMuR),  MuonPhi->at(iMuR),  0);
-      lep2.SetPtEtaPhiM( HPSTauPt->at(iTauR), HPSTauEta->at(iTauR), HPSTauPhi->at(iTauR), 0);
+      lep1.SetPtEtaPhiM( muPtcorr(iMuR),  MuonEta->at(iMuR),  MuonPhi->at(iMuR),  0);
+      lep2.SetPtEtaPhiM( tauPtcorr(iTauR), HPSTauEta->at(iTauR), HPSTauPhi->at(iTauR), 0);
       if( (lep2+lep1).M() > mass ) mass=(lep2+lep1).M();
     }
   }
@@ -750,8 +750,8 @@ double analysisClass::MaxTauTauInvMass(){
     if( !tauRisoCheck(iTauR) ) continue;
     for(unsigned int iTauR2=(iTauR+1);  iTauR2<HPSTauPt->size();     iTauR2++){
       if( !tauRisoCheck(iTauR2) ) continue;
-      lep1.SetPtEtaPhiM( HPSTauPt->at(iTauR),  HPSTauEta->at(iTauR),  HPSTauPhi->at(iTauR),  0);
-      lep2.SetPtEtaPhiM( HPSTauPt->at(iTauR2), HPSTauEta->at(iTauR2), HPSTauPhi->at(iTauR2), 0);
+      lep1.SetPtEtaPhiM( tauPtcorr(iTauR),  HPSTauEta->at(iTauR),  HPSTauPhi->at(iTauR),  0);
+      lep2.SetPtEtaPhiM( tauPtcorr(iTauR2), HPSTauEta->at(iTauR2), HPSTauPhi->at(iTauR2), 0);
       if( (lep2+lep1).M() > mass ) mass=(lep2+lep1).M();
     }
   }
@@ -763,14 +763,14 @@ double analysisClass::METMuTauDeltaPhi(){
   if( TauCounter()!=1 || MuCounter()!=1 ) return -999;
   //
   TVector3 Mu;  TVector3 Tau;  TVector3 MET;
-  MET.SetPtEtaPhi( PFMETType01XYCor->at(0), 0, PFMETPhiType01XYCor->at(0) );
+  MET.SetPtEtaPhi( METcorr("Pt"), 0, METcorr("Phi") );
   for(unsigned int iTauR=0;  iTauR<HPSTauPt->size();     iTauR++){
     if( !tauRisoCheck(iTauR) ) continue;
-    Tau.SetPtEtaPhi( HPSTauPt->at(iTauR), 0, HPSTauPhi->at(iTauR) );
+    Tau.SetPtEtaPhi( tauPtcorr(iTauR), 0, HPSTauPhi->at(iTauR) );
   }
   for(unsigned int iMuR=0;  iMuR<MuonPt->size();     iMuR++){
     if( !muRisoCheck(iMuR)   ) continue;
-    Mu.SetPtEtaPhi( MuonPt->at(iMuR), 0, MuonPhi->at(iMuR) );
+    Mu.SetPtEtaPhi( muPtcorr(iMuR), 0, MuonPhi->at(iMuR) );
   }
   //
   return (Mu+Tau).DeltaPhi(MET);
@@ -780,28 +780,28 @@ double analysisClass::METlepDeltaPhi(TString Lep, int iLep){
   TLorentzVector lep;
   lep.SetPtEtaPhiM( 0, 0, 0, 0 );
   TLorentzVector met;
-  met.SetPtEtaPhiM( PFMETType01XYCor->at(0), 0, PFMETPhiType01XYCor->at(0), 0 );
+  met.SetPtEtaPhiM( METcorr("Pt"), 0, METcorr("Phi"), 0 );
   //std::cout<< "analysisClass::METlepDeltaPhi  iLep: "<<iLep<<std::endl;
   //
   if( Lep != "Mu" && Lep != "Tau" ){ cout<<" WRONG LEPTON TYPE SPECIFIED!! analysisClass::METlepDeltaPhi(TString Lep, int iLep) "<<endl; return 0; }
   //
   if( iLep>-1 ){
-    if( Lep=="Mu" ) lep.SetPtEtaPhiM( MuonPt->at(iLep), MuonEta->at(iLep), MuonPhi->at(iLep), 0 );
-    if( Lep=="Tau") lep.SetPtEtaPhiM( HPSTauPt->at(iLep), HPSTauEta->at(iLep), HPSTauPhi->at(iLep), 0 );
+    if( Lep=="Mu" ) lep.SetPtEtaPhiM( muPtcorr(iLep), MuonEta->at(iLep), MuonPhi->at(iLep), 0 );
+    if( Lep=="Tau") lep.SetPtEtaPhiM( tauPtcorr(iLep), HPSTauEta->at(iLep), HPSTauPhi->at(iLep), 0 );
   }
   //
   if( iLep==-1 ){
     if( Lep=="Mu"){
       for(unsigned int iMuR=0;  iMuR<MuonPt->size();     iMuR++){
 	if(!muRisoCheck(iMuR))continue;
-	if( lep.Pt()<MuonPt->at(iMuR)     ) lep.SetPtEtaPhiM( MuonPt->at(iMuR), MuonEta->at(iMuR), MuonPhi->at(iMuR), 0 );
+	if( lep.Pt()<muPtcorr(iMuR)     ) lep.SetPtEtaPhiM( muPtcorr(iMuR), MuonEta->at(iMuR), MuonPhi->at(iMuR), 0 );
       }
     }
     //------ ------
     if( Lep=="Tau"){
       for(unsigned int iTauR=0; iTauR<HPSTauPt->size(); iTauR++){
 	if(!tauRisoCheck(iTauR))continue;
-	if( lep.Pt()<HPSTauPt->at(iTauR)  ) lep.SetPtEtaPhiM( HPSTauPt->at(iTauR), HPSTauEta->at(iTauR), HPSTauPhi->at(iTauR), 0 );
+	if( lep.Pt()<tauPtcorr(iTauR)  ) lep.SetPtEtaPhiM( tauPtcorr(iTauR), HPSTauEta->at(iTauR), HPSTauPhi->at(iTauR), 0 );
       }
     }
   }
@@ -818,25 +818,25 @@ double analysisClass::ST(){ //defined as the scalar PT sum of all objetcs ( JETS
   //
   for(unsigned int iMuR=0;  iMuR<MuonPt->size();     iMuR++){
     if(!muRisoCheck(iMuR)       ) continue;
-    ST+=MuonPt->at(iMuR);
+    ST+=muPtcorr(iMuR);
   }
   //
   for(unsigned int iElR=0;  iElR<ElectronPt->size(); iElR++){
     if(!elRisoCheck(iElR)       ) continue;
-    ST+=ElectronPt->at(iElR);
+    ST+=elPtcorr(iElR);
   }
   //
   for(unsigned int iTauR=0; iTauR<HPSTauPt->size(); iTauR++){
     if(!tauRisoCheck(iTauR)) continue;
-    ST+=HPSTauPt->at(iTauR);
+    ST+=tauPtcorr(iTauR);
   }
   //
   for(unsigned int iJetR=0; iJetR<PFJetPt->size();  iJetR++){
     if(!jetRisoCheck(iJetR)) continue;
-    ST+=PFJetPt->at(iJetR);
+    ST+=jetPtcorr(iJetR);
   }
   //
-  ST+=PFMETType01XYCor->at(0);
+  ST+=METcorr("Pt");
   //
   return ST;
 }
@@ -864,19 +864,19 @@ double analysisClass::DeltaRminObjects(int Obj1, int Obj2){// MET=0, jet=1, el=1
   if(Obj2==15){ Obj2size=HPSTauPt->size(); }
   //
   for(unsigned int iobj1=0; iobj1<Obj1size; iobj1++){
-    if(Obj1==0 ){ Pt1=PFMETType01XYCor->at(0); Eta1=0; Phi1=PFMETPhiType01XYCor->at(0); }
-    if(Obj1==1 ){ if(!jetRisoCheck(iobj1)){continue;} Pt1=PFJetPt->at(iobj1); Eta1= PFJetEta->at(iobj1); Phi1=PFJetPhi->at(iobj1); }
-    if(Obj1==11){ if(!elRisoCheck(iobj1)){continue;} Pt1=ElectronPt->at(iobj1); Eta1=ElectronEta->at(iobj1); Phi1=ElectronPhi->at(iobj1); }
-    if(Obj1==13){ if(!muRisoCheck(iobj1)){continue;} Pt1=MuonPt->at(iobj1); Eta1=MuonEta->at(iobj1); Phi1=MuonPhi->at(iobj1); }
-    if(Obj1==15){ if(!tauRisoCheck(iobj1)){continue;} Pt1=HPSTauPt->at(iobj1); Eta1=HPSTauEta->at(iobj1); Phi1=HPSTauPhi->at(iobj1); }
+    if(Obj1==0 ){ Pt1=METcorr("Pt"); Eta1=0; Phi1=METcorr("Phi"); }
+    if(Obj1==1 ){ if(!jetRisoCheck(iobj1)){continue;} Pt1=jetPtcorr(iobj1); Eta1= PFJetEta->at(iobj1); Phi1=PFJetPhi->at(iobj1); }
+    if(Obj1==11){ if(!elRisoCheck(iobj1)){continue;} Pt1=elPtcorr(iobj1); Eta1=ElectronEta->at(iobj1); Phi1=ElectronPhi->at(iobj1); }
+    if(Obj1==13){ if(!muRisoCheck(iobj1)){continue;} Pt1=muPtcorr(iobj1); Eta1=MuonEta->at(iobj1); Phi1=MuonPhi->at(iobj1); }
+    if(Obj1==15){ if(!tauRisoCheck(iobj1)){continue;} Pt1=tauPtcorr(iobj1); Eta1=HPSTauEta->at(iobj1); Phi1=HPSTauPhi->at(iobj1); }
     Obj1Cand.SetPtEtaPhiM( Pt1, Eta1, Phi1, 0 );
     //
     for(unsigned int iobj2=0; iobj2<Obj2size; iobj2++){
-    if(Obj2==0 ){ Pt2=PFMETType01XYCor->at(0); Eta2=0; Phi2=PFMETPhiType01XYCor->at(0); }
-    if(Obj2==1 ){ if(!jetRisoCheck(iobj2)){continue;} Pt2=PFJetPt->at(iobj2); Eta2= PFJetEta->at(iobj2); Phi2=PFJetPhi->at(iobj2); }
-    if(Obj2==11){ if(!elRisoCheck(iobj2)){continue;} Pt2=ElectronPt->at(iobj2); Eta2=ElectronEta->at(iobj2); Phi2=ElectronPhi->at(iobj2); }
-    if(Obj2==13){ if(!muRisoCheck(iobj2)){continue;} Pt2=MuonPt->at(iobj2); Eta2=MuonEta->at(iobj2); Phi2=MuonPhi->at(iobj2); }
-    if(Obj2==15){ if(!tauRisoCheck(iobj2)){continue;} Pt2=HPSTauPt->at(iobj2); Eta2=HPSTauEta->at(iobj2); Phi2=HPSTauPhi->at(iobj2); }
+    if(Obj2==0 ){ Pt2=METcorr("Pt"); Eta2=0; Phi2=METcorr("Phi"); }
+    if(Obj2==1 ){ if(!jetRisoCheck(iobj2)){continue;} Pt2=jetPtcorr(iobj2); Eta2= PFJetEta->at(iobj2); Phi2=PFJetPhi->at(iobj2); }
+    if(Obj2==11){ if(!elRisoCheck(iobj2)){continue;} Pt2=elPtcorr(iobj2); Eta2=ElectronEta->at(iobj2); Phi2=ElectronPhi->at(iobj2); }
+    if(Obj2==13){ if(!muRisoCheck(iobj2)){continue;} Pt2=muPtcorr(iobj2); Eta2=MuonEta->at(iobj2); Phi2=MuonPhi->at(iobj2); }
+    if(Obj2==15){ if(!tauRisoCheck(iobj2)){continue;} Pt2=tauPtcorr(iobj2); Eta2=HPSTauEta->at(iobj2); Phi2=HPSTauPhi->at(iobj2); }
     Obj2Cand.SetPtEtaPhiM( Pt2, Eta2, Phi2, 0 );
     //
     TwoObjFound_=true;
@@ -951,15 +951,15 @@ double analysisClass::METlepMT(TString Lep, int iLep){
   if( Lep != "Mu" && Lep != "Tau" ){ cout<<" WRONG LEPTON TYPE SPECIFIED!! analysisClass::METlepMT(TString Lep, int iLep) "<<endl; return 0; }
   //
   if( iLep>-1 ){
-    if( Lep == "Mu"  ) lep.SetPtEtaPhiM( MuonPt->at(iLep), MuonEta->at(iLep), MuonPhi->at(iLep), 0 );
-    if( Lep == "Tau" ) lep.SetPtEtaPhiM( HPSTauPt->at(iLep), HPSTauEta->at(iLep), HPSTauPhi->at(iLep), 0 );
+    if( Lep == "Mu"  ) lep.SetPtEtaPhiM( muPtcorr(iLep), MuonEta->at(iLep), MuonPhi->at(iLep), 0 );
+    if( Lep == "Tau" ) lep.SetPtEtaPhiM( tauPtcorr(iLep), HPSTauEta->at(iLep), HPSTauPhi->at(iLep), 0 );
   }
   if( iLep==-1){
     if( Lep == "Mu"  ){
       maxPt=0;
       for(unsigned int iMuR=0; iMuR<MuonPt->size(); iMuR++){
 	if(!muRisoCheck(iMuR))continue;
-	if( MuonPt->at(iMuR)>maxPt ){ maxPt=MuonPt->at(iMuR);  lep.SetPtEtaPhiM( MuonPt->at(iMuR), MuonEta->at(iMuR), MuonPhi->at(iMuR), 0 ); }
+	if( muPtcorr(iMuR)>maxPt ){ maxPt=muPtcorr(iMuR);  lep.SetPtEtaPhiM( muPtcorr(iMuR), MuonEta->at(iMuR), MuonPhi->at(iMuR), 0 ); }
       }
     }
     //------- -------
@@ -967,12 +967,12 @@ double analysisClass::METlepMT(TString Lep, int iLep){
       maxPt=0;
       for(unsigned int iTauR=0; iTauR<HPSTauPt->size(); iTauR++){
 	if(!tauRisoCheck(iTauR))continue;
-	if( HPSTauPt->at(iTauR)>maxPt ){ maxPt=HPSTauPt->at(iTauR);  lep.SetPtEtaPhiM( HPSTauPt->at(iTauR), HPSTauEta->at(iTauR), HPSTauPhi->at(iTauR), 0 ); }
+	if( tauPtcorr(iTauR)>maxPt ){ maxPt=tauPtcorr(iTauR);  lep.SetPtEtaPhiM( tauPtcorr(iTauR), HPSTauEta->at(iTauR), HPSTauPhi->at(iTauR), 0 ); }
       }
     }
   }
   //
-  MET.SetPtEtaPhiM( PFMETType01XYCor->at(0), 0 , PFMETPhiType01XYCor->at(0) , 0 );
+  MET.SetPtEtaPhiM( METcorr("Pt"), 0 , METcorr("Phi") , 0 );
   double M_T=TMath::Sqrt(2*fabs(MET.Pt())*fabs(lep.Pt())*(1-TMath::Cos(MET.DeltaPhi(lep))));
   //
   return M_T;
@@ -992,16 +992,16 @@ double analysisClass::MuTauInZpeak(TString Pair){
   /*
   if( Pair == "ZToMuTau" ){ // MET is redistributed to Mu and Tau.. 
     TLorentzVector MET;
-    MET.SetPtEtaPhiM( PFMETType01XYCor->at(0), 0 , PFMETPhiType01XYCor->at(0) , 0 );
+    MET.SetPtEtaPhiM( METcorr("Pt"), 0 , METcorr("Phi") , 0 );
     for(unsigned int iMuR=0; iMuR<MuonPt->size(); iMuR++){
       if(!muRisoCheck(iMuR)){continue;}
-      mu.SetPtEtaPhiM( MuonPt->at(iMuR), MuonEta->at(iMuR), MuonPhi->at(iMuR), 0);
-      MuPt = MET.Pt()*TMath::Cos(mu.DeltaPhi(MET)) + MuonPt->at(iMuR); //adding projected MET on transverse plane Muon.
+      mu.SetPtEtaPhiM( muPtcorr(iMuR), MuonEta->at(iMuR), MuonPhi->at(iMuR), 0);
+      MuPt = MET.Pt()*TMath::Cos(mu.DeltaPhi(MET)) + muPtcorr(iMuR); //adding projected MET on transverse plane Muon.
       mu.SetPtEtaPhiM( MuPt , MuonEta->at(iMuR), MuonPhi->at(iMuR), 0);
       for(unsigned int iTauR=0; iTauR<HPSTauPt->size(); iTauR++){
 	if(!tauRisoCheck(iTauR)){continue;}
-	tau.SetPtEtaPhiM( HPSTauPt->at(iTauR), HPSTauEta->at(iTauR) , HPSTauPhi->at(iTauR), 0); 
-	TauPt = MET.Pt()*TMath::Cos(tau.DeltaPhi(MET)) + HPSTauPt->at(iTauR); //adding projected MET on transverse plane Tau.
+	tau.SetPtEtaPhiM( tauPtcorr(iTauR), HPSTauEta->at(iTauR) , HPSTauPhi->at(iTauR), 0); 
+	TauPt = MET.Pt()*TMath::Cos(tau.DeltaPhi(MET)) + tauPtcorr(iTauR); //adding projected MET on transverse plane Tau.
 	tau.SetPtEtaPhiM( TauPt, HPSTauEta->at(iTauR), HPSTauPhi->at(iTauR), 0);
 	pairfound_=true;
 	if( fabs((mu+tau).M()-Zmass) < fabs(Dilepmass-Zmass) ) Dilepmass=(mu+tau).M();
@@ -1012,17 +1012,17 @@ double analysisClass::MuTauInZpeak(TString Pair){
   //
   if( Pair == "ZToMuTau" ){ // MET is added to TauPt..         mu <-- Z --> Tau (Tau_vis, neutrino :: collinear)
     TLorentzVector MET;
-    MET.SetPtEtaPhiM( PFMETType01XYCor->at(0), 0 , PFMETPhiType01XYCor->at(0) , 0 );
+    MET.SetPtEtaPhiM( METcorr("Pt"), 0 , METcorr("Phi") , 0 );
     for(unsigned int iMuR=0; iMuR<MuonPt->size(); iMuR++){
       if(!muRisoCheck(iMuR)){continue;}
-      mu.SetPtEtaPhiM( MuonPt->at(iMuR), MuonEta->at(iMuR), MuonPhi->at(iMuR), 0);
-      //MuPt = MET.Pt()*TMath::Cos(mu.DeltaPhi(MET)) + MuonPt->at(iMuR); //adding projected MET on transverse plane Muon.
+      mu.SetPtEtaPhiM( muPtcorr(iMuR), MuonEta->at(iMuR), MuonPhi->at(iMuR), 0);
+      //MuPt = MET.Pt()*TMath::Cos(mu.DeltaPhi(MET)) + muPtcorr(iMuR); //adding projected MET on transverse plane Muon.
       // mu.SetPtEtaPhiM( MuPt , MuonEta->at(iMuR), MuonPhi->at(iMuR), 0);
       for(unsigned int iTauR=0; iTauR<HPSTauPt->size(); iTauR++){
 	if(!tauRisoCheck(iTauR)){continue;}
-	tau.SetPtEtaPhiM( HPSTauPt->at(iTauR), HPSTauEta->at(iTauR) , HPSTauPhi->at(iTauR), 0); 
-	//TauPt = MET.Pt()*TMath::Cos(tau.DeltaPhi(MET)) + HPSTauPt->at(iTauR); //adding projected MET on transverse plane Tau.
-	TauPt = MET.Pt()*TMath::Cos(tau.DeltaPhi(MET)) + HPSTauPt->at(iTauR); //adding MET to TauPt.
+	tau.SetPtEtaPhiM( tauPtcorr(iTauR), HPSTauEta->at(iTauR) , HPSTauPhi->at(iTauR), 0); 
+	//TauPt = MET.Pt()*TMath::Cos(tau.DeltaPhi(MET)) + tauPtcorr(iTauR); //adding projected MET on transverse plane Tau.
+	TauPt = MET.Pt()*TMath::Cos(tau.DeltaPhi(MET)) + tauPtcorr(iTauR); //adding MET to TauPt.
 	tau.SetPtEtaPhiM( TauPt, HPSTauEta->at(iTauR), HPSTauPhi->at(iTauR), 0);
 	pairfound_=true;
 	if( fabs((mu+tau).M()-Zmass) < fabs(Dilepmass-Zmass) ) Dilepmass=(mu+tau).M();
@@ -1033,10 +1033,10 @@ double analysisClass::MuTauInZpeak(TString Pair){
   if( Pair == "ZToMuMu" ){
     for(unsigned int iMuR=0; iMuR<MuonPt->size(); iMuR++){
       if(!muRisoCheck(iMuR)){continue;}
-      mu.SetPtEtaPhiM( MuonPt->at(iMuR), MuonEta->at(iMuR), MuonPhi->at(iMuR), 0);
+      mu.SetPtEtaPhiM( muPtcorr(iMuR), MuonEta->at(iMuR), MuonPhi->at(iMuR), 0);
       for(unsigned int iMuR2=iMuR+1; iMuR2<MuonPt->size(); iMuR2++){
 	if(!muRisoCheck(iMuR2)){continue;}
-	mu2.SetPtEtaPhiM( MuonPt->at(iMuR2), MuonEta->at(iMuR2), MuonPhi->at(iMuR2), 0);
+	mu2.SetPtEtaPhiM( muPtcorr(iMuR2), MuonEta->at(iMuR2), MuonPhi->at(iMuR2), 0);
 	pairfound_=true;
 	if( fabs((mu+mu2).M()-Zmass) < fabs(Dilepmass-Zmass) ) Dilepmass=(mu+mu2).M();
       }
@@ -1046,10 +1046,10 @@ double analysisClass::MuTauInZpeak(TString Pair){
   if( Pair == "ZToTauTau" ){
     for(unsigned int iTauR=0; iTauR<HPSTauPt->size(); iTauR++){
       if(!tauRisoCheck(iTauR)){continue;}
-      tau.SetPtEtaPhiM( HPSTauPt->at(iTauR), HPSTauEta->at(iTauR), HPSTauPhi->at(iTauR), 0);
+      tau.SetPtEtaPhiM( tauPtcorr(iTauR), HPSTauEta->at(iTauR), HPSTauPhi->at(iTauR), 0);
       for(unsigned int iTauR2=iTauR+1; iTauR2<HPSTauPt->size(); iTauR2++){
 	if(!tauRisoCheck(iTauR2)){continue;}
-	tau2.SetPtEtaPhiM( HPSTauPt->at(iTauR2), HPSTauEta->at(iTauR2), HPSTauPhi->at(iTauR2), 0);
+	tau2.SetPtEtaPhiM( tauPtcorr(iTauR2), HPSTauEta->at(iTauR2), HPSTauPhi->at(iTauR2), 0);
 	pairfound_=true;
 	if( fabs((tau+tau2).M()-Zmass) < fabs(Dilepmass-Zmass) ) Dilepmass=(tau+tau2).M();
       }
@@ -1122,7 +1122,7 @@ bool analysisClass::isRecoMuMatchedTO( double genPt , double genEta , double gen
   //
   for(unsigned int iMuR=0;  iMuR<MuonPt->size();     iMuR++){
     if( !muRCheck( iMuR )    ) continue;
-    RecoMu.SetPtEtaPhiM( MuonPt->at(iMuR) , MuonEta->at(iMuR) , MuonPhi->at(iMuR) , 0 );
+    RecoMu.SetPtEtaPhiM( muPtcorr(iMuR) , MuonEta->at(iMuR) , MuonPhi->at(iMuR) , 0 );
     if( RecoMu.DeltaR(GenMu)<deltaR ) deltaR=RecoMu.DeltaR(GenMu);
   }
   //
@@ -1138,7 +1138,7 @@ bool analysisClass::isRecoTauMatchedTO( double genPt , double genEta , double ge
   //
   for(unsigned int iTauR=0;  iTauR<HPSTauPt->size();     iTauR++){
     if( !tauRCheck( iTauR )    ) continue;
-    RecoTau.SetPtEtaPhiM( HPSTauPt->at(iTauR) , HPSTauEta->at(iTauR) , HPSTauPhi->at(iTauR) , 0 );
+    RecoTau.SetPtEtaPhiM( tauPtcorr(iTauR) , HPSTauEta->at(iTauR) , HPSTauPhi->at(iTauR) , 0 );
     if( fabs(RecoTau.DeltaR(GenTau))<deltaR ) deltaR=fabs(RecoTau.DeltaR(GenTau));
   }
   //

@@ -52,13 +52,13 @@ bool analysisClass::isRecoTauPrompt( unsigned int iTauR ){
     }
   }
   //Check RecoTau (LQ3->Tau->Had_Tau)
-  //for( unsigned int iTauT=0; iTauT<GenLQTauTauPt->size(); iTauT++){
-  //if( GenLQTauTauTauDecayMode->at(iTauT)<3 ) continue;//mode 1: electron, 2: muon (semileptonic)
-  //GenTau.SetPtEtaPhiM( GenLQTauTauTauVisiblePt->at(iTauT), GenLQTauTauTauVisibleEta->at(iTauT), GenLQTauTauTauVisiblePhi->at(iTauT), 0 );
-  //if( GenTau.DeltaR(RecoTau)<0.15 ){
-  //isRecoTauPrompt_ = true;
-  //}
-  //}
+  for( unsigned int iTauT=0; iTauT<GenLQTauTauPt->size(); iTauT++){
+    if( GenLQTauTauTauDecayMode->at(iTauT)<3 ) continue;//mode 1: electron, 2: muon (semileptonic)
+    GenTau.SetPtEtaPhiM( GenLQTauTauTauVisiblePt->at(iTauT), GenLQTauTauTauVisibleEta->at(iTauT), GenLQTauTauTauVisiblePhi->at(iTauT), 0 );
+    if( GenTau.DeltaR(RecoTau)<0.15 ){
+      isRecoTauPrompt_ = true;
+    }
+  }
   //
   return isRecoTauPrompt_;
 }
@@ -84,13 +84,13 @@ double analysisClass::getRecoTauGenPt( unsigned int iTauR ){
     }
   }
   //Check RecoTau (LQ3->Tau->Had_Tau)
-  //for( unsigned int iTauT=0; iTauT<GenLQTauTauPt->size(); iTauT++){
-  //if( GenLQTauTauTauDecayMode->at(iTauT)<3 ) continue;//mode 1: electron, 2: muon (semileptonic)
-  //GenTau.SetPtEtaPhiM( GenLQTauTauTauVisiblePt->at(iTauT), GenLQTauTauTauVisibleEta->at(iTauT), GenLQTauTauTauVisiblePhi->at(iTauT), 0 );
-  //if( GenTau.DeltaR(RecoTau)<0.15 ){
-  //genTauPT_ = GenTau.Pt();
-  //}
-  //}
+  for( unsigned int iTauT=0; iTauT<GenLQTauTauPt->size(); iTauT++){
+    if( GenLQTauTauTauDecayMode->at(iTauT)<3 ) continue;//mode 1: electron, 2: muon (semileptonic)
+    GenTau.SetPtEtaPhiM( GenLQTauTauTauVisiblePt->at(iTauT), GenLQTauTauTauVisibleEta->at(iTauT), GenLQTauTauTauVisiblePhi->at(iTauT), 0 );
+    if( GenTau.DeltaR(RecoTau)<0.15 ){
+      genTauPT_ = GenTau.Pt();
+    }
+  }
   //
   return genTauPT_;
 }
@@ -124,13 +124,13 @@ bool analysisClass::isRecoTauChargeFlip( unsigned int iTauR ){ //has to be promp
     }
   }
   //Check RecoTau (LQ3->Tau->Had_Tau)
-  //for( unsigned int iTauT=0; iTauT<GenLQTauTauPt->size(); iTauT++){
-  //if( GenLQTauTauTauDecayMode->at(iTauT)<3 ) continue;//mode 1: electron, 2: muon (semileptonic)
-  //GenTau.SetPtEtaPhiM( GenLQTauTauTauVisiblePt->at(iTauT), GenLQTauTauTauVisibleEta->at(iTauT), GenLQTauTauTauVisiblePhi->at(iTauT), 0 );
-  //if( GenTau.DeltaR(RecoTau)<0.15 ){
-  //if( HPSTauCharge->at(iTauR)*GenLQTauTauPdgId->at(iTauT)>0 ) isTauChargeFlip_ = true;
-  //}
-  //}
+  for( unsigned int iTauT=0; iTauT<GenLQTauTauPt->size(); iTauT++){
+    if( GenLQTauTauTauDecayMode->at(iTauT)<3 ) continue;//mode 1: electron, 2: muon (semileptonic)
+    GenTau.SetPtEtaPhiM( GenLQTauTauTauVisiblePt->at(iTauT), GenLQTauTauTauVisibleEta->at(iTauT), GenLQTauTauTauVisiblePhi->at(iTauT), 0 );
+    if( GenTau.DeltaR(RecoTau)<0.15 ){
+      if( HPSTauCharge->at(iTauR)*GenLQTauTauPdgId->at(iTauT)>0 ) isTauChargeFlip_ = true;
+    }
+  }
   //
   return isTauChargeFlip_;
 }

@@ -14,7 +14,8 @@
 #include "LAC/ADDON2_LAC.C"
 #include "LAC/ADDON3_LAC.C"
 //#include "LAC/ADDON4_LAC.C"///  LQgen functions //fake
-//#include "LAC/ADDON5_LAC.C" //gen-reco matching 
+#include "LAC/ADDON5_LAC.C"
+#include "LAC/ADDON6_LAC.C"
 // // //
 analysisClass::analysisClass(string * inputList, string * cutFile, string * treeName, string * outputFileName, string * cutEfficFile)
   :baseClass(inputList, cutFile, treeName, outputFileName, cutEfficFile){
@@ -123,6 +124,8 @@ void analysisClass::Loop()
    //
    TH1D* LeadMuPthisto    = new TH1D("LeadMuPthisto",   "LeadMuPthisto",   1000,0,1000);
    TH1D* LeadTauPthisto   = new TH1D("LeadTauPthisto",  "LeadTauPthisto",  1000,0,1000);
+   TH1D* LeadTauPtOShisto   = new TH1D("LeadTauPtOShisto",  "LeadTauPtOShisto",  1000,0,1000);//OS
+   TH1D* LeadTauPtSShisto   = new TH1D("LeadTauPtSShisto",  "LeadTauPtSShisto",  1000,0,1000);//SS
    TH1D* LeadElPthisto    = new TH1D("LeadElPthisto",   "LeadElPthisto",   1000,0,1000);
    TH1D* LeadJetPthisto   = new TH1D("LeadJetPthisto",  "LeadJetPthisto",  1000,0,1000);
    TH1D* LeadBJetPthisto  = new TH1D("LeadBJetPthisto", "LeadBJetPthisto", 1000,0,1000);
@@ -156,6 +159,10 @@ void analysisClass::Loop()
    TH1D* ElPhihisto   = new TH1D("ElPhihisto",  "ElPhihisto",  800,-4,4);
    TH1D* JetPhihisto  = new TH1D("JetPhihisto", "JetPhihisto", 800,-4,4);
    TH1D* BJetPhihisto = new TH1D("BJetPhihisto","BJetPhihisto",800,-4,4);
+   //
+   TH1D* AveAbsEtahisto   = new TH1D("AveAbsEtahisto",  "AveAbsEtahisto",  730,-3,4.3);
+   TH1D* AveAbsEtaV2histo = new TH1D("AveAbsEtaV2histo","AveAbsEtaV2histo",730,-3,4.3);
+   TH1D* AveAbsEtaV3histo = new TH1D("AveAbsEtaV3histo","AveAbsEtaV3histo",730,-3,4.3);
    //
    // from here on, it used to be TH1I
    TH1D* MuNhisto      = new TH1D("MuNhisto",    "MuNhisto",    16,-0.5,15.5);
@@ -255,6 +262,8 @@ void analysisClass::Loop()
      ////////////////////// User's code starts here ///////////////////////
      ///Stuff to be done every event
      //
+     // Define Systematic Scheme to be used:
+     ApplyLepJetMetSystematics(0);//this is no correction, should be used if object pt functions in this code are to be kept as is..
 
      // Set the evaluation of the cuts to false and clear the variable values and filled status
      resetCuts();
@@ -288,7 +297,7 @@ void analysisClass::Loop()
 	 theTau=iTauR;
 	 break;//take the leading one
      }
-     if( ltemMuTau.size()==2 ) triggerMuon=ltemMuTau[0];
+     //if( ltemMuTau.size()==2 ) triggerMuon=ltemMuTau[0];
      if( ltemMuTau.size()==2 ) theTau=ltemMuTau[1];
      //
      int usedTrigger_=-5;
@@ -308,6 +317,9 @@ void analysisClass::Loop()
        // LTEM_ScaleFactor( ltemMuTau ) weights are applied below..
      }
      if( isData  ) w=1;
+
+     bool isSS_=false;
+     if( ltemMuTau.size()==2 ) isSS_=true;
 
 
      //  -- JSON SKIM
@@ -390,8 +402,8 @@ void analysisClass::Loop()
 	 //muJetDeltaRmin(ltemMuTau[0])>0.5 && tauJetDeltaRmin(ltemMuTau[1])>0.7 ) OfflineCuts_=1;
 	 //muJetDeltaRmin(ltemMuTau[0])>0.5 && tauJetDeltaRmin(ltemMuTau[1])>1.0 ) OfflineCuts_=1;
 	 //MuonPt->at(triggerMuon)>45 && 
-	 JetCounter()<2 &&
-	 ST()>150
+	 JetCounter()<2 && ST()>150
+	 //ST()>150
 	) OfflineCuts_=1;
      fillVariableWithValue("PassOfflineCuts", OfflineCuts_ );// returns 0, 1 
      
@@ -654,6 +666,8 @@ void analysisClass::Loop()
        //
        if( MuN>0   )LeadMuPthisto->Fill(Mu.Pt(), w );
        if( TauN>0  )LeadTauPthisto->Fill(Tau.Pt(), w );
+       if( TauN>0 && !isSS_ )LeadTauPtOShisto->Fill(Tau.Pt(), w );
+       if( TauN>0 &&  isSS_ )LeadTauPtSShisto->Fill(Tau.Pt(), w );
        if( ElN>0   )LeadElPthisto->Fill(El.Pt(), w );
        if( JetN>0  )LeadJetPthisto->Fill(Jet.Pt(), w );
        if( BJetN>0 )LeadBJetPthisto->Fill(BJet.Pt(), w );
@@ -683,6 +697,10 @@ void analysisClass::Loop()
        JetNhisto->Fill((double)JetN, w );
        BJetNhisto->Fill((double)BJetN, w );
        TotalNhisto->Fill((double)(MuN+TauN+ElN+JetN), w );
+       //
+       AveAbsEtahisto->Fill(   GetAveAbsEta()   , w );
+       AveAbsEtaV2histo->Fill( GetAveAbsEtaV2() , w );
+       AveAbsEtaV3histo->Fill( GetAveAbsEtaV3() , w );
        //
 
      }
@@ -743,6 +761,8 @@ void analysisClass::Loop()
    //
    LeadMuPthisto->Write();
    LeadTauPthisto->Write();
+   LeadTauPtOShisto->Write();
+   LeadTauPtSShisto->Write();
    LeadElPthisto->Write();
    LeadJetPthisto->Write();
    LeadBJetPthisto->Write();
@@ -780,6 +800,10 @@ void analysisClass::Loop()
    BJetNhisto->Write();
    TotalNhisto->Write();
    VertexNhisto->Write();
+   //
+   AveAbsEtahisto->Write();
+   AveAbsEtaV2histo->Write();
+   AveAbsEtaV3histo->Write();
    //
    LooseToTightMatrixRAW2Dhisto->Write();
    LooseToTightMatrix2Dhisto->Write();

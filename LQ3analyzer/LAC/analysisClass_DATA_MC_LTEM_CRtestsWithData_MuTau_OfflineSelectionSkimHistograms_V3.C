@@ -14,8 +14,10 @@
 //#include "LAC/ADDON1_LAC.C" //this is included in LAC/ADDON2_LAC.C
 #include "LAC/ADDON2_LAC.C"
 #include "LAC/ADDON3_LAC.C"
-//#include "LAC/ADDON4_LAC.C"///  LQgen functions //fake
-//#include "LAC/ADDON5_LAC.C" //gen-reco matching 
+//#include "LAC/ADDON5_LAC.C"
+#include "LAC/ADDON5_H_LAC.C"
+//#include "LAC/ADDON5_LQ_LAC.C"
+#include "LAC/ADDON6_LAC.C"
 // // //
 analysisClass::analysisClass(string * inputList, string * cutFile, string * treeName, string * outputFileName, string * cutEfficFile)
   :baseClass(inputList, cutFile, treeName, outputFileName, cutEfficFile){
@@ -35,6 +37,8 @@ void analysisClass::Loop()
 
    ////////// Enable Sumw2
    TH1::SetDefaultSumw2();
+   TH2::SetDefaultSumw2();
+   TH3::SetDefaultSumw2();
    
    ////////// Set analysis Object ID variables here
    ObjDef  = "LI";
@@ -52,8 +56,12 @@ void analysisClass::Loop()
    LumiD=7248;
    //
    ResetAllSFs();
+   //--// InitTauFunctionParameters(); //This is hard-coded!  (no such function)
+   InitMuonFunctionParameters();
    //
 
+   // Jet Systematics
+   ResetLepJetMetSystematics(); //Reset all to FALSE
 
    //////////book histos here
    //
@@ -68,14 +76,23 @@ void analysisClass::Loop()
    //distribution of the applied Total-weights
    TH1D* AppliedTotalWeightshisto    = new TH1D("AppliedTotalWeightshisto",  "AppliedTotalWeightshisto",  10000,0,100);
    //
-   TH1D* muPRhisto   = new TH1D("muPRhisto",  "muPRhisto",   2000,0,2);
-   TH1D* muFRhisto   = new TH1D("muFRhisto",  "muFRhisto",   2000,0,2);
-   TH1D* tauPRhisto  = new TH1D("tauPRhisto", "tauPRhisto",  2000,0,2);
-   TH1D* tauFRhisto  = new TH1D("tauFRhisto", "tauFRhisto",  2000,0,2);
-   TH1D* muPREhisto  = new TH1D("muPREhisto", "muPREhisto",  1000,-0.25,0.75);
-   TH1D* muFREhisto  = new TH1D("muFREhisto", "muFREhisto",  1000,-0.25,0.75);
-   TH1D* tauPREhisto = new TH1D("tauPREhisto","tauPREhisto", 1000,-0.25,0.75);
-   TH1D* tauFREhisto = new TH1D("tauFRhisto", "tauFREhisto", 1000,-0.25,0.75);
+   TH1D* muPRwSFhisto   = new TH1D("muPRwSFhisto",  "muPRwSFhisto",    10000,0,1);
+   TH1D* muFRwSFhisto   = new TH1D("muFRwSFhisto",  "muFRwSFhisto",    10000,0,1);
+   TH1D* tauPRwSFhisto  = new TH1D("tauPRwSFhisto", "tauPRwSFhisto",   10000,0,1);
+   TH1D* tauFRwSFhisto  = new TH1D("tauFRwSFhisto", "tauFRwSFhisto",   10000,0,1);
+   TH1D* muPREwSFhisto  = new TH1D("muPREwSFhisto", "muPREwSFhisto",   10000,0,1);
+   TH1D* muFREwSFhisto  = new TH1D("muFREwSFhisto", "muFREwSFhisto",   10000,0,1);
+   TH1D* tauPREwSFhisto = new TH1D("tauPREwSFhisto","tauPREwSFhisto",  10000,0,1);
+   TH1D* tauFREwSFhisto = new TH1D("tauFREwSFhisto", "tauFREwSFhisto", 10000,0,1);
+   //
+   TH1D* muPRhisto   = new TH1D("muPRhisto",  "muPRhisto",    10000,0,1);
+   TH1D* muFRhisto   = new TH1D("muFRhisto",  "muFRhisto",    10000,0,1);
+   TH1D* tauPRhisto  = new TH1D("tauPRhisto", "tauPRhisto",   10000,0,1);
+   TH1D* tauFRhisto  = new TH1D("tauFRhisto", "tauFRhisto",   10000,0,1);
+   TH1D* muPREhisto  = new TH1D("muPREhisto", "muPREhisto",   10000,0,1);
+   TH1D* muFREhisto  = new TH1D("muFREhisto", "muFREhisto",   10000,0,1);
+   TH1D* tauPREhisto = new TH1D("tauPREhisto","tauPREhisto",  10000,0,1);
+   TH1D* tauFREhisto = new TH1D("tauFREhisto", "tauFREhisto", 10000,0,1);
    //
    TH1D* LeadMuTauDeltaRhisto = new TH1D("LeadMuTauDeltaRhisto","LeadMuTauDeltaRhisto",5000,0,50);
    TH1D* SThisto              = new TH1D("SThisto", "SThisto", 5000,0,5000);
@@ -100,8 +117,8 @@ void analysisClass::Loop()
    TH1D* LTEMTauJetDeltaRminhisto  = new TH1D("LTEMTauJetDeltaRminhisto", "LTEMTauJetDeltaRminhisto", 200,-5,5);
    TH1D* LTEMMuPthisto             = new TH1D("LTEMMuPthisto",            "LTEMMuPthisto",            2000,0,2000);
    TH1D* LTEMTauPthisto            = new TH1D("LTEMTauPthisto",           "LTEMTauPthisto",           2000,0,2000);
-   TH1D* LTEMMuEtahisto            = new TH1D("LTEMMuEtahisto",           "LTEMMuEtahisto",           800,-4,4);
-   TH1D* LTEMTauEtahisto           = new TH1D("LTEMTauEtahisto",          "LTEMTauEtahisto",          800,-4,4);
+   TH1D* LTEMMuEtahisto            = new TH1D("LTEMMuEtahisto",           "LTEMMuEtahisto",           600,-3,3);
+   TH1D* LTEMTauEtahisto           = new TH1D("LTEMTauEtahisto",          "LTEMTauEtahisto",          600,-3,3);
    TH1D* LTEMMuPhihisto            = new TH1D("LTEMMuPhihisto",           "LTEMMuPhihisto",           800,-4,4);
    TH1D* LTEMTauPhihisto           = new TH1D("LTEMTauPhihisto",          "LTEMTauPhihisto",          800,-4,4);
    TH1D* LTEMMuTauDeltaRhisto      = new TH1D("LTEMMuTauDeltaRhisto",     "LTEMMuTauDeltaRhisto",     300,-5,10);
@@ -109,28 +126,139 @@ void analysisClass::Loop()
    TH1D* LTEMMuTauDeltaPhihisto    = new TH1D("LTEMMuTauDeltaPhihisto",   "LTEMMuTauDeltaPhihisto",   200,-5,5);
    TH1D* LTEMMuTauMasshisto        = new TH1D("LTEMMuTauMasshisto",       "LTEMMuTauMasshisto",       5000,0,5000);
    //
-   TH1D* ExpTotalBckg_MuTauDeltaRhisto      = new TH1D("ExpTotalBckg_MuTauDeltaRhisto",     "ExpTotalBckg_MuTauDeltaRhisto",     300,-5,10);
-   TH1D* ExpTotalBckg_TauJetDeltaRminhisto        = new TH1D("ExpTotalBckg_TauJetDeltaRminhisto",       "ExpTotalBckg_TauJetDeltaRminhisto",       200,-5,5);
-   TH1D* ExpTotalBckgTauFRU_TauJetDeltaRminhisto  = new TH1D("ExpTotalBckgTauFRU_TauJetDeltaRminhisto", "ExpTotalBckgTauFRU_TauJetDeltaRminhisto", 200,-5,5);
-   TH1D* ExpTotalBckgTauFRD_TauJetDeltaRminhisto  = new TH1D("ExpTotalBckgTauFRD_TauJetDeltaRminhisto", "ExpTotalBckgTauFRD_TauJetDeltaRminhisto", 200,-5,5);
-   TH1D* ExpTotalBckg_TauPthisto            = new TH1D("ExpTotalBckg_TauPthisto",           "ExpTotalBckg_TauPthisto",           2000,0,2000);
-   TH1D* ExpTotalBckgTauFRU_TauPthisto      = new TH1D("ExpTotalBckgTauFRU_TauPthisto",     "ExpTotalBckgTauFRU_TauPthisto",     2000,0,2000);
-   TH1D* ExpTotalBckgTauFRD_TauPthisto      = new TH1D("ExpTotalBckgTauFRD_TauPthisto",     "ExpTotalBckgTauFRD_TauPthisto",     2000,0,2000);
-   TH1D* ExpTotalBckg_TauEtahisto           = new TH1D("ExpTotalBckg_TauEtahisto",          "ExpTotalBckg_TauEtahisto",          800,-4,4);
-   TH1D* ExpTotalBckgTauFRU_TauEtahisto     = new TH1D("ExpTotalBckgTauFRU_TauEtahisto",    "ExpTotalBckgTauFRU_TauEtahisto",    800,-4,4);
-   TH1D* ExpTotalBckgTauFRD_TauEtahisto     = new TH1D("ExpTotalBckgTauFRD_TauEtahisto",    "ExpTotalBckgTauFRD_TauEtahisto",    800,-4,4);
-   TH1D* ExpTotalBckg_TauPhihisto           = new TH1D("ExpTotalBckg_TauPhihisto",          "ExpTotalBckg_TauPhihisto",          800,-4,4);
+   //
+   TH1D* ExpTotalBckg_VertexNhisto        = new TH1D("ExpTotalBckg_VertexNhisto",        "ExpTotalBckg_VertexNhisto",           62,-0.5,61.5);
+   TH1D* ExpTotalBckgPPonly_VertexNhisto  = new TH1D("ExpTotalBckgPPonly_VertexNhisto",  "ExpTotalBckgPPonly_VertexNhisto",     62,-0.5,61.5);
+   TH1D* ExpTotalBckgTauFRU_VertexNhisto  = new TH1D("ExpTotalBckgTauFRU_VertexNhisto",  "ExpTotalBckgTauFRU_VertexNhisto",     62,-0.5,61.5);
+   TH1D* ExpTotalBckgTauFRD_VertexNhisto  = new TH1D("ExpTotalBckgTauFRD_VertexNhisto",  "ExpTotalBckgTauFRD_VertexNhisto",     62,-0.5,61.5);
+   TH1D* ExpTotalBckgTauPRU_VertexNhisto  = new TH1D("ExpTotalBckgTauPRU_VertexNhisto",  "ExpTotalBckgTauPRU_VertexNhisto",     62,-0.5,61.5);
+   TH1D* ExpTotalBckgTauPRD_VertexNhisto  = new TH1D("ExpTotalBckgTauPRD_VertexNhisto",  "ExpTotalBckgTauPRD_VertexNhisto",     62,-0.5,61.5);
+   TH1D* ExpTotalBckgMuFRU_VertexNhisto   = new TH1D("ExpTotalBckgMuFRU_VertexNhisto",   "ExpTotalBckgMuFRU_VertexNhisto",      62,-0.5,61.5);
+   TH1D* ExpTotalBckgMuFRD_VertexNhisto   = new TH1D("ExpTotalBckgMuFRD_VertexNhisto",   "ExpTotalBckgMuFRD_VertexNhisto",      62,-0.5,61.5);
+   TH1D* ExpTotalBckgMuPRU_VertexNhisto   = new TH1D("ExpTotalBckgMuPRU_VertexNhisto",   "ExpTotalBckgMuPRU_VertexNhisto",      62,-0.5,61.5);
+   TH1D* ExpTotalBckgMuPRD_VertexNhisto   = new TH1D("ExpTotalBckgMuPRD_VertexNhisto",   "ExpTotalBckgMuPRD_VertexNhisto",      62,-0.5,61.5);
+   //
+   TH1D* ExpTotalBckg_TauJetDeltaRminhisto        = new TH1D("ExpTotalBckg_TauJetDeltaRminhisto",        "ExpTotalBckg_TauJetDeltaRminhisto",           200,-5,5);
+   TH1D* ExpTotalBckgPPonly_TauJetDeltaRminhisto  = new TH1D("ExpTotalBckgPPonly_TauJetDeltaRminhisto",  "ExpTotalBckgPPonly_TauJetDeltaRminhisto",     200,-5,5);
+   TH1D* ExpTotalBckgTauFRU_TauJetDeltaRminhisto  = new TH1D("ExpTotalBckgTauFRU_TauJetDeltaRminhisto",  "ExpTotalBckgTauFRU_TauJetDeltaRminhisto",     200,-5,5);
+   TH1D* ExpTotalBckgTauFRD_TauJetDeltaRminhisto  = new TH1D("ExpTotalBckgTauFRD_TauJetDeltaRminhisto",  "ExpTotalBckgTauFRD_TauJetDeltaRminhisto",     200,-5,5);
+   TH1D* ExpTotalBckgTauPRU_TauJetDeltaRminhisto  = new TH1D("ExpTotalBckgTauPRU_TauJetDeltaRminhisto",  "ExpTotalBckgTauPRU_TauJetDeltaRminhisto",     200,-5,5);
+   TH1D* ExpTotalBckgTauPRD_TauJetDeltaRminhisto  = new TH1D("ExpTotalBckgTauPRD_TauJetDeltaRminhisto",  "ExpTotalBckgTauPRD_TauJetDeltaRminhisto",     200,-5,5);
+   TH1D* ExpTotalBckgMuFRU_TauJetDeltaRminhisto   = new TH1D("ExpTotalBckgMuFRU_TauJetDeltaRminhisto",   "ExpTotalBckgMuFRU_TauJetDeltaRminhisto",      200,-5,5);
+   TH1D* ExpTotalBckgMuFRD_TauJetDeltaRminhisto   = new TH1D("ExpTotalBckgMuFRD_TauJetDeltaRminhisto",   "ExpTotalBckgMuFRD_TauJetDeltaRminhisto",      200,-5,5);
+   TH1D* ExpTotalBckgMuPRU_TauJetDeltaRminhisto   = new TH1D("ExpTotalBckgMuPRU_TauJetDeltaRminhisto",   "ExpTotalBckgMuPRU_TauJetDeltaRminhisto",      200,-5,5);
+   TH1D* ExpTotalBckgMuPRD_TauJetDeltaRminhisto   = new TH1D("ExpTotalBckgMuPRD_TauJetDeltaRminhisto",   "ExpTotalBckgMuPRD_TauJetDeltaRminhisto",      200,-5,5);
+   //
+   TH1D* ExpTotalBckg_MuJetDeltaRminhisto        = new TH1D("ExpTotalBckg_MuJetDeltaRminhisto",        "ExpTotalBckg_MuJetDeltaRminhisto",           200,-5,5);
+   TH1D* ExpTotalBckgPPonly_MuJetDeltaRminhisto  = new TH1D("ExpTotalBckgPPonly_MuJetDeltaRminhisto",  "ExpTotalBckgPPonly_MuJetDeltaRminhisto",     200,-5,5);
+   TH1D* ExpTotalBckgTauFRU_MuJetDeltaRminhisto  = new TH1D("ExpTotalBckgTauFRU_MuJetDeltaRminhisto",  "ExpTotalBckgTauFRU_MuJetDeltaRminhisto",     200,-5,5);
+   TH1D* ExpTotalBckgTauFRD_MuJetDeltaRminhisto  = new TH1D("ExpTotalBckgTauFRD_MuJetDeltaRminhisto",  "ExpTotalBckgTauFRD_MuJetDeltaRminhisto",     200,-5,5);
+   TH1D* ExpTotalBckgTauPRU_MuJetDeltaRminhisto  = new TH1D("ExpTotalBckgTauPRU_MuJetDeltaRminhisto",  "ExpTotalBckgTauPRU_MuJetDeltaRminhisto",     200,-5,5);
+   TH1D* ExpTotalBckgTauPRD_MuJetDeltaRminhisto  = new TH1D("ExpTotalBckgTauPRD_MuJetDeltaRminhisto",  "ExpTotalBckgTauPRD_MuJetDeltaRminhisto",     200,-5,5);
+   TH1D* ExpTotalBckgMuFRU_MuJetDeltaRminhisto   = new TH1D("ExpTotalBckgMuFRU_MuJetDeltaRminhisto",   "ExpTotalBckgMuFRU_MuJetDeltaRminhisto",      200,-5,5);
+   TH1D* ExpTotalBckgMuFRD_MuJetDeltaRminhisto   = new TH1D("ExpTotalBckgMuFRD_MuJetDeltaRminhisto",   "ExpTotalBckgMuFRD_MuJetDeltaRminhisto",      200,-5,5);
+   TH1D* ExpTotalBckgMuPRU_MuJetDeltaRminhisto   = new TH1D("ExpTotalBckgMuPRU_MuJetDeltaRminhisto",   "ExpTotalBckgMuPRU_MuJetDeltaRminhisto",      200,-5,5);
+   TH1D* ExpTotalBckgMuPRD_MuJetDeltaRminhisto   = new TH1D("ExpTotalBckgMuPRD_MuJetDeltaRminhisto",   "ExpTotalBckgMuPRD_MuJetDeltaRminhisto",      200,-5,5);
+   //
+   TH1D* ExpTotalBckg_MuPthisto           = new TH1D("ExpTotalBckg_MuPthisto",           "ExpTotalBckg_MuPthisto",           2000,0,2000);
+   TH1D* ExpTotalBckgPPonly_MuPthisto     = new TH1D("ExpTotalBckgPPonly_MuPthisto",     "ExpTotalBckgPPonly_MuPthisto",     2000,0,2000);
+   TH1D* ExpTotalBckgTauFRU_MuPthisto     = new TH1D("ExpTotalBckgTauFRU_MuPthisto",     "ExpTotalBckgTauFRU_MuPthisto",     2000,0,2000);
+   TH1D* ExpTotalBckgTauFRD_MuPthisto     = new TH1D("ExpTotalBckgTauFRD_MuPthisto",     "ExpTotalBckgTauFRD_MuPthisto",     2000,0,2000);
+   TH1D* ExpTotalBckgTauPRU_MuPthisto     = new TH1D("ExpTotalBckgTauPRU_MuPthisto",     "ExpTotalBckgTauPRU_MuPthisto",     2000,0,2000);
+   TH1D* ExpTotalBckgTauPRD_MuPthisto     = new TH1D("ExpTotalBckgTauPRD_MuPthisto",     "ExpTotalBckgTauPRD_MuPthisto",     2000,0,2000);
+   TH1D* ExpTotalBckgMuFRU_MuPthisto      = new TH1D("ExpTotalBckgMuFRU_MuPthisto",      "ExpTotalBckgMuFRU_MuPthisto",      2000,0,2000);
+   TH1D* ExpTotalBckgMuFRD_MuPthisto      = new TH1D("ExpTotalBckgMuFRD_MuPthisto",      "ExpTotalBckgMuFRD_MuPthisto",      2000,0,2000);
+   TH1D* ExpTotalBckgMuPRU_MuPthisto      = new TH1D("ExpTotalBckgMuPRU_MuPthisto",      "ExpTotalBckgMuPRU_MuPthisto",      2000,0,2000);
+   TH1D* ExpTotalBckgMuPRD_MuPthisto      = new TH1D("ExpTotalBckgMuPRD_MuPthisto",      "ExpTotalBckgMuPRD_MuPthisto",      2000,0,2000);
+   //
+   TH1D* ExpTotalBckg_MuEtahisto           = new TH1D("ExpTotalBckg_MuEtahisto",          "ExpTotalBckg_MuEtahisto",          600,-3,3);
+   TH1D* ExpTotalBckgPPonly_MuEtahisto     = new TH1D("ExpTotalBckgPPonly_MuEtahisto",    "ExpTotalBckgPPonly_MuEtahisto",    600,-3,3);
+   TH1D* ExpTotalBckgTauFRU_MuEtahisto     = new TH1D("ExpTotalBckgTauFRU_MuEtahisto",    "ExpTotalBckgTauFRU_MuEtahisto",    600,-3,3);
+   TH1D* ExpTotalBckgTauFRD_MuEtahisto     = new TH1D("ExpTotalBckgTauFRD_MuEtahisto",    "ExpTotalBckgTauFRD_MuEtahisto",    600,-3,3);
+   TH1D* ExpTotalBckgTauPRU_MuEtahisto     = new TH1D("ExpTotalBckgTauPRU_MuEtahisto",    "ExpTotalBckgTauPRU_MuEtahisto",    600,-3,3);
+   TH1D* ExpTotalBckgTauPRD_MuEtahisto     = new TH1D("ExpTotalBckgTauPRD_MuEtahisto",    "ExpTotalBckgTauPRD_MuEtahisto",    600,-3,3);
+   TH1D* ExpTotalBckgMuFRU_MuEtahisto      = new TH1D("ExpTotalBckgMuFRU_MuEtahisto",     "ExpTotalBckgMuFRU_MuEtahisto",     600,-3,3);
+   TH1D* ExpTotalBckgMuFRD_MuEtahisto      = new TH1D("ExpTotalBckgMuFRD_MuEtahisto",     "ExpTotalBckgMuFRD_MuEtahisto",     600,-3,3);
+   TH1D* ExpTotalBckgMuPRU_MuEtahisto      = new TH1D("ExpTotalBckgMuPRU_MuEtahisto",     "ExpTotalBckgMuPRU_MuEtahisto",     600,-3,3);
+   TH1D* ExpTotalBckgMuPRD_MuEtahisto      = new TH1D("ExpTotalBckgMuPRD_MuEtahisto",     "ExpTotalBckgMuPRD_MuEtahisto",     600,-3,3);
+   //
+   TH1D* ExpTotalBckg_TauPthisto           = new TH1D("ExpTotalBckg_TauPthisto",           "ExpTotalBckg_TauPthisto",           2000,0,2000);
+   TH1D* ExpTotalBckgPPonly_TauPthisto     = new TH1D("ExpTotalBckgPPonly_TauPthisto",     "ExpTotalBckgPPonly_TauPthisto",     2000,0,2000);
+   TH1D* ExpTotalBckgTauFRU_TauPthisto     = new TH1D("ExpTotalBckgTauFRU_TauPthisto",     "ExpTotalBckgTauFRU_TauPthisto",     2000,0,2000);
+   TH1D* ExpTotalBckgTauFRD_TauPthisto     = new TH1D("ExpTotalBckgTauFRD_TauPthisto",     "ExpTotalBckgTauFRD_TauPthisto",     2000,0,2000);
+   TH1D* ExpTotalBckgTauPRU_TauPthisto     = new TH1D("ExpTotalBckgTauPRU_TauPthisto",     "ExpTotalBckgTauPRU_TauPthisto",     2000,0,2000);
+   TH1D* ExpTotalBckgTauPRD_TauPthisto     = new TH1D("ExpTotalBckgTauPRD_TauPthisto",     "ExpTotalBckgTauPRD_TauPthisto",     2000,0,2000);
+   TH1D* ExpTotalBckgMuFRU_TauPthisto      = new TH1D("ExpTotalBckgMuFRU_TauPthisto",      "ExpTotalBckgMuFRU_TauPthisto",      2000,0,2000);
+   TH1D* ExpTotalBckgMuFRD_TauPthisto      = new TH1D("ExpTotalBckgMuFRD_TauPthisto",      "ExpTotalBckgMuFRD_TauPthisto",      2000,0,2000);
+   TH1D* ExpTotalBckgMuPRU_TauPthisto      = new TH1D("ExpTotalBckgMuPRU_TauPthisto",      "ExpTotalBckgMuPRU_TauPthisto",      2000,0,2000);
+   TH1D* ExpTotalBckgMuPRD_TauPthisto      = new TH1D("ExpTotalBckgMuPRD_TauPthisto",      "ExpTotalBckgMuPRD_TauPthisto",      2000,0,2000);
+   //
+   TH1D* ExpTotalBckg_TauEtahisto           = new TH1D("ExpTotalBckg_TauEtahisto",          "ExpTotalBckg_TauEtahisto",          600,-3,3);
+   TH1D* ExpTotalBckgPPonly_TauEtahisto     = new TH1D("ExpTotalBckgPPonly_TauEtahisto",    "ExpTotalBckgPPonly_TauEtahisto",    600,-3,3);
+   TH1D* ExpTotalBckgTauFRU_TauEtahisto     = new TH1D("ExpTotalBckgTauFRU_TauEtahisto",    "ExpTotalBckgTauFRU_TauEtahisto",    600,-3,3);
+   TH1D* ExpTotalBckgTauFRD_TauEtahisto     = new TH1D("ExpTotalBckgTauFRD_TauEtahisto",    "ExpTotalBckgTauFRD_TauEtahisto",    600,-3,3);
+   TH1D* ExpTotalBckgTauPRU_TauEtahisto     = new TH1D("ExpTotalBckgTauPRU_TauEtahisto",    "ExpTotalBckgTauPRU_TauEtahisto",    600,-3,3);
+   TH1D* ExpTotalBckgTauPRD_TauEtahisto     = new TH1D("ExpTotalBckgTauPRD_TauEtahisto",    "ExpTotalBckgTauPRD_TauEtahisto",    600,-3,3);
+   TH1D* ExpTotalBckgMuFRU_TauEtahisto      = new TH1D("ExpTotalBckgMuFRU_TauEtahisto",     "ExpTotalBckgMuFRU_TauEtahisto",     600,-3,3);
+   TH1D* ExpTotalBckgMuFRD_TauEtahisto      = new TH1D("ExpTotalBckgMuFRD_TauEtahisto",     "ExpTotalBckgMuFRD_TauEtahisto",     600,-3,3);
+   TH1D* ExpTotalBckgMuPRU_TauEtahisto      = new TH1D("ExpTotalBckgMuPRU_TauEtahisto",     "ExpTotalBckgMuPRU_TauEtahisto",     600,-3,3);
+   TH1D* ExpTotalBckgMuPRD_TauEtahisto      = new TH1D("ExpTotalBckgMuPRD_TauEtahisto",     "ExpTotalBckgMuPRD_TauEtahisto",     600,-3,3);
+   //
    TH1D* ExpTotalBckg_SThisto               = new TH1D("ExpTotalBckg_SThisto",              "ExpTotalBckg_SThisto",              5000,0,5000);
+   TH1D* ExpTotalBckgPPonly_SThisto         = new TH1D("ExpTotalBckgPPonly_SThisto",        "ExpTotalBckgPPonly_SThisto",        5000,0,5000);
    TH1D* ExpTotalBckgTauFRU_SThisto         = new TH1D("ExpTotalBckgTauFRU_SThisto",        "ExpTotalBckgTauFRU_SThisto",        5000,0,5000);
    TH1D* ExpTotalBckgTauFRD_SThisto         = new TH1D("ExpTotalBckgTauFRD_SThisto",        "ExpTotalBckgTauFRD_SThisto",        5000,0,5000);
+   TH1D* ExpTotalBckgTauPRU_SThisto         = new TH1D("ExpTotalBckgTauPRU_SThisto",        "ExpTotalBckgTauPRU_SThisto",        5000,0,5000);
+   TH1D* ExpTotalBckgTauPRD_SThisto         = new TH1D("ExpTotalBckgTauPRD_SThisto",        "ExpTotalBckgTauPRD_SThisto",        5000,0,5000);
+   TH1D* ExpTotalBckgMuFRU_SThisto          = new TH1D("ExpTotalBckgMuFRU_SThisto",         "ExpTotalBckgMuFRU_SThisto",         5000,0,5000);
+   TH1D* ExpTotalBckgMuFRD_SThisto          = new TH1D("ExpTotalBckgMuFRD_SThisto",         "ExpTotalBckgMuFRD_SThisto",         5000,0,5000);
+   TH1D* ExpTotalBckgMuPRU_SThisto          = new TH1D("ExpTotalBckgMuPRU_SThisto",         "ExpTotalBckgMuPRU_SThisto",         5000,0,5000);
+   TH1D* ExpTotalBckgMuPRD_SThisto          = new TH1D("ExpTotalBckgMuPRD_SThisto",         "ExpTotalBckgMuPRD_SThisto",         5000,0,5000);
+   //
    TH1D* ExpTotalBckg_JetNhisto             = new TH1D("ExpTotalBckg_JetNhisto",            "ExpTotalBckg_JetNhisto",            16,-0.5,15.5);
+   TH1D* ExpTotalBckgPPonly_JetNhisto       = new TH1D("ExpTotalBckgPPonly_JetNhisto",      "ExpTotalBckgPPonly_JetNhisto",      16,-0.5,15.5);
    TH1D* ExpTotalBckgTauFRU_JetNhisto       = new TH1D("ExpTotalBckgTauFRU_JetNhisto",      "ExpTotalBckgTauFRU_JetNhisto",      16,-0.5,15.5);
    TH1D* ExpTotalBckgTauFRD_JetNhisto       = new TH1D("ExpTotalBckgTauFRD_JetNhisto",      "ExpTotalBckgTauFRD_JetNhisto",      16,-0.5,15.5);
+   TH1D* ExpTotalBckgTauPRU_JetNhisto       = new TH1D("ExpTotalBckgTauPRU_JetNhisto",      "ExpTotalBckgTauPRU_JetNhisto",      16,-0.5,15.5);
+   TH1D* ExpTotalBckgTauPRD_JetNhisto       = new TH1D("ExpTotalBckgTauPRD_JetNhisto",      "ExpTotalBckgTauPRD_JetNhisto",      16,-0.5,15.5);
+   TH1D* ExpTotalBckgMuFRU_JetNhisto        = new TH1D("ExpTotalBckgMuFRU_JetNhisto",       "ExpTotalBckgMuFRU_JetNhisto",       16,-0.5,15.5);
+   TH1D* ExpTotalBckgMuFRD_JetNhisto        = new TH1D("ExpTotalBckgMuFRD_JetNhisto",       "ExpTotalBckgMuFRD_JetNhisto",       16,-0.5,15.5);
+   TH1D* ExpTotalBckgMuPRU_JetNhisto        = new TH1D("ExpTotalBckgMuPRU_JetNhisto",       "ExpTotalBckgMuPRU_JetNhisto",       16,-0.5,15.5);
+   TH1D* ExpTotalBckgMuPRD_JetNhisto        = new TH1D("ExpTotalBckgMuPRD_JetNhisto",       "ExpTotalBckgMuPRD_JetNhisto",       16,-0.5,15.5);
+   //
+   //Two seach regions: Tau Barrel, Tau Endcap
+   TH1D* Search1Binhisto                      = new TH1D("Search1Binhisto",                         "Search1Binhisto",                         5,0,5);
+   TH1D* ExpTotalBckg_Search1Binhisto         = new TH1D("ExpTotalBckg_Search1Binhisto",            "ExpTotalBckg_Search1Binhisto",            5,0,5);
+   TH1D* ExpTotalBckgPPonly_Search1Binhisto   = new TH1D("ExpTotalBckgPPonly_Search1Binhisto",      "ExpTotalBckgPPonly_Search1Binhisto",      5,0,5);
+   TH1D* ExpTotalBckgTauFRU_Search1Binhisto   = new TH1D("ExpTotalBckgTauFRU_Search1Binhisto",      "ExpTotalBckgTauFRU_Search1Binhisto",      5,0,5);
+   TH1D* ExpTotalBckgTauFRD_Search1Binhisto   = new TH1D("ExpTotalBckgTauFRD_Search1Binhisto",      "ExpTotalBckgTauFRD_Search1Binhisto",      5,0,5);
+   TH1D* ExpTotalBckgTauPRU_Search1Binhisto   = new TH1D("ExpTotalBckgTauPRU_Search1Binhisto",      "ExpTotalBckgTauPRU_Search1Binhisto",      5,0,5);
+   TH1D* ExpTotalBckgTauPRD_Search1Binhisto   = new TH1D("ExpTotalBckgTauPRD_Search1Binhisto",      "ExpTotalBckgTauPRD_Search1Binhisto",      5,0,5);
+   TH1D* ExpTotalBckgMuFRU_Search1Binhisto    = new TH1D("ExpTotalBckgMuFRU_Search1Binhisto",       "ExpTotalBckgMuFRU_Search1Binhisto",       5,0,5);
+   TH1D* ExpTotalBckgMuFRD_Search1Binhisto    = new TH1D("ExpTotalBckgMuFRD_Search1Binhisto",       "ExpTotalBckgMuFRD_Search1Binhisto",       5,0,5);
+   TH1D* ExpTotalBckgMuPRU_Search1Binhisto    = new TH1D("ExpTotalBckgMuPRU_Search1Binhisto",       "ExpTotalBckgMuPRU_Search1Binhisto",       5,0,5);
+   TH1D* ExpTotalBckgMuPRD_Search1Binhisto    = new TH1D("ExpTotalBckgMuPRD_Search1Binhisto",       "ExpTotalBckgMuPRD_Search1Binhisto",       5,0,5);
+   //
+   //Four seach regions: Tau Barrel, Tau Endcap x 0 bjets, 1>bjets
+   TH1D* Search2Binhisto                      = new TH1D("Search2Binhisto",                         "Search2Binhisto",                         10,0,10);
+   TH1D* ExpTotalBckg_Search2Binhisto         = new TH1D("ExpTotalBckg_Search2Binhisto",            "ExpTotalBckg_Search2Binhisto",            10,0,10);
+   TH1D* ExpTotalBckgPPonly_Search2Binhisto   = new TH1D("ExpTotalBckgPPonly_Search2Binhisto",      "ExpTotalBckgPPonly_Search2Binhisto",      10,0,10);
+   TH1D* ExpTotalBckgTauFRU_Search2Binhisto   = new TH1D("ExpTotalBckgTauFRU_Search2Binhisto",      "ExpTotalBckgTauFRU_Search2Binhisto",      10,0,10);
+   TH1D* ExpTotalBckgTauFRD_Search2Binhisto   = new TH1D("ExpTotalBckgTauFRD_Search2Binhisto",      "ExpTotalBckgTauFRD_Search2Binhisto",      10,0,10);
+   TH1D* ExpTotalBckgTauPRU_Search2Binhisto   = new TH1D("ExpTotalBckgTauPRU_Search2Binhisto",      "ExpTotalBckgTauPRU_Search2Binhisto",      10,0,10);
+   TH1D* ExpTotalBckgTauPRD_Search2Binhisto   = new TH1D("ExpTotalBckgTauPRD_Search2Binhisto",      "ExpTotalBckgTauPRD_Search2Binhisto",      10,0,10);
+   TH1D* ExpTotalBckgMuFRU_Search2Binhisto    = new TH1D("ExpTotalBckgMuFRU_Search2Binhisto",       "ExpTotalBckgMuFRU_Search2Binhisto",       10,0,10);
+   TH1D* ExpTotalBckgMuFRD_Search2Binhisto    = new TH1D("ExpTotalBckgMuFRD_Search2Binhisto",       "ExpTotalBckgMuFRD_Search2Binhisto",       10,0,10);
+   TH1D* ExpTotalBckgMuPRU_Search2Binhisto    = new TH1D("ExpTotalBckgMuPRU_Search2Binhisto",       "ExpTotalBckgMuPRU_Search2Binhisto",       10,0,10);
+   TH1D* ExpTotalBckgMuPRD_Search2Binhisto    = new TH1D("ExpTotalBckgMuPRD_Search2Binhisto",       "ExpTotalBckgMuPRD_Search2Binhisto",       10,0,10);
+   //
+   //
+   //TH1D* ExpTotalBckg_MuTauDeltaRhisto      = new TH1D("ExpTotalBckg_MuTauDeltaRhisto",     "ExpTotalBckg_MuTauDeltaRhisto",     300,-5,10);
    //
    TH1D* ExpSingleTauFake_MuTauDeltaRhisto      = new TH1D("ExpSingleTauFake_MuTauDeltaRhisto",     "ExpSingleTauFake_MuTauDeltaRhisto",     300,-5,10);
    TH1D* ExpSingleTauFake_TauJetDeltaRminhisto  = new TH1D("ExpSingleTauFake_TauJetDeltaRminhisto", "ExpSingleTauFake_TauJetDeltaRminhisto", 200,-5,5);
    TH1D* ExpSingleTauFake_TauPthisto            = new TH1D("ExpSingleTauFake_TauPthisto",           "ExpSingleTauFake_TauPthisto",           2000,0,2000);
-   TH1D* ExpSingleTauFake_TauEtahisto           = new TH1D("ExpSingleTauFake_TauEtahisto",          "ExpSingleTauFake_TauEtahisto",          800,-4,4);
+   TH1D* ExpSingleTauFake_TauEtahisto           = new TH1D("ExpSingleTauFake_TauEtahisto",          "ExpSingleTauFake_TauEtahisto",          600,-3,3);
    TH1D* ExpSingleTauFake_TauPhihisto           = new TH1D("ExpSingleTauFake_TauPhihisto",          "ExpSingleTauFake_TauPhihisto",          800,-4,4);
    TH1D* ExpSingleTauFake_SThisto               = new TH1D("ExpSingleTauFake_SThisto",              "ExpSingleTauFake_SThisto",              5000,0,5000);
    TH1D* ExpSingleMuFake_SThisto                = new TH1D("ExpSingleMuFake_SThisto",               "ExpSingleMuFake_SThisto",               5000,0,5000);
@@ -290,6 +418,8 @@ void analysisClass::Loop()
      ltemMuMu.clear();
      ltemMuTau.clear();
 
+     ApplyLepJetMetSystematics(0);//no systematics applied
+
      // -- RUN LTEM 
      which_MuTau(ltemMuTau);
 
@@ -299,30 +429,36 @@ void analysisClass::Loop()
      safePileupWeights_=safePileupWeights();
      // ---- trigger 
      unsigned int triggerMuon=99;
-     for(unsigned int iMuR=0;  iMuR<MuonPt->size();     iMuR++){
-	 if( !muRisoCheck(iMuR) ) continue;
-	 triggerMuon=iMuR;
-	 break;//take the leading one
-     }
+     //for(unsigned int iMuR=0;  iMuR<MuonPt->size();     iMuR++){
+     //if( !muRisoCheck(iMuR) ) continue;
+     //triggerMuon=iMuR;
+     //break;//take the leading one
+     //}
      if( ltemMuTau.size()==2 ) triggerMuon=ltemMuTau[0];
      //
+     if( ltemMuTau.size()!=2 ) continue;
+     //
      int usedTrigger_=-5;
-     //usedTrigger_ = SingleMu_passTrigger();
-     //usedTrigger_ = SingleMu40_passTrigger();
-     usedTrigger_ = HLT_MuPT_eta2p1_passTrigger();
+     if( MuonPt->at(triggerMuon)> 45                                ) usedTrigger_ = SingleMu40_passTrigger();
+     if( MuonPt->at(triggerMuon)<=45 &&  muRTightCheck(triggerMuon) ) usedTrigger_ = SingleMu_passTrigger();
+     if( MuonPt->at(triggerMuon)<=45 && !muRTightCheck(triggerMuon) ) usedTrigger_ = HLT_MuPT_eta2p1_passTrigger();// prescale 167.2
+     //
      double TriggerEfficiencyWeights_;
-     // use same weights for Mu24 and Mu40 triggers
-     //TriggerEfficiencyWeights_=IsoMu24e2p1_Eff( MuonPt->at(triggerMuon), MuonEta->at(triggerMuon) );
-     //TriggerEfficiencyWeights_=Mu40e2p1_ScaleFactor( MuonPt->at(triggerMuon), MuonEta->at(triggerMuon) );
-     TriggerEfficiencyWeights_=Mu40e2p1_ScaleFactor( 50, MuonEta->at(triggerMuon) );
+     if( MuonPt->at(triggerMuon)> 45                                ) TriggerEfficiencyWeights_ = Mu40e2p1_ScaleFactor( MuonPt->at(triggerMuon), MuonEta->at(triggerMuon) );
+     if( MuonPt->at(triggerMuon)<=45 &&  muRTightCheck(triggerMuon) ) TriggerEfficiencyWeights_ = IsoMu24e2p1_Eff(      MuonPt->at(triggerMuon), MuonEta->at(triggerMuon) );     
+     if( MuonPt->at(triggerMuon)<=45 && !muRTightCheck(triggerMuon) ) TriggerEfficiencyWeights_ = Mu24e2p1_ScaleFactor( MuonPt->at(triggerMuon), MuonEta->at(triggerMuon) );
+     //
      AppliedTrigEffWeightshisto->Fill( TriggerEfficiencyWeights_ );
      // ---- total = pileup x trigger
      double w = 0;
      if( !isData  ){
        w=safePileupWeights_*TriggerEfficiencyWeights_; 
-       // w=w*LTEM_ScaleFactor( ltemMuTau );
      }
      if( isData  ) w=1;
+     if( isData && MuonPt->at(triggerMuon)<=45 && !muRTightCheck(triggerMuon) ){
+       double trigPrescale_=167.2;
+       w=(double)(w*trigPrescale_);
+     }
      //w=1;//set all weights to one!!
      //w=safePileupWeights_; // PU weights only
 
@@ -334,9 +470,9 @@ void analysisClass::Loop()
 
      //  -- TRIGGER SKIM
      int passTrigger_=0;
-     //passTrigger_ = SingleMu_passTrigger(); //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<this is IsoMu24 trigger
-     //passTrigger_ = SingleMu40_passTrigger();        //<<<<<<<<<<<<<<<<< this is Mu40 trigger 
-     passTrigger_ = HLT_MuPT_eta2p1_passTrigger(); //<<<<<<<<<<<<<<<<< this is Mu24 trigger  (no isolation)
+     if( MuonPt->at(triggerMuon)> 45                                ) passTrigger_ = SingleMu40_passTrigger();//<<<<< Mu40    trigger
+     if( MuonPt->at(triggerMuon)<=45 &&  muRTightCheck(triggerMuon) ) passTrigger_ = SingleMu_passTrigger();  //<<<<< IsoMu24 trigger
+     if( MuonPt->at(triggerMuon)<=45 && !muRTightCheck(triggerMuon) ) passTrigger_ = HLT_MuPT_eta2p1_passTrigger();// Mu24    trigger  (no isolation)
      fillVariableWithValue("PassTrig", passTrigger_ );//...// returns -2, -1, 0, trig                                                                         
 
      //  -- EVENT FILTER SKIM
@@ -348,19 +484,15 @@ void analysisClass::Loop()
      //  -- DILEPTON SKIM - MuTau
      int isOfflineDilepton_=0;
      if( isMuTauDR0p30() ) isOfflineDilepton_ = 1;
-     //Make Trigger Muon Tight
-     //if( isMuTauDR0p30() && muRTightCheck(triggerMuon) ) isOfflineDilepton_ = 1;
      fillVariableWithValue("PassOfflineDilepton", isOfflineDilepton_ );// Returns 0, 1          
 
 
      // -- HLT MATCHING SKIM
      int passAllMuHLTmatching_=0;
-     //passAllMuHLTmatching_=1; // this is done in the skimming step already.
-     //if(  RecoHLTdeltaRmin_SingleMuTrigger(triggerMuon)<0.15              ) passAllMuHLTmatching_=1;
-     //if( RecoHLTdeltaRmin_SingleMu40Trigger(triggerMuon)<0.15 ) passAllMuHLTmatching_=1;
-     if( RecoHLTdeltaRmin_SingleMu24Trigger(triggerMuon)<0.15 ) passAllMuHLTmatching_=1;
+     if( MuonPt->at(triggerMuon)> 45                                && RecoHLTdeltaRmin_SingleMu40Trigger(triggerMuon)<0.15 ) passAllMuHLTmatching_=1;
+     if( MuonPt->at(triggerMuon)<=45 &&  muRTightCheck(triggerMuon) && RecoHLTdeltaRmin_SingleMuTrigger(triggerMuon)<0.15   ) passAllMuHLTmatching_=1;
+     if( MuonPt->at(triggerMuon)<=45 && !muRTightCheck(triggerMuon) && RecoHLTdeltaRmin_SingleMu24Trigger(triggerMuon)<0.15 ) passAllMuHLTmatching_=1;
      fillVariableWithValue("PassAllMuHLTmatching",passAllMuHLTmatching_);
-
 
      
      // 
@@ -392,24 +524,13 @@ void analysisClass::Loop()
      int OfflineCuts_=0;
      int NLepJet= MuCounter()+ElCounter()+TauCounter()+JetCounter();
      //
-     if( ltemMuTau.size()==2 && 
-	 //MuonPt->at(ltemMuTau[0])>45 &&
-	 //pZeta>-10 &&
-	 fabs(HPSTauEta->at(ltemMuTau[1]))<1.5 && //barrel Taus only
+     if( ltemMuTau.size()==2 && //MuonPt->at(ltemMuTau[0])>45 &&
+         pZeta>-10 &&
+	 //fabs(HPSTauEta->at(ltemMuTau[1]))<1.5 && //barrel Taus only
 	 //fabs(HPSTauEta->at(ltemMuTau[1]))>=1.5 && //endcap Taus only
 	 HPSTauPt->at(ltemMuTau[1])>35 && //TauPt>35
-	 //fabs(MuonEta->at(ltemMuTau[0]))<1.5 && //barrel Muons only
-	 //ST()>150  && JetCounter()<=1 && NLepJet<=3 && // <<<< CONTROL REGION with DATA
-	 //ST()>300  && JetCounter()>1 && NLepJet>3 && // <<<< CONTROL REGION like SIGNAL selection!! (for mixing the two)
-	 //ST()>300  && JetCounter()>1  && NLepJet>4 && // <<<< SIGNAL REGION no DATA
-	 //ST()>150  && JetCounter()>0 &&
-	 ST()>200  && JetCounter()>0 &&
-	 // ST()>300  && JetCounter()>1 && // <<<< SIGNAL REGION no DATA -- For checking LTEM in MC
-	 //ST()>470  && HPSTauPt->at(ltemMuTau[1])>50 && // LQ3M300 Optimized
-	 //ST()>590  && HPSTauPt->at(ltemMuTau[1])>60 && // LQ3M400 Optimized
-	 //ST()>720  && HPSTauPt->at(ltemMuTau[1])>65 && // LQ3M500 Optimized
-	 muJetDeltaRmin(ltemMuTau[0])>0.5 && tauJetDeltaRmin(ltemMuTau[1])>0.7 ) OfflineCuts_=1;
-	 //muJetDeltaRmin(ltemMuTau[0])>0.5 && tauJetDeltaRmin(ltemMuTau[1])>1.0 ) OfflineCuts_=1;
+	 ST()>150  && JetCounter()<=1 && NLepJet<=3 
+	 ) OfflineCuts_=1;
      fillVariableWithValue("PassOfflineCuts", OfflineCuts_ );// returns 0, 1 
      
      
@@ -426,63 +547,40 @@ void analysisClass::Loop()
        bool isRecoTauPrompt_ = false;
        //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
        // Check whether LTEM mu & tau are Fake or Prompt!!
-       TLorentzVector RecoMu, RecoTau, GenMu, GenTau;
-       RecoMu.SetPtEtaPhiM( MuonPt->at(ltemMuTau[0]), MuonEta->at(ltemMuTau[0]), MuonPhi->at(ltemMuTau[0]), 0 );
-       RecoTau.SetPtEtaPhiM( HPSTauPt->at(ltemMuTau[1]), HPSTauEta->at(ltemMuTau[1]), HPSTauPhi->at(ltemMuTau[1]), 0 );
-       //Check RecoMu  ( W )
-       for( unsigned int iMuT=0; iMuT<GenWMuPt->size(); iMuT++){
-	 GenMu.SetPtEtaPhiM( GenWMuPt->at(iMuT),     GenWMuEta->at(iMuT),   GenWMuPhi->at(iMuT), 0 );
-	 if( GenMu.DeltaR(RecoMu)<0.15 ) isRecoMuPrompt_ = true;
-       }
-       //Check RecoTau ( W )
-       for( unsigned int iTauT=0; iTauT<GenWTauPt->size(); iTauT++){
-	 if( GenWTauTauDecayMode->at(iTauT)<3 ) continue;//mode 1: electron, 2: muon (semileptonic)
-	 GenTau.SetPtEtaPhiM( GenWTauTauVisiblePt->at(iTauT),     GenWTauTauVisibleEta->at(iTauT),   GenWTauTauVisiblePhi->at(iTauT), 0 );
-	 if( GenTau.DeltaR(RecoTau)<0.15 ) isRecoTauPrompt_ = true;
-       }
-       //
-       /**/
-       //Check RecoMu  ( Z )
-       for( unsigned int iMuT=0; iMuT<GenZMuPt->size(); iMuT++){
-	 GenMu.SetPtEtaPhiM( GenZMuPt->at(iMuT),     GenZMuEta->at(iMuT),   GenZMuPhi->at(iMuT), 0 );
-	 if( GenMu.DeltaR(RecoMu)<0.15 ) isRecoMuPrompt_ = true;
-       }
-       //Check RecoTau ( Z )
-       for( unsigned int iTauT=0; iTauT<GenZTauPt->size(); iTauT++){
-	 if( GenZTauTauDecayMode->at(iTauT)<3 ) continue;//mode 1: electron, 2: muon (semileptonic)
-	 GenTau.SetPtEtaPhiM( GenZTauTauVisiblePt->at(iTauT),     GenZTauTauVisibleEta->at(iTauT),   GenZTauTauVisiblePhi->at(iTauT), 0 );
-	 if( GenTau.DeltaR(RecoTau)<0.15 ) isRecoTauPrompt_ = true;
-       }
-       /**/
-       //
-       /*
-       //Check RecoMu  (LQ3->Tau)
-       for( unsigned int iMuT=0; iMuT<GenLQTauMuonPt->size(); iMuT++){
-	 GenMu.SetPtEtaPhiM( GenLQTauMuonPt->at(iMuT),     GenLQTauMuonEta->at(iMuT),   GenLQTauMuonPhi->at(iMuT), 0 );
-	 if( GenMu.DeltaR(RecoMu)<0.15 ) isRecoMuPrompt_ = true;
-       }
-       //Check RecoTau (LQ3->Tau)
-       for( unsigned int iTauT=0; iTauT<GenLQTauTauPt->size(); iTauT++){
-	 if( GenLQTauTauTauDecayMode->at(iTauT)<3 ) continue;//mode 1: electron, 2: muon (semileptonic)
-	 GenTau.SetPtEtaPhiM( GenLQTauTauTauVisiblePt->at(iTauT),     GenLQTauTauTauVisibleEta->at(iTauT),   GenLQTauTauTauVisiblePhi->at(iTauT), 0 );
-	 if( GenTau.DeltaR(RecoTau)<0.15 ) isRecoTauPrompt_ = true;
-       }
-       */
-       //
+       if( isRecoMuPrompt(ltemMuTau[0])  ) isRecoMuPrompt_=true;
+       if( isRecoTauPrompt(ltemMuTau[1]) ) isRecoTauPrompt_=true;
+
+
        //-----------------------------------
-       // Muon Scale Factors
-       InitMuonFunctionParameters();
+       // Prompt and Fake Rate WITHOUT Scale Factor Histograms
+       muPRhisto  ->Fill( muPR(ltemMuTau[0])   );
+       muFRhisto  ->Fill( muFR(ltemMuTau[0])   );
+       muPREhisto ->Fill( muPRE(ltemMuTau[0])  );
+       muFREhisto ->Fill( muFRE(ltemMuTau[0])  );
+       tauPRhisto ->Fill( tauPR(ltemMuTau[1])  );
+       tauFRhisto ->Fill( tauFR(ltemMuTau[1])  );
+       tauPREhisto->Fill( tauPRE(ltemMuTau[1]) );
+       tauFREhisto->Fill( tauFRE(ltemMuTau[1]) );
+       //-----------------------------------
        InitMuonSFs(ltemMuTau[0]);
-       //-----------------------------------
-       // Tau Scale Factors
        InitTauSFs();
-       //
+       ////ResetAllSFs();// UNDO ALL SF set up above!!!!  <<<<<<<<<<<<< noSF scenario! -- If used with data, this is to show it doesnt work!
+       //-----------------------------------
+       // Prompt and Fake Rate WITH Scale Factor Histograms
+       muPRwSFhisto  ->Fill( muPR(ltemMuTau[0])   );
+       muFRwSFhisto  ->Fill( muFR(ltemMuTau[0])   );
+       muPREwSFhisto ->Fill( muPRE(ltemMuTau[0])  );
+       muFREwSFhisto ->Fill( muFRE(ltemMuTau[0])  );
+       tauPRwSFhisto ->Fill( tauPR(ltemMuTau[1])  );
+       tauFRwSFhisto ->Fill( tauFR(ltemMuTau[1])  );
+       tauPREwSFhisto->Fill( tauPRE(ltemMuTau[1]) );
+       tauFREwSFhisto->Fill( tauFRE(ltemMuTau[1]) );
        //-----------------------------------
        double LTEM_ScaleFactor_=1;
-       if( !isData  ){//for MC: apply SF dependent event weights to TT box based on Gen info, set SFs back to one
-	 LTEM_ScaleFactor_=LTEM_ScaleFactor( ltemMuTau[0], isRecoMuPrompt_, ltemMuTau[1], isRecoTauPrompt_ );
-	 ResetAllSFs();
-       }
+       //if( !isData  ){//for MC: apply SF dependent event weights to TT box based on Gen info, set SFs back to one
+       //LTEM_ScaleFactor_=LTEM_ScaleFactor( ltemMuTau[0], isRecoMuPrompt_, ltemMuTau[1], isRecoTauPrompt_ );
+       //ResetAllSFs();
+       //}
        //-----------------------------------
        //
        //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -491,16 +589,6 @@ void analysisClass::Loop()
        TLorentzVector LTEMMuVector, LTEMTauVector;
        LTEMMuVector.SetPtEtaPhiM(  MuonPt->at(ltemMuTau[0]),    MuonEta->at(ltemMuTau[0]),   MuonPhi->at(ltemMuTau[0]),   0 );
        LTEMTauVector.SetPtEtaPhiM( HPSTauPt->at(ltemMuTau[1]),  HPSTauEta->at(ltemMuTau[1]), HPSTauPhi->at(ltemMuTau[1]), 0 );
-
-
-       muPRhisto->Fill(muPR(ltemMuTau[0]));
-       muFRhisto->Fill(muFR(ltemMuTau[0]));
-       tauPRhisto->Fill(tauPR(ltemMuTau[1]));
-       tauFRhisto->Fill(tauFR(ltemMuTau[1]));
-       muPREhisto->Fill(muPRE(ltemMuTau[0]));
-       muFREhisto->Fill(muFRE(ltemMuTau[0]));
-       tauPREhisto->Fill(tauPRE(ltemMuTau[1]));
-       tauFREhisto->Fill(tauFRE(ltemMuTau[1]));
 
 
        // Weight Histos
@@ -516,6 +604,22 @@ void analysisClass::Loop()
        if( muRTightCheck(ltemMuTau[0])  ) isMuTight_=true;
        if( tauRTightCheck(ltemMuTau[1]) ) isTauTight_=true;
        //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+       //Creating SearchEventType variables:
+       double Search1EventType=0;
+       double Search2EventType=0;
+       int NoOfBjets=0;
+       if( fabs(HPSTauEta->at(ltemMuTau[1]))< 1.5 ) Search1EventType=1;//barrel tau
+       if( fabs(HPSTauEta->at(ltemMuTau[1]))>=1.5 ) Search1EventType=3;//endcap tau
+       for(unsigned int iJetR=0; iJetR<PFJetPt->size(); iJetR++){
+	 if( !jetRisoCheck(iJetR)    )continue;
+	 if( !btag_jetRCheck(iJetR)  )continue;
+	 NoOfBjets++;
+       }	 
+       if( fabs(HPSTauEta->at(ltemMuTau[1]))< 1.5 && NoOfBjets==0 ) Search2EventType=1;//barrel tau, 0  bjets
+       if( fabs(HPSTauEta->at(ltemMuTau[1]))< 1.5 && NoOfBjets>0  ) Search2EventType=3;//barrel tau, 1> bjets
+       if( fabs(HPSTauEta->at(ltemMuTau[1]))>=1.5 && NoOfBjets==0 ) Search2EventType=5;//endcap tau, 0  bjets
+       if( fabs(HPSTauEta->at(ltemMuTau[1]))>=1.5 && NoOfBjets>0  ) Search2EventType=7;//endcap tau, 1> bjets
 
 
        //--- Fill in LT reco, gen matricies
@@ -574,22 +678,31 @@ void analysisClass::Loop()
        TTBackgroundhisto->Fill( 3, TTSingleTauFake_*w );//SingleFakeTau in TT
        if(  isMuTight_ &&  isTauTight_ ) TTBackgroundhisto->Fill( 4, w );
        // Need various distributions of Single Tau Fakes here.. Weight: TTSingleTauFake_*w
+       ExpTotalBckg_Search1Binhisto->Fill( Search1EventType,                        (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckg_Search2Binhisto->Fill( Search2EventType,                        (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
        ExpTotalBckg_SThisto->Fill(              st,                                 (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
        ExpTotalBckg_JetNhisto->Fill(            nJet,                               (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
-       ExpTotalBckg_MuTauDeltaRhisto->Fill(     LTEMMuVector.DeltaR(LTEMTauVector), (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
        ExpTotalBckg_TauJetDeltaRminhisto->Fill( tauJetDeltaRmin(ltemMuTau[1]),      (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckg_MuJetDeltaRminhisto->Fill(  muJetDeltaRmin(ltemMuTau[0]),       (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
        ExpTotalBckg_TauPthisto->Fill(           HPSTauPt->at(ltemMuTau[1]),         (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
        ExpTotalBckg_TauEtahisto->Fill(          HPSTauEta->at(ltemMuTau[1]),        (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
-       ExpTotalBckg_TauPhihisto->Fill(          HPSTauPhi->at(ltemMuTau[1]),        (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
-       if( isMuTight_ && isTauTight_ && isRecoMuPrompt_ && isRecoTauPrompt_ ){//add PP contribution to TT box estimation
-	 ExpTotalBckg_SThisto->Fill(              st,                                 w );
-	 ExpTotalBckg_JetNhisto->Fill(            nJet,                               w );
-	 ExpTotalBckg_MuTauDeltaRhisto->Fill(     LTEMMuVector.DeltaR(LTEMTauVector), w );
-	 ExpTotalBckg_TauJetDeltaRminhisto->Fill( tauJetDeltaRmin(ltemMuTau[1]),      w );
-	 ExpTotalBckg_TauPthisto->Fill(           HPSTauPt->at(ltemMuTau[1]),         w );
-	 ExpTotalBckg_TauEtahisto->Fill(          HPSTauEta->at(ltemMuTau[1]),        w );
-	 ExpTotalBckg_TauPhihisto->Fill(          HPSTauPhi->at(ltemMuTau[1]),        w );
+       ExpTotalBckg_MuPthisto->Fill(            MuonPt->at(ltemMuTau[0]),           (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckg_MuEtahisto->Fill(           MuonEta->at(ltemMuTau[0]),          (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckg_VertexNhisto->Fill(         (double)(VertexX->size()),          (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       if( !isData && isMuTight_ && isTauTight_ && isRecoMuPrompt_ && isRecoTauPrompt_ ){//add PP contribution to TT box estimation (for MC obviously)
+	 ExpTotalBckgPPonly_Search1Binhisto->Fill(      Search1EventType,                   w*LTEM_ScaleFactor_ );
+	 ExpTotalBckgPPonly_Search2Binhisto->Fill(      Search2EventType,                   w*LTEM_ScaleFactor_ );
+	 ExpTotalBckgPPonly_SThisto->Fill(              st,                                 w*LTEM_ScaleFactor_ );
+	 ExpTotalBckgPPonly_JetNhisto->Fill(            nJet,                               w*LTEM_ScaleFactor_ );
+	 ExpTotalBckgPPonly_TauJetDeltaRminhisto->Fill( tauJetDeltaRmin(ltemMuTau[1]),      w*LTEM_ScaleFactor_ );
+	 ExpTotalBckgPPonly_MuJetDeltaRminhisto->Fill(  muJetDeltaRmin(ltemMuTau[0]),       w*LTEM_ScaleFactor_ );
+	 ExpTotalBckgPPonly_TauPthisto->Fill(           HPSTauPt->at(ltemMuTau[1]),         w*LTEM_ScaleFactor_ );
+	 ExpTotalBckgPPonly_TauEtahisto->Fill(          HPSTauEta->at(ltemMuTau[1]),        w*LTEM_ScaleFactor_ );
+	 ExpTotalBckgPPonly_MuPthisto->Fill(            MuonPt->at(ltemMuTau[0]),           w*LTEM_ScaleFactor_ );
+	 ExpTotalBckgPPonly_MuEtahisto->Fill(           MuonEta->at(ltemMuTau[0]),          w*LTEM_ScaleFactor_ );
+	 ExpTotalBckgPPonly_VertexNhisto->Fill(         (double)(VertexX->size()),          w*LTEM_ScaleFactor_ );
        }
+       //
        //
        //mini test
        ExpSingleMuFake_SThisto->Fill(               st,                               TTSingleMuFake_*w  );
@@ -622,6 +735,17 @@ void analysisClass::Loop()
        TTBackgroundMuPRUhisto->Fill( 2, TTSingleMuFake_*w  );//SingleFakeMu  in TT
        TTBackgroundMuPRUhisto->Fill( 3, TTSingleTauFake_*w );//SingleFakeTau in TT
        if(  isMuTight_ &&  isTauTight_ ) TTBackgroundMuPRUhisto->Fill( 4, w );
+       ExpTotalBckgMuPRU_Search1Binhisto->Fill( Search1EventType,                        (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgMuPRU_Search2Binhisto->Fill( Search2EventType,                        (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgMuPRU_SThisto->Fill(              st,                                 (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgMuPRU_JetNhisto->Fill(            nJet,                               (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgMuPRU_TauJetDeltaRminhisto->Fill( tauJetDeltaRmin(ltemMuTau[1]),      (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgMuPRU_MuJetDeltaRminhisto->Fill(  muJetDeltaRmin(ltemMuTau[0]),       (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgMuPRU_TauPthisto->Fill(           HPSTauPt->at(ltemMuTau[1]),         (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgMuPRU_TauEtahisto->Fill(          HPSTauEta->at(ltemMuTau[1]),        (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgMuPRU_MuPthisto->Fill(            MuonPt->at(ltemMuTau[0]),           (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgMuPRU_MuEtahisto->Fill(           MuonEta->at(ltemMuTau[0]),          (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgMuPRU_VertexNhisto->Fill(         (double)(VertexX->size()),          (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
        //
        // Mu Prompt Rate Down
        muPR_  = muPR(ltemMuTau[0])-muPRE(ltemMuTau[0]);
@@ -641,6 +765,17 @@ void analysisClass::Loop()
        TTBackgroundMuPRDhisto->Fill( 2, TTSingleMuFake_*w  );//SingleFakeMu  in TT
        TTBackgroundMuPRDhisto->Fill( 3, TTSingleTauFake_*w );//SingleFakeTau in TT
        if(  isMuTight_ &&  isTauTight_ ) TTBackgroundMuPRDhisto->Fill( 4, w );
+       ExpTotalBckgMuPRD_Search1Binhisto->Fill( Search1EventType,                        (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgMuPRD_Search2Binhisto->Fill( Search2EventType,                        (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgMuPRD_SThisto->Fill(              st,                                 (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgMuPRD_JetNhisto->Fill(            nJet,                               (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgMuPRD_TauJetDeltaRminhisto->Fill( tauJetDeltaRmin(ltemMuTau[1]),      (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgMuPRD_MuJetDeltaRminhisto->Fill(  muJetDeltaRmin(ltemMuTau[0]),       (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgMuPRD_TauPthisto->Fill(           HPSTauPt->at(ltemMuTau[1]),         (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgMuPRD_TauEtahisto->Fill(          HPSTauEta->at(ltemMuTau[1]),        (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgMuPRD_MuPthisto->Fill(            MuonPt->at(ltemMuTau[0]),           (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgMuPRD_MuEtahisto->Fill(           MuonEta->at(ltemMuTau[0]),          (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgMuPRD_VertexNhisto->Fill(         (double)(VertexX->size()),          (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
        //
        // Mu Fake Rate Up
        muPR_  = muPR(ltemMuTau[0]);
@@ -660,6 +795,17 @@ void analysisClass::Loop()
        TTBackgroundMuFRUhisto->Fill( 2, TTSingleMuFake_*w  );//SingleFakeMu  in TT
        TTBackgroundMuFRUhisto->Fill( 3, TTSingleTauFake_*w );//SingleFakeTau in TT
        if(  isMuTight_ &&  isTauTight_ ) TTBackgroundMuFRUhisto->Fill( 4, w );
+       ExpTotalBckgMuFRU_Search1Binhisto->Fill( Search1EventType,                        (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgMuFRU_Search2Binhisto->Fill( Search2EventType,                        (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgMuFRU_SThisto->Fill(              st,                                 (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgMuFRU_JetNhisto->Fill(            nJet,                               (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgMuFRU_TauJetDeltaRminhisto->Fill( tauJetDeltaRmin(ltemMuTau[1]),      (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgMuFRU_MuJetDeltaRminhisto->Fill(  muJetDeltaRmin(ltemMuTau[0]),       (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgMuFRU_TauPthisto->Fill(           HPSTauPt->at(ltemMuTau[1]),         (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgMuFRU_TauEtahisto->Fill(          HPSTauEta->at(ltemMuTau[1]),        (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgMuFRU_MuPthisto->Fill(            MuonPt->at(ltemMuTau[0]),           (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgMuFRU_MuEtahisto->Fill(           MuonEta->at(ltemMuTau[0]),          (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgMuFRU_VertexNhisto->Fill(         (double)(VertexX->size()),          (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
        //
        // Mu Fake Rate Down
        muPR_  = muPR(ltemMuTau[0]);
@@ -679,6 +825,17 @@ void analysisClass::Loop()
        TTBackgroundMuFRDhisto->Fill( 2, TTSingleMuFake_*w  );//SingleFakeMu  in TT
        TTBackgroundMuFRDhisto->Fill( 3, TTSingleTauFake_*w );//SingleFakeTau in TT
        if(  isMuTight_ &&  isTauTight_ ) TTBackgroundMuFRDhisto->Fill( 4, w );
+       ExpTotalBckgMuFRD_Search1Binhisto->Fill( Search1EventType,                        (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgMuFRD_Search2Binhisto->Fill( Search2EventType,                        (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgMuFRD_SThisto->Fill(              st,                                 (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgMuFRD_JetNhisto->Fill(            nJet,                               (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgMuFRD_TauJetDeltaRminhisto->Fill( tauJetDeltaRmin(ltemMuTau[1]),      (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgMuFRD_MuJetDeltaRminhisto->Fill(  muJetDeltaRmin(ltemMuTau[0]),       (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgMuFRD_TauPthisto->Fill(           HPSTauPt->at(ltemMuTau[1]),         (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgMuFRD_TauEtahisto->Fill(          HPSTauEta->at(ltemMuTau[1]),        (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgMuFRD_MuPthisto->Fill(            MuonPt->at(ltemMuTau[0]),           (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgMuFRD_MuEtahisto->Fill(           MuonEta->at(ltemMuTau[0]),          (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgMuFRD_VertexNhisto->Fill(         (double)(VertexX->size()),          (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
        //
        // Tau Prompt Rate Up
        muPR_  = muPR(ltemMuTau[0]);
@@ -698,6 +855,17 @@ void analysisClass::Loop()
        TTBackgroundTauPRUhisto->Fill( 2, TTSingleMuFake_*w  );//SingleFakeMu  in TT
        TTBackgroundTauPRUhisto->Fill( 3, TTSingleTauFake_*w );//SingleFakeTau in TT
        if(  isMuTight_ &&  isTauTight_ ) TTBackgroundTauPRUhisto->Fill( 4, w );
+       ExpTotalBckgTauPRU_Search1Binhisto->Fill( Search1EventType,                        (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgTauPRU_Search2Binhisto->Fill( Search2EventType,                        (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgTauPRU_SThisto->Fill(              st,                                 (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgTauPRU_JetNhisto->Fill(            nJet,                               (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgTauPRU_TauJetDeltaRminhisto->Fill( tauJetDeltaRmin(ltemMuTau[1]),      (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgTauPRU_MuJetDeltaRminhisto->Fill(  muJetDeltaRmin(ltemMuTau[0]),       (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgTauPRU_TauPthisto->Fill(           HPSTauPt->at(ltemMuTau[1]),         (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgTauPRU_TauEtahisto->Fill(          HPSTauEta->at(ltemMuTau[1]),        (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgTauPRU_MuPthisto->Fill(            MuonPt->at(ltemMuTau[0]),           (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgTauPRU_MuEtahisto->Fill(           MuonEta->at(ltemMuTau[0]),          (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgTauPRU_VertexNhisto->Fill(         (double)(VertexX->size()),          (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
        //
        // Tau Prompt Rate Down
        muPR_  = muPR(ltemMuTau[0]);
@@ -717,6 +885,17 @@ void analysisClass::Loop()
        TTBackgroundTauPRDhisto->Fill( 2, TTSingleMuFake_*w  );//SingleFakeMu  in TT
        TTBackgroundTauPRDhisto->Fill( 3, TTSingleTauFake_*w );//SingleFakeTau in TT
        if(  isMuTight_ &&  isTauTight_ ) TTBackgroundTauPRDhisto->Fill( 4, w );
+       ExpTotalBckgTauPRD_Search1Binhisto->Fill( Search1EventType,                        (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgTauPRD_Search2Binhisto->Fill( Search2EventType,                        (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgTauPRD_SThisto->Fill(              st,                                 (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgTauPRD_JetNhisto->Fill(            nJet,                               (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgTauPRD_TauJetDeltaRminhisto->Fill( tauJetDeltaRmin(ltemMuTau[1]),      (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgTauPRD_MuJetDeltaRminhisto->Fill(  muJetDeltaRmin(ltemMuTau[0]),       (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgTauPRD_TauPthisto->Fill(           HPSTauPt->at(ltemMuTau[1]),         (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgTauPRD_TauEtahisto->Fill(          HPSTauEta->at(ltemMuTau[1]),        (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgTauPRD_MuPthisto->Fill(            MuonPt->at(ltemMuTau[0]),           (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgTauPRD_MuEtahisto->Fill(           MuonEta->at(ltemMuTau[0]),          (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgTauPRD_VertexNhisto->Fill(         (double)(VertexX->size()),          (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
        //
        // Tau Fake Rate Up
        muPR_  = muPR(ltemMuTau[0]);
@@ -736,18 +915,17 @@ void analysisClass::Loop()
        TTBackgroundTauFRUhisto->Fill( 2, TTSingleMuFake_*w  );//SingleFakeMu  in TT
        TTBackgroundTauFRUhisto->Fill( 3, TTSingleTauFake_*w );//SingleFakeTau in TT
        if(  isMuTight_ &&  isTauTight_ ) TTBackgroundTauFRUhisto->Fill( 4, w );
-       ExpTotalBckgTauFRU_TauJetDeltaRminhisto->Fill( tauJetDeltaRmin(ltemMuTau[1]), (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
-       ExpTotalBckgTauFRU_TauPthisto->Fill(           HPSTauPt->at(ltemMuTau[1]),    (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
-       ExpTotalBckgTauFRU_TauEtahisto->Fill(          HPSTauEta->at(ltemMuTau[1]),   (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
-       ExpTotalBckgTauFRU_SThisto->Fill(              st,                            (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
-       ExpTotalBckgTauFRU_JetNhisto->Fill(            nJet,                          (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
-       if( isMuTight_ && isTauTight_ && isRecoMuPrompt_ && isRecoTauPrompt_ ){
-	 ExpTotalBckgTauFRU_TauJetDeltaRminhisto->Fill( tauJetDeltaRmin(ltemMuTau[1]), w);
-	 ExpTotalBckgTauFRU_TauPthisto->Fill(           HPSTauPt->at(ltemMuTau[1]),    w );
-	 ExpTotalBckgTauFRU_TauEtahisto->Fill(          HPSTauEta->at(ltemMuTau[1]),   w );
-	 ExpTotalBckgTauFRU_SThisto->Fill(              st,                            w );
-	 ExpTotalBckgTauFRU_JetNhisto->Fill(            nJet,                          w );
-       }
+       ExpTotalBckgTauFRU_Search1Binhisto->Fill( Search1EventType,                        (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgTauFRU_Search2Binhisto->Fill( Search2EventType,                        (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgTauFRU_SThisto->Fill(              st,                                 (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgTauFRU_JetNhisto->Fill(            nJet,                               (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgTauFRU_TauJetDeltaRminhisto->Fill( tauJetDeltaRmin(ltemMuTau[1]),      (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgTauFRU_MuJetDeltaRminhisto->Fill(  muJetDeltaRmin(ltemMuTau[0]),       (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgTauFRU_TauPthisto->Fill(           HPSTauPt->at(ltemMuTau[1]),         (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgTauFRU_TauEtahisto->Fill(          HPSTauEta->at(ltemMuTau[1]),        (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgTauFRU_MuPthisto->Fill(            MuonPt->at(ltemMuTau[0]),           (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgTauFRU_MuEtahisto->Fill(           MuonEta->at(ltemMuTau[0]),          (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgTauFRU_VertexNhisto->Fill(         (double)(VertexX->size()),          (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
        //
        // Tau Fake Rate Down
        muPR_  = muPR(ltemMuTau[0]);
@@ -767,18 +945,17 @@ void analysisClass::Loop()
        TTBackgroundTauFRDhisto->Fill( 2, TTSingleMuFake_*w  );//SingleFakeMu  in TT
        TTBackgroundTauFRDhisto->Fill( 3, TTSingleTauFake_*w );//SingleFakeTau in TT
        if(  isMuTight_ &&  isTauTight_ ) TTBackgroundTauFRDhisto->Fill( 4, w );
-       ExpTotalBckgTauFRD_TauJetDeltaRminhisto->Fill( tauJetDeltaRmin(ltemMuTau[1]), (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
-       ExpTotalBckgTauFRD_TauPthisto->Fill(           HPSTauPt->at(ltemMuTau[1]),    (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
-       ExpTotalBckgTauFRD_TauEtahisto->Fill(          HPSTauEta->at(ltemMuTau[1]),   (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
-       ExpTotalBckgTauFRD_SThisto->Fill(              st,                            (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
-       ExpTotalBckgTauFRD_JetNhisto->Fill(            nJet,                          (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
-       if( isMuTight_ && isTauTight_ && isRecoMuPrompt_ && isRecoTauPrompt_ ){
-	 ExpTotalBckgTauFRD_TauJetDeltaRminhisto->Fill( tauJetDeltaRmin(ltemMuTau[1]), w);
-	 ExpTotalBckgTauFRD_TauPthisto->Fill(           HPSTauPt->at(ltemMuTau[1]),    w );
-	 ExpTotalBckgTauFRD_TauEtahisto->Fill(          HPSTauEta->at(ltemMuTau[1]),   w );
-	 ExpTotalBckgTauFRD_SThisto->Fill(              st,                            w );
-	 ExpTotalBckgTauFRD_JetNhisto->Fill(            nJet,                          w );
-       }
+       ExpTotalBckgTauFRD_Search1Binhisto->Fill( Search1EventType,                        (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgTauFRD_Search2Binhisto->Fill( Search2EventType,                        (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgTauFRD_SThisto->Fill(              st,                                 (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgTauFRD_JetNhisto->Fill(            nJet,                               (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgTauFRD_TauJetDeltaRminhisto->Fill( tauJetDeltaRmin(ltemMuTau[1]),      (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgTauFRD_MuJetDeltaRminhisto->Fill(  muJetDeltaRmin(ltemMuTau[0]),       (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgTauFRD_TauPthisto->Fill(           HPSTauPt->at(ltemMuTau[1]),         (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgTauFRD_TauEtahisto->Fill(          HPSTauEta->at(ltemMuTau[1]),        (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgTauFRD_MuPthisto->Fill(            MuonPt->at(ltemMuTau[0]),           (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgTauFRD_MuEtahisto->Fill(           MuonEta->at(ltemMuTau[0]),          (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
+       ExpTotalBckgTauFRD_VertexNhisto->Fill(         (double)(VertexX->size()),          (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
        
        //
        //...........................................................................// Fake Background Estimation - End
@@ -789,6 +966,9 @@ void analysisClass::Loop()
 
        //Apply tau prompt and fake rate corrections!!
        w=w*LTEM_ScaleFactor_;
+
+       Search1Binhisto->Fill(  Search1EventType, w );
+       Search2Binhisto->Fill(  Search2EventType, w );
 
        LTEMMuJetDeltaRminhisto->Fill( muJetDeltaRmin(ltemMuTau[0]), w );
        LTEMTauJetDeltaRminhisto->Fill( tauJetDeltaRmin(ltemMuTau[1]), w );
@@ -1020,6 +1200,15 @@ void analysisClass::Loop()
    Triggerhisto->Write();
    AppliedTotalWeightshisto->Write();
    //
+   muPRwSFhisto->Write();
+   muFRwSFhisto->Write();
+   tauPRwSFhisto->Write();
+   tauFRwSFhisto->Write();
+   muPREwSFhisto->Write();
+   muFREwSFhisto->Write();
+   tauPREwSFhisto->Write();
+   tauFREwSFhisto->Write();
+   //
    muPRhisto->Write();
    muFRhisto->Write();
    tauPRhisto->Write();
@@ -1074,23 +1263,132 @@ void analysisClass::Loop()
    LTEM3DTauPtSTJetNhisto->Write();
    LTEM3DTauPtSTLepjetNhisto->Write();
    //
-   ExpTotalBckg_MuTauDeltaRhisto->Write();
-   ExpTotalBckg_TauJetDeltaRminhisto->Write();
-   ExpTotalBckgTauFRU_TauJetDeltaRminhisto->Write();
-   ExpTotalBckgTauFRD_TauJetDeltaRminhisto->Write();
-   ExpTotalBckg_TauPthisto->Write();
-   ExpTotalBckgTauFRU_TauPthisto->Write();
-   ExpTotalBckgTauFRD_TauPthisto->Write();
-   ExpTotalBckg_TauEtahisto->Write();
-   ExpTotalBckgTauFRU_TauEtahisto->Write();
-   ExpTotalBckgTauFRD_TauEtahisto->Write();
-   ExpTotalBckg_TauPhihisto->Write();
-   ExpTotalBckg_SThisto->Write();
-   ExpTotalBckgTauFRU_SThisto->Write();
-   ExpTotalBckgTauFRD_SThisto->Write();
-   ExpTotalBckg_JetNhisto->Write();
-   ExpTotalBckgTauFRU_JetNhisto->Write();
-   ExpTotalBckgTauFRD_JetNhisto->Write();
+   //ExpTotalBckg_MuTauDeltaRhisto->Write();
+   //
+   ExpTotalBckgPPonly_SThisto->Write();
+   ExpTotalBckgPPonly_JetNhisto->Write();
+   ExpTotalBckgPPonly_TauJetDeltaRminhisto->Write();
+   ExpTotalBckgPPonly_MuJetDeltaRminhisto->Write();
+   ExpTotalBckgPPonly_TauPthisto->Write();
+   ExpTotalBckgPPonly_TauEtahisto->Write();
+   ExpTotalBckgPPonly_MuPthisto->Write();
+   ExpTotalBckgPPonly_MuEtahisto->Write();
+   ExpTotalBckgPPonly_VertexNhisto->Write();
+   //
+   ExpTotalBckg_VertexNhisto->Write();
+   ExpTotalBckgTauFRU_VertexNhisto->Write();
+   ExpTotalBckgTauFRD_VertexNhisto->Write();
+   ExpTotalBckgTauPRU_VertexNhisto->Write();
+   ExpTotalBckgTauPRD_VertexNhisto->Write();
+   ExpTotalBckgMuFRU_VertexNhisto->Write();
+   ExpTotalBckgMuFRD_VertexNhisto->Write();
+   ExpTotalBckgMuPRU_VertexNhisto->Write();
+   ExpTotalBckgMuPRD_VertexNhisto->Write();
+   //
+   ExpTotalBckg_TauJetDeltaRminhisto->Write();        
+   ExpTotalBckgTauFRU_TauJetDeltaRminhisto->Write();  
+   ExpTotalBckgTauFRD_TauJetDeltaRminhisto->Write();  
+   ExpTotalBckgTauPRU_TauJetDeltaRminhisto->Write();  
+   ExpTotalBckgTauPRD_TauJetDeltaRminhisto->Write();  
+   ExpTotalBckgMuFRU_TauJetDeltaRminhisto->Write();   
+   ExpTotalBckgMuFRD_TauJetDeltaRminhisto->Write();   
+   ExpTotalBckgMuPRU_TauJetDeltaRminhisto->Write();   
+   ExpTotalBckgMuPRD_TauJetDeltaRminhisto->Write();   
+   //
+   ExpTotalBckg_MuJetDeltaRminhisto->Write();        
+   ExpTotalBckgTauFRU_MuJetDeltaRminhisto->Write();  
+   ExpTotalBckgTauFRD_MuJetDeltaRminhisto->Write();  
+   ExpTotalBckgTauPRU_MuJetDeltaRminhisto->Write();  
+   ExpTotalBckgTauPRD_MuJetDeltaRminhisto->Write();  
+   ExpTotalBckgMuFRU_MuJetDeltaRminhisto->Write();   
+   ExpTotalBckgMuFRD_MuJetDeltaRminhisto->Write();   
+   ExpTotalBckgMuPRU_MuJetDeltaRminhisto->Write();   
+   ExpTotalBckgMuPRD_MuJetDeltaRminhisto->Write();
+   //
+   ExpTotalBckg_MuPthisto->Write();           
+   ExpTotalBckgTauFRU_MuPthisto->Write();     
+   ExpTotalBckgTauFRD_MuPthisto->Write();     
+   ExpTotalBckgTauPRU_MuPthisto->Write();     
+   ExpTotalBckgTauPRD_MuPthisto->Write();     
+   ExpTotalBckgMuFRU_MuPthisto->Write();      
+   ExpTotalBckgMuFRD_MuPthisto->Write();      
+   ExpTotalBckgMuPRU_MuPthisto->Write();      
+   ExpTotalBckgMuPRD_MuPthisto->Write();      
+   //
+   ExpTotalBckg_MuEtahisto->Write();           
+   ExpTotalBckgTauFRU_MuEtahisto->Write();     
+   ExpTotalBckgTauFRD_MuEtahisto->Write();     
+   ExpTotalBckgTauPRU_MuEtahisto->Write();     
+   ExpTotalBckgTauPRD_MuEtahisto->Write();     
+   ExpTotalBckgMuFRU_MuEtahisto->Write();      
+   ExpTotalBckgMuFRD_MuEtahisto->Write();      
+   ExpTotalBckgMuPRU_MuEtahisto->Write();      
+   ExpTotalBckgMuPRD_MuEtahisto->Write();      
+   //
+   ExpTotalBckg_TauPthisto->Write();           
+   ExpTotalBckgTauFRU_TauPthisto->Write();     
+   ExpTotalBckgTauFRD_TauPthisto->Write();     
+   ExpTotalBckgTauPRU_TauPthisto->Write();     
+   ExpTotalBckgTauPRD_TauPthisto->Write();     
+   ExpTotalBckgMuFRU_TauPthisto->Write();      
+   ExpTotalBckgMuFRD_TauPthisto->Write();      
+   ExpTotalBckgMuPRU_TauPthisto->Write();      
+   ExpTotalBckgMuPRD_TauPthisto->Write();      
+   //
+   ExpTotalBckg_TauEtahisto->Write();           
+   ExpTotalBckgTauFRU_TauEtahisto->Write();     
+   ExpTotalBckgTauFRD_TauEtahisto->Write();     
+   ExpTotalBckgTauPRU_TauEtahisto->Write();     
+   ExpTotalBckgTauPRD_TauEtahisto->Write();     
+   ExpTotalBckgMuFRU_TauEtahisto->Write();      
+   ExpTotalBckgMuFRD_TauEtahisto->Write();      
+   ExpTotalBckgMuPRU_TauEtahisto->Write();      
+   ExpTotalBckgMuPRD_TauEtahisto->Write();      
+   //
+   ExpTotalBckg_SThisto->Write();               
+   ExpTotalBckgTauFRU_SThisto->Write();         
+   ExpTotalBckgTauFRD_SThisto->Write();         
+   ExpTotalBckgTauPRU_SThisto->Write();         
+   ExpTotalBckgTauPRD_SThisto->Write();         
+   ExpTotalBckgMuFRU_SThisto->Write();          
+   ExpTotalBckgMuFRD_SThisto->Write();          
+   ExpTotalBckgMuPRU_SThisto->Write();          
+   ExpTotalBckgMuPRD_SThisto->Write();          
+   //
+   ExpTotalBckg_JetNhisto->Write();             
+   ExpTotalBckgTauFRU_JetNhisto->Write();       
+   ExpTotalBckgTauFRD_JetNhisto->Write();       
+   ExpTotalBckgTauPRU_JetNhisto->Write();       
+   ExpTotalBckgTauPRD_JetNhisto->Write();       
+   ExpTotalBckgMuFRU_JetNhisto->Write();        
+   ExpTotalBckgMuFRD_JetNhisto->Write();        
+   ExpTotalBckgMuPRU_JetNhisto->Write();        
+   ExpTotalBckgMuPRD_JetNhisto->Write();        
+   //
+   Search1Binhisto->Write();                      
+   ExpTotalBckg_Search1Binhisto->Write();   
+   ExpTotalBckgPPonly_Search1Binhisto->Write();
+   ExpTotalBckgTauFRU_Search1Binhisto->Write();
+   ExpTotalBckgTauFRD_Search1Binhisto->Write();
+   ExpTotalBckgTauPRU_Search1Binhisto->Write();
+   ExpTotalBckgTauPRD_Search1Binhisto->Write();
+   ExpTotalBckgMuFRU_Search1Binhisto->Write(); 
+   ExpTotalBckgMuFRD_Search1Binhisto->Write(); 
+   ExpTotalBckgMuPRU_Search1Binhisto->Write(); 
+   ExpTotalBckgMuPRD_Search1Binhisto->Write(); 
+   //
+   Search2Binhisto->Write();                      
+   ExpTotalBckg_Search2Binhisto->Write();         
+   ExpTotalBckgPPonly_Search2Binhisto->Write();   
+   ExpTotalBckgTauFRU_Search2Binhisto->Write();   
+   ExpTotalBckgTauFRD_Search2Binhisto->Write();   
+   ExpTotalBckgTauPRU_Search2Binhisto->Write();   
+   ExpTotalBckgTauPRD_Search2Binhisto->Write();   
+   ExpTotalBckgMuFRU_Search2Binhisto->Write();    
+   ExpTotalBckgMuFRD_Search2Binhisto->Write();    
+   ExpTotalBckgMuPRU_Search2Binhisto->Write();    
+   ExpTotalBckgMuPRD_Search2Binhisto->Write();
+   //
    //
    ExpSingleMuFake_SThisto->Write();
    ExpDoubleFake_SThisto->Write();

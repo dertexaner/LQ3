@@ -14,8 +14,7 @@
 #include "LAC/ADDON2_LAC.C"
 #include "LAC/ADDON3_LAC.C"
 //#include "LAC/ADDON4_LAC.C"///  LQgen functions //fake
-#include "LAC/ADDON5_LAC.C"
-#include "LAC/ADDON6_LAC.C"
+//#include "LAC/ADDON5_LAC.C"/// TOPgen functions //fake
 // // //
 analysisClass::analysisClass(string * inputList, string * cutFile, string * treeName, string * outputFileName, string * cutEfficFile)
   :baseClass(inputList, cutFile, treeName, outputFileName, cutEfficFile){
@@ -42,9 +41,6 @@ void analysisClass::Loop()
    TauPtCut  = 20;
    ApplyAbsMuonIsolation=false;
    removeOverlaps=true;
-
-   // Jet Systematics
-   ResetLepJetMetSystematics();
 
    //////////book histos here
    TH1D* ProvidedPileUpWeightshisto  = new TH1D("ProvidedPileUpWeightshisto","ProvidedPileUpWeightshisto",10000,0,100);//distribution of the provided PileUp-weights
@@ -85,10 +81,9 @@ void analysisClass::Loop()
      ltemMuMu.clear();
      ltemMuTau.clear();
 
-     ApplyLepJetMetSystematics(0);
 
      // -- RUN LTEM
-     which_MuTau(ltemMuTau);
+     //which_MuTau(ltemMuTau);
 
 
      //  -- JSON SKIM
@@ -100,9 +95,9 @@ void analysisClass::Loop()
 
      //  -- TRIGGER SKIM (Mu24,Mu40,IsoMu24)
      int passTrigger_=0;
-     //if( SingleMu40_passTrigger()>0 ) passTrigger_=1;
+     if( SingleMu40_passTrigger()>0 ) passTrigger_=1;
      //if( SingleMu_passTrigger()>0 ) passTrigger_=1;
-     if( SingleMu_passTrigger()>0 || SingleMu40_passTrigger()>0 || HLT_MuPT_eta2p1_passTrigger()>0 ) passTrigger_=1;
+     //if( SingleMu_passTrigger()>0 || SingleMu40_passTrigger()>0 || HLT_MuPT_eta2p1_passTrigger()>0 ) passTrigger_=1;
      //bool muHLT_=false;
      //if( passTrigger_>0 ){//check if trigger passed
      //for( unsigned int iMuR=0; iMuR<MuonPt->size(); iMuR++){
@@ -120,23 +115,15 @@ void analysisClass::Loop()
      fillVariableWithValue("PassEventFilter", passEventFilter_ );//.// returns 0, 1 
 
 
-     //  -- DILEPTON SKIM - MuTau  --- also has ST component
+     //  -- DILEPTON SKIM - MuTau  --- >>> NOW JUST 1 MUON
      unsigned int whichMu=99;
      for( unsigned int iMuR=0; iMuR<MuonPt->size(); iMuR++ ){
-       //if( muRisoCheck(iMuR) && muRTightCheck(iMuR) ) whichMu=iMuR;
-       double pfIso = 0;
-       pfIso = MuonPFIsoR04ChargedHadron->at(iMuR) + 
-	 TMath::Max( 0.0 , (MuonPFIsoR04NeutralHadron->at(iMuR)+MuonPFIsoR04Photon->at(iMuR)-0.5*MuonPFIsoR04PU->at(iMuR)) );
-       if( muRisoCheck(iMuR) && (pfIso/MuonPt->at(iMuR))<0.20 && (pfIso/MuonPt->at(iMuR))>0.12 ) whichMu=iMuR; // using the loose-but-not-tight WP of Muon PFiso
+       if( !muRisoCheck(iMuR) ) continue;
+       whichMu=iMuR;
+       break;
      }
      int isOfflineDilepton_=0;
-     //if( isMuTauDR0p30() && ST()>350 ) isOfflineDilepton_ = 1;
-     //if( isMuTauDR0p30() && ST()>350 && ltemMuTau.size()==2 && RecoHLTdeltaRmin_SingleMu40Trigger(ltemMuTau[0])<0.15 && JetCounter()>0 ){
-     //if( isMuTauDR0p30() && ST()>200 && JetCounter()>0 &&  MuCounter()==1 && ElCounter()==0 && whichMu!=99 && RecoHLTdeltaRmin_SingleMuTrigger(whichMu)<0.15 ){
-     //if( isMuTauDR0p30() && ST()>100 && TauCounter()>0 && MuCounter()==1 && ElCounter()==0 && whichMu!=99 && RecoHLTdeltaRmin_SingleMuTrigger(whichMu)<0.15 ){
-     //
-     //if( isMuTauDR0p30() && ST()>150 && ltemMuTau.size()==2 && JetCounter()<=1 ){
-     if( isMuTauDR0p30() && ST()>150 && !isZToMuMu() ){
+     if( MuCounter()==1 && TauCounter()==0 && ElCounter()==0 && MuonPt->at(whichMu)>45 ){
        isOfflineDilepton_ = 1;
      }
      fillVariableWithValue("PassOfflineDilepton", isOfflineDilepton_ );// Returns 0, 1          

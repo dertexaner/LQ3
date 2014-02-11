@@ -15,7 +15,8 @@
 #include "LAC/ADDON2_LAC.C"
 #include "LAC/ADDON3_LAC.C"
 //#include "LAC/ADDON4_LAC.C"///  LQgen functions //fake
-//#include "LAC/ADDON5_LAC.C" //gen-reco matching 
+#include "LAC/ADDON5_LAC.C"
+#include "LAC/ADDON6_LAC.C"
 // // //
 analysisClass::analysisClass(string * inputList, string * cutFile, string * treeName, string * outputFileName, string * cutEfficFile)
   :baseClass(inputList, cutFile, treeName, outputFileName, cutEfficFile){
@@ -35,9 +36,12 @@ void analysisClass::Loop()
 
    ////////// Enable Sumw2
    TH1::SetDefaultSumw2();
-   
+   TH2::SetDefaultSumw2();
+   TH3::SetDefaultSumw2();
+
    ////////// Set analysis Object ID variables here
    ObjDef  = "LI";
+   ///ObjDef  = "TI";
    BTagDef = "CSVM";
    idDef   = "CUT";
    MuonPtCut = 25;
@@ -51,7 +55,21 @@ void analysisClass::Loop()
    LumiC=7018;
    LumiD=7248;
    //
-   ResetAllSFs();
+   /**/
+   tauPRdR3B_SF    = 1;   tauPRdR3B_SFerr = 0;
+   tauPRdR2B_SF    = 1;   tauPRdR2B_SFerr = 0;
+   tauPRdR1B_SF    = 1;   tauPRdR1B_SFerr = 0;
+   tauPRdR3E_SF    = 1;   tauPRdR3E_SFerr = 0;
+   tauPRdR2E_SF    = 1;   tauPRdR2E_SFerr = 0;
+   tauPRdR1E_SF    = 1;   tauPRdR1E_SFerr = 0;
+   //
+   tauFRdR3B_SF    = 1;   tauFRdR3B_SFerr = 0;
+   tauFRdR2B_SF    = 1;   tauFRdR2B_SFerr = 0;
+   tauFRdR1B_SF    = 1;   tauFRdR1B_SFerr = 0;
+   tauFRdR3E_SF    = 1;   tauFRdR3E_SFerr = 0;
+   tauFRdR2E_SF    = 1;   tauFRdR2E_SFerr = 0;
+   tauFRdR1E_SF    = 1;   tauFRdR1E_SFerr = 0;
+   /**/
    //
 
 
@@ -67,15 +85,6 @@ void analysisClass::Loop()
    TH1D* Triggerhisto                = new TH1D("Triggerhisto",              "Triggerhisto",              10,-3.5,6.5);
    //distribution of the applied Total-weights
    TH1D* AppliedTotalWeightshisto    = new TH1D("AppliedTotalWeightshisto",  "AppliedTotalWeightshisto",  10000,0,100);
-   //
-   TH1D* muPRhisto   = new TH1D("muPRhisto",  "muPRhisto",   2000,0,2);
-   TH1D* muFRhisto   = new TH1D("muFRhisto",  "muFRhisto",   2000,0,2);
-   TH1D* tauPRhisto  = new TH1D("tauPRhisto", "tauPRhisto",  2000,0,2);
-   TH1D* tauFRhisto  = new TH1D("tauFRhisto", "tauFRhisto",  2000,0,2);
-   TH1D* muPREhisto  = new TH1D("muPREhisto", "muPREhisto",  1000,-0.25,0.75);
-   TH1D* muFREhisto  = new TH1D("muFREhisto", "muFREhisto",  1000,-0.25,0.75);
-   TH1D* tauPREhisto = new TH1D("tauPREhisto","tauPREhisto", 1000,-0.25,0.75);
-   TH1D* tauFREhisto = new TH1D("tauFRhisto", "tauFREhisto", 1000,-0.25,0.75);
    //
    TH1D* LeadMuTauDeltaRhisto = new TH1D("LeadMuTauDeltaRhisto","LeadMuTauDeltaRhisto",5000,0,50);
    TH1D* SThisto              = new TH1D("SThisto", "SThisto", 5000,0,5000);
@@ -104,38 +113,14 @@ void analysisClass::Loop()
    TH1D* LTEMTauEtahisto           = new TH1D("LTEMTauEtahisto",          "LTEMTauEtahisto",          800,-4,4);
    TH1D* LTEMMuPhihisto            = new TH1D("LTEMMuPhihisto",           "LTEMMuPhihisto",           800,-4,4);
    TH1D* LTEMTauPhihisto           = new TH1D("LTEMTauPhihisto",          "LTEMTauPhihisto",          800,-4,4);
-   TH1D* LTEMMuTauDeltaRhisto      = new TH1D("LTEMMuTauDeltaRhisto",     "LTEMMuTauDeltaRhisto",     300,-5,10);
-   //TH1D* LTEMMuTauDeltaRhisto      = new TH1D("LTEMMuTauDeltaRhisto",     "LTEMMuTauDeltaRhisto",     200,-5,5);
+   TH1D* LTEMMuTauDeltaRhisto      = new TH1D("LTEMMuTauDeltaRhisto",     "LTEMMuTauDeltaRhisto",     200,-5,5);
    TH1D* LTEMMuTauDeltaPhihisto    = new TH1D("LTEMMuTauDeltaPhihisto",   "LTEMMuTauDeltaPhihisto",   200,-5,5);
    TH1D* LTEMMuTauMasshisto        = new TH1D("LTEMMuTauMasshisto",       "LTEMMuTauMasshisto",       5000,0,5000);
    //
-   TH1D* ExpTotalBckg_MuTauDeltaRhisto      = new TH1D("ExpTotalBckg_MuTauDeltaRhisto",     "ExpTotalBckg_MuTauDeltaRhisto",     300,-5,10);
-   TH1D* ExpTotalBckg_TauJetDeltaRminhisto        = new TH1D("ExpTotalBckg_TauJetDeltaRminhisto",       "ExpTotalBckg_TauJetDeltaRminhisto",       200,-5,5);
-   TH1D* ExpTotalBckgTauFRU_TauJetDeltaRminhisto  = new TH1D("ExpTotalBckgTauFRU_TauJetDeltaRminhisto", "ExpTotalBckgTauFRU_TauJetDeltaRminhisto", 200,-5,5);
-   TH1D* ExpTotalBckgTauFRD_TauJetDeltaRminhisto  = new TH1D("ExpTotalBckgTauFRD_TauJetDeltaRminhisto", "ExpTotalBckgTauFRD_TauJetDeltaRminhisto", 200,-5,5);
-   TH1D* ExpTotalBckg_TauPthisto            = new TH1D("ExpTotalBckg_TauPthisto",           "ExpTotalBckg_TauPthisto",           2000,0,2000);
-   TH1D* ExpTotalBckgTauFRU_TauPthisto      = new TH1D("ExpTotalBckgTauFRU_TauPthisto",     "ExpTotalBckgTauFRU_TauPthisto",     2000,0,2000);
-   TH1D* ExpTotalBckgTauFRD_TauPthisto      = new TH1D("ExpTotalBckgTauFRD_TauPthisto",     "ExpTotalBckgTauFRD_TauPthisto",     2000,0,2000);
-   TH1D* ExpTotalBckg_TauEtahisto           = new TH1D("ExpTotalBckg_TauEtahisto",          "ExpTotalBckg_TauEtahisto",          800,-4,4);
-   TH1D* ExpTotalBckgTauFRU_TauEtahisto     = new TH1D("ExpTotalBckgTauFRU_TauEtahisto",    "ExpTotalBckgTauFRU_TauEtahisto",    800,-4,4);
-   TH1D* ExpTotalBckgTauFRD_TauEtahisto     = new TH1D("ExpTotalBckgTauFRD_TauEtahisto",    "ExpTotalBckgTauFRD_TauEtahisto",    800,-4,4);
-   TH1D* ExpTotalBckg_TauPhihisto           = new TH1D("ExpTotalBckg_TauPhihisto",          "ExpTotalBckg_TauPhihisto",          800,-4,4);
-   TH1D* ExpTotalBckg_SThisto               = new TH1D("ExpTotalBckg_SThisto",              "ExpTotalBckg_SThisto",              5000,0,5000);
-   TH1D* ExpTotalBckgTauFRU_SThisto         = new TH1D("ExpTotalBckgTauFRU_SThisto",        "ExpTotalBckgTauFRU_SThisto",        5000,0,5000);
-   TH1D* ExpTotalBckgTauFRD_SThisto         = new TH1D("ExpTotalBckgTauFRD_SThisto",        "ExpTotalBckgTauFRD_SThisto",        5000,0,5000);
-   TH1D* ExpTotalBckg_JetNhisto             = new TH1D("ExpTotalBckg_JetNhisto",            "ExpTotalBckg_JetNhisto",            16,-0.5,15.5);
-   TH1D* ExpTotalBckgTauFRU_JetNhisto       = new TH1D("ExpTotalBckgTauFRU_JetNhisto",      "ExpTotalBckgTauFRU_JetNhisto",      16,-0.5,15.5);
-   TH1D* ExpTotalBckgTauFRD_JetNhisto       = new TH1D("ExpTotalBckgTauFRD_JetNhisto",      "ExpTotalBckgTauFRD_JetNhisto",      16,-0.5,15.5);
-   //
-   TH1D* ExpSingleTauFake_MuTauDeltaRhisto      = new TH1D("ExpSingleTauFake_MuTauDeltaRhisto",     "ExpSingleTauFake_MuTauDeltaRhisto",     300,-5,10);
-   TH1D* ExpSingleTauFake_TauJetDeltaRminhisto  = new TH1D("ExpSingleTauFake_TauJetDeltaRminhisto", "ExpSingleTauFake_TauJetDeltaRminhisto", 200,-5,5);
-   TH1D* ExpSingleTauFake_TauPthisto            = new TH1D("ExpSingleTauFake_TauPthisto",           "ExpSingleTauFake_TauPthisto",           2000,0,2000);
-   TH1D* ExpSingleTauFake_TauEtahisto           = new TH1D("ExpSingleTauFake_TauEtahisto",          "ExpSingleTauFake_TauEtahisto",          800,-4,4);
-   TH1D* ExpSingleTauFake_TauPhihisto           = new TH1D("ExpSingleTauFake_TauPhihisto",          "ExpSingleTauFake_TauPhihisto",          800,-4,4);
-   TH1D* ExpSingleTauFake_SThisto               = new TH1D("ExpSingleTauFake_SThisto",              "ExpSingleTauFake_SThisto",              5000,0,5000);
-   TH1D* ExpSingleMuFake_SThisto                = new TH1D("ExpSingleMuFake_SThisto",               "ExpSingleMuFake_SThisto",               5000,0,5000);
-   TH1D* ExpDoubleFake_SThisto                  = new TH1D("ExpDoubleFake_SThisto",                 "ExpDoubleFake_SThisto",                 5000,0,5000);
-   TH1D* ExpSingleTauFake_JetNhisto             = new TH1D("ExpSingleTauFake_JetNhisto",            "ExpSingleTauFake_JetNhisto",            16,-0.5,15.5);
+   TH1D* LTEMTauPtLoosehisto       = new TH1D("LTEMTauPtLoosehisto",      "LTEMTauPtLoosehisto",           2000,0,2000);
+   TH1D* LTEMTauPtTighthisto       = new TH1D("LTEMTauPtTighthisto",      "LTEMTauPtTighthisto",           2000,0,2000);
+   TH1D* LTEMTauEtaLoosehisto      = new TH1D("LTEMTauEtaLoosehisto",     "LTEMTauEtaLoosehisto",          800,-4,4);
+   TH1D* LTEMTauEtaTighthisto      = new TH1D("LTEMTauEtaTighthisto",     "LTEMTauEtaTighthisto",          800,-4,4);
    //
    // For 2D optimization
    TH2D* LTEM2DMuPtTauPthisto = new TH2D("LTEM2DMuPtTauPthisto","LTEM2DMuPtTauPthisto", 120,0,600,120,0,600);
@@ -145,12 +130,13 @@ void analysisClass::Loop()
    TH2D* LTEM2DMuPtSThisto    = new TH2D("LTEM2DMuPtSThisto","LTEM2DMuPtSThisto", 120,0,600,500,0,5000);
    TH2D* LTEM2DNLepjetSThisto = new TH2D("LTEM2DNLepjetSThisto","LTEM2DNLepjetSThisto", 21,-0.5,20.5,500,0,5000);
    TH2D* LTEM2DNJetSThisto    = new TH2D("LTEM2DNJetSThisto","LTEM2DNJetSThisto", 21,-0.5,20.5,500,0,5000);
-   // For 3D optimization
-   TH3D* LTEM3DTauPtSTJetNhisto    = new TH3D("LTEM3DTauPtSTJetNhisto",   "LTEM3DTauPtSTJetNhisto",    120,0,600, 500,0,5000, 11,-0.5,10.5);
-   TH3D* LTEM3DTauPtSTLepjetNhisto = new TH3D("LTEM3DTauPtSTLepjetNhisto","LTEM3DTauPtSTLepjetNhisto", 120,0,600, 500,0,5000, 16,-0.5,15.5);
    //
    TH1D* LeadMuPthisto    = new TH1D("LeadMuPthisto",   "LeadMuPthisto",   1000,0,1000);
    TH1D* LeadTauPthisto   = new TH1D("LeadTauPthisto",  "LeadTauPthisto",  1000,0,1000);
+   TH1D* LeadTauPtOShisto   = new TH1D("LeadTauPtOShisto",  "LeadTauPtOShisto",  1000,0,1000);//OS
+   TH1D* LeadTauPtSShisto   = new TH1D("LeadTauPtSShisto",  "LeadTauPtSShisto",  1000,0,1000);//SS
+   TH1D* LeadTauPt1Jhisto   = new TH1D("LeadTauPt1Jhisto",  "LeadTauPt1Jhisto",  1000,0,1000);//1J
+   TH1D* LeadTauPt0Jhisto   = new TH1D("LeadTauPt0Jhisto",  "LeadTauPt0Jhisto",  1000,0,1000);//0J
    TH1D* LeadElPthisto    = new TH1D("LeadElPthisto",   "LeadElPthisto",   1000,0,1000);
    TH1D* LeadJetPthisto   = new TH1D("LeadJetPthisto",  "LeadJetPthisto",  1000,0,1000);
    TH1D* LeadBJetPthisto  = new TH1D("LeadBJetPthisto", "LeadBJetPthisto", 1000,0,1000);
@@ -184,6 +170,10 @@ void analysisClass::Loop()
    TH1D* ElPhihisto   = new TH1D("ElPhihisto",  "ElPhihisto",  800,-4,4);
    TH1D* JetPhihisto  = new TH1D("JetPhihisto", "JetPhihisto", 800,-4,4);
    TH1D* BJetPhihisto = new TH1D("BJetPhihisto","BJetPhihisto",800,-4,4);
+   //
+   TH1D* AveAbsEtahisto   = new TH1D("AveAbsEtahisto",  "AveAbsEtahisto",  730,-3,4.3);
+   TH1D* AveAbsEtaV2histo = new TH1D("AveAbsEtaV2histo","AveAbsEtaV2histo",730,-3,4.3);
+   TH1D* AveAbsEtaV3histo = new TH1D("AveAbsEtaV3histo","AveAbsEtaV3histo",730,-3,4.3);
    //
    // from here on, it used to be TH1I
    TH1D* MuNhisto      = new TH1D("MuNhisto",    "MuNhisto",    16,-0.5,15.5);
@@ -283,48 +273,73 @@ void analysisClass::Loop()
      ////////////////////// User's code starts here ///////////////////////
      ///Stuff to be done every event
      //
+     // Define Systematic Scheme to be used:
+     ApplyLepJetMetSystematics(0);//this is no correction, should be used if object pt functions in this code are to be kept as is..
 
      // Set the evaluation of the cuts to false and clear the variable values and filled status
      resetCuts();
      //
      ltemMuMu.clear();
      ltemMuTau.clear();
+     ltemMuTauOS.clear();
 
      // -- RUN LTEM 
      which_MuTau(ltemMuTau);
+     which_MuTauOS(ltemMuTauOS);
 
      // WEIGHTS
      // ---- pileup
      double safePileupWeights_=0;
      safePileupWeights_=safePileupWeights();
      // ---- trigger 
+     //for trigger: if SS Mu-Tau, pick up that muon
+     //             if not, pick up the leading pt muon
+     // for tau selection: if SS Mu-Tau, pick up that tau,
+     //                    if not, pick up the leading pt tau
      unsigned int triggerMuon=99;
-     for(unsigned int iMuR=0;  iMuR<MuonPt->size();     iMuR++){
-	 if( !muRisoCheck(iMuR) ) continue;
-	 triggerMuon=iMuR;
-	 break;//take the leading one
-     }
+     unsigned int theTau=99;
+     //for(unsigned int iMuR=0;  iMuR<MuonPt->size();     iMuR++){
+     // if( !muRisoCheck(iMuR) ) continue;
+     // triggerMuon=iMuR;
+     // break;//take the leading one
+     //}
+     //for(unsigned int iTauR=0;  iTauR<HPSTauPt->size();     iTauR++){
+     // if( !tauRisoCheck(iTauR) ) continue;
+     // theTau=iTauR;
+     // break;//take the leading one
+     //}
+     //
      if( ltemMuTau.size()==2 ) triggerMuon=ltemMuTau[0];
+     if( ltemMuTau.size()==2 ) theTau=ltemMuTau[1];
+     //if( ltemMuTau.size()!=2 ) continue;
+     if( ltemMuTau.size()!=2 && ltemMuTauOS.size()==2 ) triggerMuon=ltemMuTauOS[0];
+     if( ltemMuTau.size()!=2 && ltemMuTauOS.size()==2 ) theTau=ltemMuTauOS[1];      
+     if( ltemMuTau.size()!=2 && ltemMuTauOS.size()!=2 ) continue;
+     //if( ltemMuTauOS.size()==2 ) triggerMuon=ltemMuTauOS[0];
+     //if( ltemMuTauOS.size()==2 ) theTau=ltemMuTauOS[1];
+     //if( ltemMuTauOS.size()!=2 ) continue;
      //
      int usedTrigger_=-5;
-     //usedTrigger_ = SingleMu_passTrigger();
+     usedTrigger_ = SingleMu_passTrigger();//IsoMu24_eta2p1 trigger
      //usedTrigger_ = SingleMu40_passTrigger();
-     usedTrigger_ = HLT_MuPT_eta2p1_passTrigger();
+     //usedTrigger_ = HLT_MuPT_eta2p1_passTrigger();
      double TriggerEfficiencyWeights_;
-     // use same weights for Mu24 and Mu40 triggers
-     //TriggerEfficiencyWeights_=IsoMu24e2p1_Eff( MuonPt->at(triggerMuon), MuonEta->at(triggerMuon) );
+     //
+     TriggerEfficiencyWeights_=IsoMu24e2p1_Eff( MuonPt->at(triggerMuon), MuonEta->at(triggerMuon) );
      //TriggerEfficiencyWeights_=Mu40e2p1_ScaleFactor( MuonPt->at(triggerMuon), MuonEta->at(triggerMuon) );
-     TriggerEfficiencyWeights_=Mu40e2p1_ScaleFactor( 50, MuonEta->at(triggerMuon) );
+     //
      AppliedTrigEffWeightshisto->Fill( TriggerEfficiencyWeights_ );
      // ---- total = pileup x trigger
      double w = 0;
      if( !isData  ){
        w=safePileupWeights_*TriggerEfficiencyWeights_; 
-       // w=w*LTEM_ScaleFactor( ltemMuTau );
+       // LTEM_ScaleFactor( ltemMuTau ) weights are applied below..
      }
      if( isData  ) w=1;
-     //w=1;//set all weights to one!!
-     //w=safePileupWeights_; // PU weights only
+
+     bool isSS_=false;
+     if( ltemMuTau.size()==2 ) isSS_=true;
+
 
      //  -- JSON SKIM
      int passJSON_=0;
@@ -332,11 +347,12 @@ void analysisClass::Loop()
      if( !isData ) passJSON_ = 1;
      fillVariableWithValue("PassJSON", passJSON_ );//..............// returns 0, 1                                                                      
 
+
      //  -- TRIGGER SKIM
      int passTrigger_=0;
-     //passTrigger_ = SingleMu_passTrigger(); //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<this is IsoMu24 trigger
+     passTrigger_ = SingleMu_passTrigger(); //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<this is IsoMu24 trigger
      //passTrigger_ = SingleMu40_passTrigger();        //<<<<<<<<<<<<<<<<< this is Mu40 trigger 
-     passTrigger_ = HLT_MuPT_eta2p1_passTrigger(); //<<<<<<<<<<<<<<<<< this is Mu24 trigger  (no isolation)
+     //passTrigger_ = HLT_MuPT_eta2p1_passTrigger(); //<<<<<<<<<<<<<<<<< this is Mu24 trigger  (no isolation)
      fillVariableWithValue("PassTrig", passTrigger_ );//...// returns -2, -1, 0, trig                                                                         
 
      //  -- EVENT FILTER SKIM
@@ -345,30 +361,27 @@ void analysisClass::Loop()
      fillVariableWithValue("PassEventFilter", passEventFilter_ );//.// returns 0, 1 
 
 
+
      //  -- DILEPTON SKIM - MuTau
      int isOfflineDilepton_=0;
      if( isMuTauDR0p30() ) isOfflineDilepton_ = 1;
-     //Make Trigger Muon Tight
-     //if( isMuTauDR0p30() && muRTightCheck(triggerMuon) ) isOfflineDilepton_ = 1;
      fillVariableWithValue("PassOfflineDilepton", isOfflineDilepton_ );// Returns 0, 1          
 
 
      // -- HLT MATCHING SKIM
      int passAllMuHLTmatching_=0;
-     //passAllMuHLTmatching_=1; // this is done in the skimming step already.
-     //if(  RecoHLTdeltaRmin_SingleMuTrigger(triggerMuon)<0.15              ) passAllMuHLTmatching_=1;
+     if( RecoHLTdeltaRmin_SingleMuTrigger(triggerMuon)<0.15   ) passAllMuHLTmatching_=1;
      //if( RecoHLTdeltaRmin_SingleMu40Trigger(triggerMuon)<0.15 ) passAllMuHLTmatching_=1;
-     if( RecoHLTdeltaRmin_SingleMu24Trigger(triggerMuon)<0.15 ) passAllMuHLTmatching_=1;
+     //if( RecoHLTdeltaRmin_SingleMu24Trigger(triggerMuon)<0.15 ) passAllMuHLTmatching_=1;
      fillVariableWithValue("PassAllMuHLTmatching",passAllMuHLTmatching_);
-
 
      
      // 
      // Computing Pzeta quantity
      double pZeta=-99999;
      if( ltemMuTau.size()==2 ){
-       unsigned int tagMuon=ltemMuTau[0];
-       unsigned int probeTau=ltemMuTau[1];
+       unsigned int tagMuon=triggerMuon;
+       unsigned int probeTau=theTau;
        //
        TLorentzVector muTransVector, tauTransVector, metTransVector;
        muTransVector.SetPtEtaPhiM(  MuonPt->at(tagMuon),     0, MuonPhi->at(tagMuon),       0 );
@@ -388,28 +401,30 @@ void analysisClass::Loop()
        pZeta=((pz2D.Mod())*(zeta2D.Mod())*TMath::Cos(pz2D.DeltaPhi(zeta2D)))-1.5*((pzvis2D.Mod())*(zeta2D.Mod())*TMath::Cos(pzvis2D.DeltaPhi(zeta2D)));
      }
 
+
      // -- OFFLINE SKIM
      int OfflineCuts_=0;
      int NLepJet= MuCounter()+ElCounter()+TauCounter()+JetCounter();
      //
-     if( ltemMuTau.size()==2 && 
-	 //MuonPt->at(ltemMuTau[0])>45 &&
-	 //pZeta>-10 &&
-	 fabs(HPSTauEta->at(ltemMuTau[1]))<1.5 && //barrel Taus only
-	 //fabs(HPSTauEta->at(ltemMuTau[1]))>=1.5 && //endcap Taus only
-	 HPSTauPt->at(ltemMuTau[1])>35 && //TauPt>35
-	 //fabs(MuonEta->at(ltemMuTau[0]))<1.5 && //barrel Muons only
+     if( //(ltemMuTau.size()==2 || ltemMuTauOS.size()==2) &&
+         ltemMuTau.size()==2 &&
+	 muRTightCheck(triggerMuon) && 
+	 tauRTightCheck(theTau) &&
+	 //MuonPt->at(triggerMuon)>45 &&
+	 // pZeta>-10 &&
+	 //fabs(HPSTauEta->at(theTau))<1.5 && //barrel Taus only
+	 //fabs(HPSTauPt->at(theTau))>35 && //TauPt>35
+	 //fabs(MuonEta->at(triggerMuon))<1.5 && //barrel Muons only
 	 //ST()>150  && JetCounter()<=1 && NLepJet<=3 && // <<<< CONTROL REGION with DATA
 	 //ST()>300  && JetCounter()>1 && NLepJet>3 && // <<<< CONTROL REGION like SIGNAL selection!! (for mixing the two)
-	 //ST()>300  && JetCounter()>1  && NLepJet>4 && // <<<< SIGNAL REGION no DATA
-	 //ST()>150  && JetCounter()>0 &&
-	 ST()>200  && JetCounter()>0 &&
-	 // ST()>300  && JetCounter()>1 && // <<<< SIGNAL REGION no DATA -- For checking LTEM in MC
-	 //ST()>470  && HPSTauPt->at(ltemMuTau[1])>50 && // LQ3M300 Optimized
-	 //ST()>590  && HPSTauPt->at(ltemMuTau[1])>60 && // LQ3M400 Optimized
-	 //ST()>720  && HPSTauPt->at(ltemMuTau[1])>65 && // LQ3M500 Optimized
-	 muJetDeltaRmin(ltemMuTau[0])>0.5 && tauJetDeltaRmin(ltemMuTau[1])>0.7 ) OfflineCuts_=1;
-	 //muJetDeltaRmin(ltemMuTau[0])>0.5 && tauJetDeltaRmin(ltemMuTau[1])>1.0 ) OfflineCuts_=1;
+	 //ST()>500  && JetCounter()>1 &&  ltemMuTau.size()==2 &&	 NLepJet>4 && // <<<< SIGNAL REGION no DATA
+	 //muJetDeltaRmin(triggerMuon)>0.5 && tauJetDeltaRmin(theTau)>0.7 ) OfflineCuts_=1;
+	 //muJetDeltaRmin(triggerMuon)>0.5 && tauJetDeltaRmin(theTau)>1.0 ) OfflineCuts_=1;
+	 //MuonPt->at(triggerMuon)>45 && 
+	 METlepMT("Mu",triggerMuon)>40 &&
+	 JetCounter()<2 //&& ST()>100
+	 //ST()>150
+	) OfflineCuts_=1;
      fillVariableWithValue("PassOfflineCuts", OfflineCuts_ );// returns 0, 1 
      
      
@@ -417,18 +432,15 @@ void analysisClass::Loop()
      //---------------------------------------------------------------------------------
      if( passedCut("PassJSON") && passedCut("PassTrig") && passedCut("PassEventFilter") && passedCut("PassOfflineDilepton") &&
 	 passedCut("PassAllMuHLTmatching") && passedCut("PassOfflineCuts") ){ 
-
-       double nLepjet= (MuCounter()+ElCounter()+TauCounter()+JetCounter());
-       double nJet   = JetCounter();
-       double st     = ST();
+       
 
        bool isRecoMuPrompt_  = false;
        bool isRecoTauPrompt_ = false;
        //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
        // Check whether LTEM mu & tau are Fake or Prompt!!
        TLorentzVector RecoMu, RecoTau, GenMu, GenTau;
-       RecoMu.SetPtEtaPhiM( MuonPt->at(ltemMuTau[0]), MuonEta->at(ltemMuTau[0]), MuonPhi->at(ltemMuTau[0]), 0 );
-       RecoTau.SetPtEtaPhiM( HPSTauPt->at(ltemMuTau[1]), HPSTauEta->at(ltemMuTau[1]), HPSTauPhi->at(ltemMuTau[1]), 0 );
+       RecoMu.SetPtEtaPhiM( MuonPt->at(triggerMuon), MuonEta->at(triggerMuon), MuonPhi->at(triggerMuon), 0 );
+       RecoTau.SetPtEtaPhiM( HPSTauPt->at(theTau), HPSTauEta->at(theTau), HPSTauPhi->at(theTau), 0 );
        //Check RecoMu  ( W )
        for( unsigned int iMuT=0; iMuT<GenWMuPt->size(); iMuT++){
 	 GenMu.SetPtEtaPhiM( GenWMuPt->at(iMuT),     GenWMuEta->at(iMuT),   GenWMuPhi->at(iMuT), 0 );
@@ -469,355 +481,54 @@ void analysisClass::Loop()
        }
        */
        //
-       //-----------------------------------
-       // Muon Scale Factors
-       InitMuonFunctionParameters();
-       InitMuonSFs(ltemMuTau[0]);
-       //-----------------------------------
-       // Tau Scale Factors
-       InitTauSFs();
        //
-       //-----------------------------------
+       /*
+       tauPRdR3B_SF    = 0.981;   tauPRdR3B_SFerr = 0.028;
+       tauPRdR2B_SF    = 0.960;   tauPRdR2B_SFerr = 0.092;
+       tauPRdR1B_SF    = 0.960;   tauPRdR1B_SFerr = 0.092;
+       tauPRdR3E_SF    = 1.097;   tauPRdR3E_SFerr = 0.083;
+       tauPRdR2E_SF    = 1.097;   tauPRdR2E_SFerr = 0.083;
+       tauPRdR1E_SF    = 1.097;   tauPRdR1E_SFerr = 0.083;
+       //
+       //tauFRdR3B_SF    = 1.083;   tauFRdR3B_SFerr = 0.063;
+       //tauFRdR2B_SF    = 1.119;   tauFRdR2B_SFerr = 0.066;
+       //tauFRdR1B_SF    = 1.261;   tauFRdR1B_SFerr = 0.111;
+       tauFRdR3B_SF    = 1.000;   tauFRdR3B_SFerr = 0.022;//for TauPt>32.5
+       tauFRdR2B_SF    = 1.000;   tauFRdR2B_SFerr = 0.106;
+       tauFRdR1B_SF    = 1.000;   tauFRdR1B_SFerr = 0.177;
+       //tauFRdR3E_SF    = 1.079;   tauFRdR3E_SFerr = 0.077;
+       tauFRdR3E_SF    = 1.000;   tauFRdR3E_SFerr = 0.065;//for TauPt>32.5
+       tauFRdR2E_SF    = 1.101;   tauFRdR2E_SFerr = 0.114;
+       tauFRdR1E_SF    = 1.117;   tauFRdR1E_SFerr = 0.173;
+       //
        double LTEM_ScaleFactor_=1;
        if( !isData  ){//for MC: apply SF dependent event weights to TT box based on Gen info, set SFs back to one
-	 LTEM_ScaleFactor_=LTEM_ScaleFactor( ltemMuTau[0], isRecoMuPrompt_, ltemMuTau[1], isRecoTauPrompt_ );
-	 ResetAllSFs();
+	 LTEM_ScaleFactor_=LTEM_ScaleFactor( theTau, isRecoTauPrompt_ );
+	 //
+	 tauPRdR3B_SF    = 1;   tauPRdR3B_SFerr = 0;
+	 tauPRdR2B_SF    = 1;   tauPRdR2B_SFerr = 0;
+	 tauPRdR1B_SF    = 1;   tauPRdR1B_SFerr = 0;
+	 tauPRdR3E_SF    = 1;   tauPRdR3E_SFerr = 0;
+	 tauPRdR2E_SF    = 1;   tauPRdR2E_SFerr = 0;
+	 tauPRdR1E_SF    = 1;   tauPRdR1E_SFerr = 0;
+	 //
+	 tauFRdR3B_SF    = 1;   tauFRdR3B_SFerr = 0;
+	 tauFRdR2B_SF    = 1;   tauFRdR2B_SFerr = 0;
+	 tauFRdR1B_SF    = 1;   tauFRdR1B_SFerr = 0;
+	 tauFRdR3E_SF    = 1;   tauFRdR3E_SFerr = 0;
+	 tauFRdR2E_SF    = 1;   tauFRdR2E_SFerr = 0;
+	 tauFRdR1E_SF    = 1;   tauFRdR1E_SFerr = 0;
        }
-       //-----------------------------------
+       */
        //
        //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-       // LTEM Mu Vector, and LTEM Tau Vector
-       TLorentzVector LTEMMuVector, LTEMTauVector;
-       LTEMMuVector.SetPtEtaPhiM(  MuonPt->at(ltemMuTau[0]),    MuonEta->at(ltemMuTau[0]),   MuonPhi->at(ltemMuTau[0]),   0 );
-       LTEMTauVector.SetPtEtaPhiM( HPSTauPt->at(ltemMuTau[1]),  HPSTauEta->at(ltemMuTau[1]), HPSTauPhi->at(ltemMuTau[1]), 0 );
-
-
-       muPRhisto->Fill(muPR(ltemMuTau[0]));
-       muFRhisto->Fill(muFR(ltemMuTau[0]));
-       tauPRhisto->Fill(tauPR(ltemMuTau[1]));
-       tauFRhisto->Fill(tauFR(ltemMuTau[1]));
-       muPREhisto->Fill(muPRE(ltemMuTau[0]));
-       muFREhisto->Fill(muFRE(ltemMuTau[0]));
-       tauPREhisto->Fill(tauPRE(ltemMuTau[1]));
-       tauFREhisto->Fill(tauFRE(ltemMuTau[1]));
-
 
        // Weight Histos
        Triggerhisto->Fill( usedTrigger_ );
        AppliedPileUpWeightshisto->Fill( safePileupWeights_ );
        AppliedTotalWeightshisto->Fill( w );
 
-
-       bool isMuTight_       = false;
-       bool isTauTight_      = false;
-       //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-       // Check whether LTEM mu & tau are Loose or Tight!!
-       if( muRTightCheck(ltemMuTau[0])  ) isMuTight_=true;
-       if( tauRTightCheck(ltemMuTau[1]) ) isTauTight_=true;
-       //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-       //--- Fill in LT reco, gen matricies
-       //..........................................//MT
-       if( !isMuTight_ && !isTauTight_ ) LTmatrixhisto->Fill( 1, w ); //LL
-       if( !isMuTight_ &&  isTauTight_ ) LTmatrixhisto->Fill( 2, w ); //LT
-       if(  isMuTight_ && !isTauTight_ ) LTmatrixhisto->Fill( 3, w ); //TL
-       if(  isMuTight_ &&  isTauTight_ ) LTmatrixhisto->Fill( 4, w ); //TT
-       //
-       if( !isRecoMuPrompt_ && !isRecoTauPrompt_ ) AllGenhisto->Fill( 1, w );//FF
-       if( !isRecoMuPrompt_ &&  isRecoTauPrompt_ ) AllGenhisto->Fill( 2, w );//FP
-       if(  isRecoMuPrompt_ && !isRecoTauPrompt_ ) AllGenhisto->Fill( 3, w );//PF
-       if(  isRecoMuPrompt_ &&  isRecoTauPrompt_ ) AllGenhisto->Fill( 4, w );//PP
-       //
-       if(  isMuTight_ &&  isTauTight_ ){
-	 if( !isRecoMuPrompt_ && !isRecoTauPrompt_ ) TTGenhisto->Fill( 1, w );//FF
-	 if( !isRecoMuPrompt_ &&  isRecoTauPrompt_ ) TTGenhisto->Fill( 2, w );//FP
-	 if(  isRecoMuPrompt_ && !isRecoTauPrompt_ ) TTGenhisto->Fill( 3, w );//PF
-	 if(  isRecoMuPrompt_ &&  isRecoTauPrompt_ ) TTGenhisto->Fill( 4, w );//PP
-       }
-       //
-       if(  isMuTight_ &&  isTauTight_ ){
-	 if( !isRecoMuPrompt_ && !isRecoTauPrompt_ ) TTGenWithSFhisto->Fill( 1, w*LTEM_ScaleFactor_ );//FF
-	 if( !isRecoMuPrompt_ &&  isRecoTauPrompt_ ) TTGenWithSFhisto->Fill( 2, w*LTEM_ScaleFactor_ );//FP
-	 if(  isRecoMuPrompt_ && !isRecoTauPrompt_ ) TTGenWithSFhisto->Fill( 3, w*LTEM_ScaleFactor_ );//PF
-	 if(  isRecoMuPrompt_ &&  isRecoTauPrompt_ ) TTGenWithSFhisto->Fill( 4, w*LTEM_ScaleFactor_ );//PP
-       }
-       //
-       
-
-       //
-       //...........................................................................// Fake Background Estimation - Begin
-       double DoubleFakeWeight_=0;
-       double SingleFakeMuWeight_=0;
-       double SingleFakeTauWeight_=0;
-       double TTDoubleFake_=0;
-       double TTSingleMuFake_=0;
-       double TTSingleTauFake_=0;
-       //
-       // Mean
-       muPR_  = muPR(ltemMuTau[0]);
-       muFR_  = muFR(ltemMuTau[0]);
-       tauPR_ = tauPR(ltemMuTau[1]);
-       tauFR_ = tauFR(ltemMuTau[1]);
-       DoubleFakeWeight_    = DoubleFakeWeight(    ltemMuTau[0], ltemMuTau[1] );
-       SingleFakeMuWeight_  = SingleFakeMuWeight(  ltemMuTau[0], ltemMuTau[1] );
-       SingleFakeTauWeight_ = SingleFakeTauWeight( ltemMuTau[0], ltemMuTau[1] );
-       TTDoubleFake_   = DoubleFakeWeight_*muFR_*tauFR_;
-       TTSingleMuFake_ = SingleFakeMuWeight_*muFR_*tauPR_;
-       TTSingleTauFake_= SingleFakeTauWeight_*muPR_*tauFR_;
-       FPmatrixhisto->Fill( 1, DoubleFakeWeight_*w    );//FF
-       FPmatrixhisto->Fill( 2, SingleFakeMuWeight_*w  );//FP
-       FPmatrixhisto->Fill( 3, SingleFakeTauWeight_*w );//PF
-       TTBackgroundhisto->Fill( 1, TTDoubleFake_*w    );//DoubleFake    in TT
-       TTBackgroundhisto->Fill( 2, TTSingleMuFake_*w  );//SingleFakeMu  in TT
-       TTBackgroundhisto->Fill( 3, TTSingleTauFake_*w );//SingleFakeTau in TT
-       if(  isMuTight_ &&  isTauTight_ ) TTBackgroundhisto->Fill( 4, w );
-       // Need various distributions of Single Tau Fakes here.. Weight: TTSingleTauFake_*w
-       ExpTotalBckg_SThisto->Fill(              st,                                 (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
-       ExpTotalBckg_JetNhisto->Fill(            nJet,                               (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
-       ExpTotalBckg_MuTauDeltaRhisto->Fill(     LTEMMuVector.DeltaR(LTEMTauVector), (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
-       ExpTotalBckg_TauJetDeltaRminhisto->Fill( tauJetDeltaRmin(ltemMuTau[1]),      (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
-       ExpTotalBckg_TauPthisto->Fill(           HPSTauPt->at(ltemMuTau[1]),         (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
-       ExpTotalBckg_TauEtahisto->Fill(          HPSTauEta->at(ltemMuTau[1]),        (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
-       ExpTotalBckg_TauPhihisto->Fill(          HPSTauPhi->at(ltemMuTau[1]),        (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
-       if( isMuTight_ && isTauTight_ && isRecoMuPrompt_ && isRecoTauPrompt_ ){//add PP contribution to TT box estimation
-	 ExpTotalBckg_SThisto->Fill(              st,                                 w );
-	 ExpTotalBckg_JetNhisto->Fill(            nJet,                               w );
-	 ExpTotalBckg_MuTauDeltaRhisto->Fill(     LTEMMuVector.DeltaR(LTEMTauVector), w );
-	 ExpTotalBckg_TauJetDeltaRminhisto->Fill( tauJetDeltaRmin(ltemMuTau[1]),      w );
-	 ExpTotalBckg_TauPthisto->Fill(           HPSTauPt->at(ltemMuTau[1]),         w );
-	 ExpTotalBckg_TauEtahisto->Fill(          HPSTauEta->at(ltemMuTau[1]),        w );
-	 ExpTotalBckg_TauPhihisto->Fill(          HPSTauPhi->at(ltemMuTau[1]),        w );
-       }
-       //
-       //mini test
-       ExpSingleMuFake_SThisto->Fill(               st,                               TTSingleMuFake_*w  );
-       ExpDoubleFake_SThisto->Fill(                 st,                               TTDoubleFake_*w    );
-       ExpSingleTauFake_SThisto->Fill(              st,                               TTSingleTauFake_*w );
-       //
-       ExpSingleTauFake_JetNhisto->Fill(            nJet,                       TTSingleTauFake_*w );
-       ExpSingleTauFake_MuTauDeltaRhisto->Fill(     LTEMMuVector.DeltaR(LTEMTauVector), TTSingleTauFake_*w );
-       ExpSingleTauFake_TauJetDeltaRminhisto->Fill( tauJetDeltaRmin(ltemMuTau[1]),      TTSingleTauFake_*w );
-       ExpSingleTauFake_TauPthisto->Fill(           HPSTauPt->at(ltemMuTau[1]),         TTSingleTauFake_*w );
-       ExpSingleTauFake_TauEtahisto->Fill(          HPSTauEta->at(ltemMuTau[1]),        TTSingleTauFake_*w );
-       ExpSingleTauFake_TauPhihisto->Fill(          HPSTauPhi->at(ltemMuTau[1]),        TTSingleTauFake_*w );
-       //
-       //
-       // Mu Prompt Rate Up
-       muPR_  = muPR(ltemMuTau[0])+muPRE(ltemMuTau[0]);
-       muFR_  = muFR(ltemMuTau[0]);
-       tauPR_ = tauPR(ltemMuTau[1]);
-       tauFR_ = tauFR(ltemMuTau[1]);
-       DoubleFakeWeight_    = DoubleFakeWeight(    ltemMuTau[0], ltemMuTau[1] );
-       SingleFakeMuWeight_  = SingleFakeMuWeight(  ltemMuTau[0], ltemMuTau[1] );
-       SingleFakeTauWeight_ = SingleFakeTauWeight( ltemMuTau[0], ltemMuTau[1] );
-       TTDoubleFake_   = DoubleFakeWeight_*muFR_*tauFR_;
-       TTSingleMuFake_ = SingleFakeMuWeight_*muFR_*tauPR_;
-       TTSingleTauFake_= SingleFakeTauWeight_*muPR_*tauFR_;
-       FPmatrixMuPRUhisto->Fill( 1, DoubleFakeWeight_*w    );//FF
-       FPmatrixMuPRUhisto->Fill( 2, SingleFakeMuWeight_*w  );//FP
-       FPmatrixMuPRUhisto->Fill( 3, SingleFakeTauWeight_*w );//PF
-       TTBackgroundMuPRUhisto->Fill( 1, TTDoubleFake_*w    );//DoubleFake    in TT
-       TTBackgroundMuPRUhisto->Fill( 2, TTSingleMuFake_*w  );//SingleFakeMu  in TT
-       TTBackgroundMuPRUhisto->Fill( 3, TTSingleTauFake_*w );//SingleFakeTau in TT
-       if(  isMuTight_ &&  isTauTight_ ) TTBackgroundMuPRUhisto->Fill( 4, w );
-       //
-       // Mu Prompt Rate Down
-       muPR_  = muPR(ltemMuTau[0])-muPRE(ltemMuTau[0]);
-       muFR_  = muFR(ltemMuTau[0]);
-       tauPR_ = tauPR(ltemMuTau[1]);
-       tauFR_ = tauFR(ltemMuTau[1]);
-       DoubleFakeWeight_    = DoubleFakeWeight(    ltemMuTau[0], ltemMuTau[1] );
-       SingleFakeMuWeight_  = SingleFakeMuWeight(  ltemMuTau[0], ltemMuTau[1] );
-       SingleFakeTauWeight_ = SingleFakeTauWeight( ltemMuTau[0], ltemMuTau[1] );
-       TTDoubleFake_   = DoubleFakeWeight_*muFR_*tauFR_;
-       TTSingleMuFake_ = SingleFakeMuWeight_*muFR_*tauPR_;
-       TTSingleTauFake_= SingleFakeTauWeight_*muPR_*tauFR_;
-       FPmatrixMuPRDhisto->Fill( 1, DoubleFakeWeight_*w    );//FF
-       FPmatrixMuPRDhisto->Fill( 2, SingleFakeMuWeight_*w  );//FP
-       FPmatrixMuPRDhisto->Fill( 3, SingleFakeTauWeight_*w );//PF
-       TTBackgroundMuPRDhisto->Fill( 1, TTDoubleFake_*w    );//DoubleFake    in TT
-       TTBackgroundMuPRDhisto->Fill( 2, TTSingleMuFake_*w  );//SingleFakeMu  in TT
-       TTBackgroundMuPRDhisto->Fill( 3, TTSingleTauFake_*w );//SingleFakeTau in TT
-       if(  isMuTight_ &&  isTauTight_ ) TTBackgroundMuPRDhisto->Fill( 4, w );
-       //
-       // Mu Fake Rate Up
-       muPR_  = muPR(ltemMuTau[0]);
-       muFR_  = muFR(ltemMuTau[0])+muFRE(ltemMuTau[0]);
-       tauPR_ = tauPR(ltemMuTau[1]);
-       tauFR_ = tauFR(ltemMuTau[1]);
-       DoubleFakeWeight_    = DoubleFakeWeight(    ltemMuTau[0], ltemMuTau[1] );
-       SingleFakeMuWeight_  = SingleFakeMuWeight(  ltemMuTau[0], ltemMuTau[1] );
-       SingleFakeTauWeight_ = SingleFakeTauWeight( ltemMuTau[0], ltemMuTau[1] );
-       TTDoubleFake_   = DoubleFakeWeight_*muFR_*tauFR_;
-       TTSingleMuFake_ = SingleFakeMuWeight_*muFR_*tauPR_;
-       TTSingleTauFake_= SingleFakeTauWeight_*muPR_*tauFR_;
-       FPmatrixMuFRUhisto->Fill( 1, DoubleFakeWeight_*w    );//FF
-       FPmatrixMuFRUhisto->Fill( 2, SingleFakeMuWeight_*w  );//FP
-       FPmatrixMuFRUhisto->Fill( 3, SingleFakeTauWeight_*w );//PF
-       TTBackgroundMuFRUhisto->Fill( 1, TTDoubleFake_*w    );//DoubleFake    in TT
-       TTBackgroundMuFRUhisto->Fill( 2, TTSingleMuFake_*w  );//SingleFakeMu  in TT
-       TTBackgroundMuFRUhisto->Fill( 3, TTSingleTauFake_*w );//SingleFakeTau in TT
-       if(  isMuTight_ &&  isTauTight_ ) TTBackgroundMuFRUhisto->Fill( 4, w );
-       //
-       // Mu Fake Rate Down
-       muPR_  = muPR(ltemMuTau[0]);
-       muFR_  = muFR(ltemMuTau[0])-muFRE(ltemMuTau[0]);
-       tauPR_ = tauPR(ltemMuTau[1]);
-       tauFR_ = tauFR(ltemMuTau[1]);
-       DoubleFakeWeight_    = DoubleFakeWeight(    ltemMuTau[0], ltemMuTau[1] );
-       SingleFakeMuWeight_  = SingleFakeMuWeight(  ltemMuTau[0], ltemMuTau[1] );
-       SingleFakeTauWeight_ = SingleFakeTauWeight( ltemMuTau[0], ltemMuTau[1] );
-       TTDoubleFake_   = DoubleFakeWeight_*muFR_*tauFR_;
-       TTSingleMuFake_ = SingleFakeMuWeight_*muFR_*tauPR_;
-       TTSingleTauFake_= SingleFakeTauWeight_*muPR_*tauFR_;
-       FPmatrixMuFRDhisto->Fill( 1, DoubleFakeWeight_*w    );//FF
-       FPmatrixMuFRDhisto->Fill( 2, SingleFakeMuWeight_*w  );//FP
-       FPmatrixMuFRDhisto->Fill( 3, SingleFakeTauWeight_*w );//PF
-       TTBackgroundMuFRDhisto->Fill( 1, TTDoubleFake_*w    );//DoubleFake    in TT
-       TTBackgroundMuFRDhisto->Fill( 2, TTSingleMuFake_*w  );//SingleFakeMu  in TT
-       TTBackgroundMuFRDhisto->Fill( 3, TTSingleTauFake_*w );//SingleFakeTau in TT
-       if(  isMuTight_ &&  isTauTight_ ) TTBackgroundMuFRDhisto->Fill( 4, w );
-       //
-       // Tau Prompt Rate Up
-       muPR_  = muPR(ltemMuTau[0]);
-       muFR_  = muFR(ltemMuTau[0]);
-       tauPR_ = tauPR(ltemMuTau[1])+tauPRE(ltemMuTau[1]);
-       tauFR_ = tauFR(ltemMuTau[1]);
-       DoubleFakeWeight_    = DoubleFakeWeight(    ltemMuTau[0], ltemMuTau[1] );
-       SingleFakeMuWeight_  = SingleFakeMuWeight(  ltemMuTau[0], ltemMuTau[1] );
-       SingleFakeTauWeight_ = SingleFakeTauWeight( ltemMuTau[0], ltemMuTau[1] );
-       TTDoubleFake_   = DoubleFakeWeight_*muFR_*tauFR_;
-       TTSingleMuFake_ = SingleFakeMuWeight_*muFR_*tauPR_;
-       TTSingleTauFake_= SingleFakeTauWeight_*muPR_*tauFR_;
-       FPmatrixTauPRUhisto->Fill( 1, DoubleFakeWeight_*w    );//FF
-       FPmatrixTauPRUhisto->Fill( 2, SingleFakeMuWeight_*w  );//FP
-       FPmatrixTauPRUhisto->Fill( 3, SingleFakeTauWeight_*w );//PF
-       TTBackgroundTauPRUhisto->Fill( 1, TTDoubleFake_*w    );//DoubleFake    in TT
-       TTBackgroundTauPRUhisto->Fill( 2, TTSingleMuFake_*w  );//SingleFakeMu  in TT
-       TTBackgroundTauPRUhisto->Fill( 3, TTSingleTauFake_*w );//SingleFakeTau in TT
-       if(  isMuTight_ &&  isTauTight_ ) TTBackgroundTauPRUhisto->Fill( 4, w );
-       //
-       // Tau Prompt Rate Down
-       muPR_  = muPR(ltemMuTau[0]);
-       muFR_  = muFR(ltemMuTau[0]);
-       tauPR_ = tauPR(ltemMuTau[1])-tauPRE(ltemMuTau[1]);
-       tauFR_ = tauFR(ltemMuTau[1]);
-       DoubleFakeWeight_    = DoubleFakeWeight(    ltemMuTau[0], ltemMuTau[1] );
-       SingleFakeMuWeight_  = SingleFakeMuWeight(  ltemMuTau[0], ltemMuTau[1] );
-       SingleFakeTauWeight_ = SingleFakeTauWeight( ltemMuTau[0], ltemMuTau[1] );
-       TTDoubleFake_   = DoubleFakeWeight_*muFR_*tauFR_;
-       TTSingleMuFake_ = SingleFakeMuWeight_*muFR_*tauPR_;
-       TTSingleTauFake_= SingleFakeTauWeight_*muPR_*tauFR_;
-       FPmatrixTauPRDhisto->Fill( 1, DoubleFakeWeight_*w    );//FF
-       FPmatrixTauPRDhisto->Fill( 2, SingleFakeMuWeight_*w  );//FP
-       FPmatrixTauPRDhisto->Fill( 3, SingleFakeTauWeight_*w );//PF
-       TTBackgroundTauPRDhisto->Fill( 1, TTDoubleFake_*w    );//DoubleFake    in TT
-       TTBackgroundTauPRDhisto->Fill( 2, TTSingleMuFake_*w  );//SingleFakeMu  in TT
-       TTBackgroundTauPRDhisto->Fill( 3, TTSingleTauFake_*w );//SingleFakeTau in TT
-       if(  isMuTight_ &&  isTauTight_ ) TTBackgroundTauPRDhisto->Fill( 4, w );
-       //
-       // Tau Fake Rate Up
-       muPR_  = muPR(ltemMuTau[0]);
-       muFR_  = muFR(ltemMuTau[0]);
-       tauPR_ = tauPR(ltemMuTau[1]);
-       tauFR_ = tauFR(ltemMuTau[1])+tauFRE(ltemMuTau[1]);
-       DoubleFakeWeight_    = DoubleFakeWeight(    ltemMuTau[0], ltemMuTau[1] );
-       SingleFakeMuWeight_  = SingleFakeMuWeight(  ltemMuTau[0], ltemMuTau[1] );
-       SingleFakeTauWeight_ = SingleFakeTauWeight( ltemMuTau[0], ltemMuTau[1] );
-       TTDoubleFake_   = DoubleFakeWeight_*muFR_*tauFR_;
-       TTSingleMuFake_ = SingleFakeMuWeight_*muFR_*tauPR_;
-       TTSingleTauFake_= SingleFakeTauWeight_*muPR_*tauFR_;
-       FPmatrixTauFRUhisto->Fill( 1, DoubleFakeWeight_*w    );//FF
-       FPmatrixTauFRUhisto->Fill( 2, SingleFakeMuWeight_*w  );//FP
-       FPmatrixTauFRUhisto->Fill( 3, SingleFakeTauWeight_*w );//PF
-       TTBackgroundTauFRUhisto->Fill( 1, TTDoubleFake_*w    );//DoubleFake    in TT
-       TTBackgroundTauFRUhisto->Fill( 2, TTSingleMuFake_*w  );//SingleFakeMu  in TT
-       TTBackgroundTauFRUhisto->Fill( 3, TTSingleTauFake_*w );//SingleFakeTau in TT
-       if(  isMuTight_ &&  isTauTight_ ) TTBackgroundTauFRUhisto->Fill( 4, w );
-       ExpTotalBckgTauFRU_TauJetDeltaRminhisto->Fill( tauJetDeltaRmin(ltemMuTau[1]), (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
-       ExpTotalBckgTauFRU_TauPthisto->Fill(           HPSTauPt->at(ltemMuTau[1]),    (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
-       ExpTotalBckgTauFRU_TauEtahisto->Fill(          HPSTauEta->at(ltemMuTau[1]),   (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
-       ExpTotalBckgTauFRU_SThisto->Fill(              st,                            (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
-       ExpTotalBckgTauFRU_JetNhisto->Fill(            nJet,                          (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
-       if( isMuTight_ && isTauTight_ && isRecoMuPrompt_ && isRecoTauPrompt_ ){
-	 ExpTotalBckgTauFRU_TauJetDeltaRminhisto->Fill( tauJetDeltaRmin(ltemMuTau[1]), w);
-	 ExpTotalBckgTauFRU_TauPthisto->Fill(           HPSTauPt->at(ltemMuTau[1]),    w );
-	 ExpTotalBckgTauFRU_TauEtahisto->Fill(          HPSTauEta->at(ltemMuTau[1]),   w );
-	 ExpTotalBckgTauFRU_SThisto->Fill(              st,                            w );
-	 ExpTotalBckgTauFRU_JetNhisto->Fill(            nJet,                          w );
-       }
-       //
-       // Tau Fake Rate Down
-       muPR_  = muPR(ltemMuTau[0]);
-       muFR_  = muFR(ltemMuTau[0]);
-       tauPR_ = tauPR(ltemMuTau[1]);
-       tauFR_ = tauFR(ltemMuTau[1])-tauFRE(ltemMuTau[1]);
-       DoubleFakeWeight_    = DoubleFakeWeight(    ltemMuTau[0], ltemMuTau[1] );
-       SingleFakeMuWeight_  = SingleFakeMuWeight(  ltemMuTau[0], ltemMuTau[1] );
-       SingleFakeTauWeight_ = SingleFakeTauWeight( ltemMuTau[0], ltemMuTau[1] );
-       TTDoubleFake_   = DoubleFakeWeight_*muFR_*tauFR_;
-       TTSingleMuFake_ = SingleFakeMuWeight_*muFR_*tauPR_;
-       TTSingleTauFake_= SingleFakeTauWeight_*muPR_*tauFR_;
-       FPmatrixTauFRDhisto->Fill( 1, DoubleFakeWeight_*w    );//FF
-       FPmatrixTauFRDhisto->Fill( 2, SingleFakeMuWeight_*w  );//FP
-       FPmatrixTauFRDhisto->Fill( 3, SingleFakeTauWeight_*w );//PF
-       TTBackgroundTauFRDhisto->Fill( 1, TTDoubleFake_*w    );//DoubleFake    in TT
-       TTBackgroundTauFRDhisto->Fill( 2, TTSingleMuFake_*w  );//SingleFakeMu  in TT
-       TTBackgroundTauFRDhisto->Fill( 3, TTSingleTauFake_*w );//SingleFakeTau in TT
-       if(  isMuTight_ &&  isTauTight_ ) TTBackgroundTauFRDhisto->Fill( 4, w );
-       ExpTotalBckgTauFRD_TauJetDeltaRminhisto->Fill( tauJetDeltaRmin(ltemMuTau[1]), (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
-       ExpTotalBckgTauFRD_TauPthisto->Fill(           HPSTauPt->at(ltemMuTau[1]),    (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
-       ExpTotalBckgTauFRD_TauEtahisto->Fill(          HPSTauEta->at(ltemMuTau[1]),   (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
-       ExpTotalBckgTauFRD_SThisto->Fill(              st,                            (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
-       ExpTotalBckgTauFRD_JetNhisto->Fill(            nJet,                          (TTSingleTauFake_+TTSingleMuFake_+TTDoubleFake_)*w );
-       if( isMuTight_ && isTauTight_ && isRecoMuPrompt_ && isRecoTauPrompt_ ){
-	 ExpTotalBckgTauFRD_TauJetDeltaRminhisto->Fill( tauJetDeltaRmin(ltemMuTau[1]), w);
-	 ExpTotalBckgTauFRD_TauPthisto->Fill(           HPSTauPt->at(ltemMuTau[1]),    w );
-	 ExpTotalBckgTauFRD_TauEtahisto->Fill(          HPSTauEta->at(ltemMuTau[1]),   w );
-	 ExpTotalBckgTauFRD_SThisto->Fill(              st,                            w );
-	 ExpTotalBckgTauFRD_JetNhisto->Fill(            nJet,                          w );
-       }
-       
-       //
-       //...........................................................................// Fake Background Estimation - End
-
-
-       // FILL OUT THE REMAINING HISTOGRAMS ONLY FOR TT EVENTS!
-       if( !isMuTight_ || !isTauTight_ ) continue;
-
-       //Apply tau prompt and fake rate corrections!!
-       w=w*LTEM_ScaleFactor_;
-
-       LTEMMuJetDeltaRminhisto->Fill( muJetDeltaRmin(ltemMuTau[0]), w );
-       LTEMTauJetDeltaRminhisto->Fill( tauJetDeltaRmin(ltemMuTau[1]), w );
-       LTEMMuPthisto->Fill( MuonPt->at(ltemMuTau[0]), w );
-       LTEMTauPthisto->Fill( HPSTauPt->at(ltemMuTau[1]), w );
-       LTEMMuEtahisto->Fill( MuonEta->at(ltemMuTau[0]), w );
-       LTEMTauEtahisto->Fill( HPSTauEta->at(ltemMuTau[1]), w );
-       //LTEMAbsTauEtahisto->Fill( fabs(HPSTauEta->at(ltemMuTau[1])), w );
-       LTEMMuPhihisto->Fill( MuonPhi->at(ltemMuTau[0]), w );
-       LTEMTauPhihisto->Fill( HPSTauPhi->at(ltemMuTau[1]), w );
-       LTEMMuTauDeltaRhisto->Fill( LTEMMuVector.DeltaR(LTEMTauVector), w );
-       LTEMMuTauDeltaPhihisto->Fill( LTEMMuVector.DeltaPhi(LTEMTauVector), w );
-       LTEMMuTauMasshisto->Fill( (LTEMMuVector+LTEMTauVector).M(), w );
-       //
-       // For 2D optimization
-       LTEM2DMuPtTauPthisto->Fill( MuonPt->at(ltemMuTau[0]), HPSTauPt->at(ltemMuTau[1]), w);
-       LTEM2DTauPtSThisto->Fill( HPSTauPt->at(ltemMuTau[1]), st, w);
-       LTEM2DTauPtNLepjethisto->Fill( HPSTauPt->at(ltemMuTau[1]), nLepjet, w);
-       LTEM2DMuPtNLepjethisto->Fill( MuonPt->at(ltemMuTau[0]), nLepjet, w);
-       LTEM2DMuPtSThisto->Fill( MuonPt->at(ltemMuTau[0]), st, w);
-       LTEM2DNLepjetSThisto->Fill( nLepjet, st, w);
-       LTEM2DNJetSThisto->Fill( nJet, st, w);
-       // For 3D optimization
-       LTEM3DTauPtSTJetNhisto->Fill( HPSTauPt->at(ltemMuTau[1]), st, nJet, w);
-       LTEM3DTauPtSTLepjetNhisto->Fill( HPSTauPt->at(ltemMuTau[1]), st, nLepjet, w);
-
-
        PZetahisto->Fill( pZeta, w );
-
        
        // >>>>>>>>>>>>>>>>>>>>>> Histograms - multiple times per event. 
        allmu.SetPtEtaPhiM( 0, 0, 0, 0 );
@@ -975,6 +686,10 @@ void analysisClass::Loop()
        //
        if( MuN>0   )LeadMuPthisto->Fill(Mu.Pt(), w );
        if( TauN>0  )LeadTauPthisto->Fill(Tau.Pt(), w );
+       if( TauN>0 && !isSS_ )LeadTauPtOShisto->Fill(Tau.Pt(), w );
+       if( TauN>0 &&  isSS_ )LeadTauPtSShisto->Fill(Tau.Pt(), w );
+       if( TauN>0 && JetN==1 ) LeadTauPt1Jhisto->Fill( Tau.Pt(), w );
+       if( TauN>0 && JetN==0 ) LeadTauPt0Jhisto->Fill( Tau.Pt(), w );
        if( ElN>0   )LeadElPthisto->Fill(El.Pt(), w );
        if( JetN>0  )LeadJetPthisto->Fill(Jet.Pt(), w );
        if( BJetN>0 )LeadBJetPthisto->Fill(BJet.Pt(), w );
@@ -994,7 +709,7 @@ void analysisClass::Loop()
        //
        MaxMuTauInvMasshisto->Fill( (double)(MaxMuTauInvMass()) );
        MaxDiLepMasshisto->Fill(MaxDiLepInvMass(), w );
-       SThisto->Fill( ST(), w );
+       SThisto->Fill(  ST(), w );
        SJThisto->Fill( SJT, w  );
        if( MuN>0 && TauN>0 )LeadMuTauDeltaRhisto->Fill(Mu.DeltaR(Tau), w );
        //
@@ -1005,7 +720,21 @@ void analysisClass::Loop()
        BJetNhisto->Fill((double)BJetN, w );
        TotalNhisto->Fill((double)(MuN+TauN+ElN+JetN), w );
        //
-
+       AveAbsEtahisto->Fill(   GetAveAbsEta()   , w );
+       AveAbsEtaV2histo->Fill( GetAveAbsEtaV2() , w );
+       AveAbsEtaV3histo->Fill( GetAveAbsEtaV3() , w );
+       //
+       LTEMMuJetDeltaRminhisto->Fill(   muJetDeltaRmin(triggerMuon), w );
+       LTEMTauJetDeltaRminhisto->Fill( tauJetDeltaRmin(theTau), w );
+       LTEMMuPthisto->Fill(      MuonPt->at(triggerMuon), w );           
+       LTEMTauPthisto->Fill(   HPSTauPt->at(theTau), w );          
+       LTEMMuEtahisto->Fill(    MuonEta->at(triggerMuon), w );          
+       LTEMTauEtahisto->Fill( HPSTauEta->at(theTau), w );         
+       //
+       if( tauRLooseCheck(theTau) )  LTEMTauPtLoosehisto->Fill(   HPSTauPt->at(theTau), w );          
+       if( tauRTightCheck(theTau) )  LTEMTauPtTighthisto->Fill(   HPSTauPt->at(theTau), w );          
+       if( tauRLooseCheck(theTau) ) LTEMTauEtaLoosehisto->Fill(  HPSTauEta->at(theTau), w );
+       if( tauRTightCheck(theTau) ) LTEMTauEtaTighthisto->Fill(  HPSTauEta->at(theTau), w );
      }
      //---------------------------------------------------------------------------------
 
@@ -1019,15 +748,6 @@ void analysisClass::Loop()
    AppliedTrigEffWeightshisto->Write();
    Triggerhisto->Write();
    AppliedTotalWeightshisto->Write();
-   //
-   muPRhisto->Write();
-   muFRhisto->Write();
-   tauPRhisto->Write();
-   tauFRhisto->Write();
-   muPREhisto->Write();
-   muFREhisto->Write();
-   tauPREhisto->Write();
-   tauFREhisto->Write();
    //
    RecoSignalTypehisto->Write();
    MuBasedRecoSignalTypehisto->Write();
@@ -1063,6 +783,11 @@ void analysisClass::Loop()
    LTEMMuTauDeltaPhihisto->Write();
    LTEMMuTauMasshisto->Write();
    //
+   LTEMTauPtLoosehisto->Write();
+   LTEMTauPtTighthisto->Write();
+   LTEMTauEtaLoosehisto->Write();
+   LTEMTauEtaTighthisto->Write();
+   //
    LTEM2DMuPtTauPthisto->Write();
    LTEM2DTauPtSThisto->Write();
    LTEM2DTauPtNLepjethisto->Write();
@@ -1071,39 +796,12 @@ void analysisClass::Loop()
    LTEM2DNLepjetSThisto->Write();
    LTEM2DNJetSThisto->Write();
    //
-   LTEM3DTauPtSTJetNhisto->Write();
-   LTEM3DTauPtSTLepjetNhisto->Write();
-   //
-   ExpTotalBckg_MuTauDeltaRhisto->Write();
-   ExpTotalBckg_TauJetDeltaRminhisto->Write();
-   ExpTotalBckgTauFRU_TauJetDeltaRminhisto->Write();
-   ExpTotalBckgTauFRD_TauJetDeltaRminhisto->Write();
-   ExpTotalBckg_TauPthisto->Write();
-   ExpTotalBckgTauFRU_TauPthisto->Write();
-   ExpTotalBckgTauFRD_TauPthisto->Write();
-   ExpTotalBckg_TauEtahisto->Write();
-   ExpTotalBckgTauFRU_TauEtahisto->Write();
-   ExpTotalBckgTauFRD_TauEtahisto->Write();
-   ExpTotalBckg_TauPhihisto->Write();
-   ExpTotalBckg_SThisto->Write();
-   ExpTotalBckgTauFRU_SThisto->Write();
-   ExpTotalBckgTauFRD_SThisto->Write();
-   ExpTotalBckg_JetNhisto->Write();
-   ExpTotalBckgTauFRU_JetNhisto->Write();
-   ExpTotalBckgTauFRD_JetNhisto->Write();
-   //
-   ExpSingleMuFake_SThisto->Write();
-   ExpDoubleFake_SThisto->Write();
-   ExpSingleTauFake_SThisto->Write();
-   ExpSingleTauFake_JetNhisto->Write();
-   ExpSingleTauFake_MuTauDeltaRhisto->Write();
-   ExpSingleTauFake_TauJetDeltaRminhisto->Write();
-   ExpSingleTauFake_TauPthisto->Write();
-   ExpSingleTauFake_TauEtahisto->Write();
-   ExpSingleTauFake_TauPhihisto->Write();
-   //
    LeadMuPthisto->Write();
    LeadTauPthisto->Write();
+   LeadTauPt1Jhisto->Write();
+   LeadTauPt0Jhisto->Write();
+   LeadTauPtOShisto->Write();
+   LeadTauPtSShisto->Write();
    LeadElPthisto->Write();
    LeadJetPthisto->Write();
    LeadBJetPthisto->Write();
@@ -1141,6 +839,10 @@ void analysisClass::Loop()
    BJetNhisto->Write();
    TotalNhisto->Write();
    VertexNhisto->Write();
+   //
+   AveAbsEtahisto->Write();
+   AveAbsEtaV2histo->Write();
+   AveAbsEtaV3histo->Write();
    //
    LooseToTightMatrixRAW2Dhisto->Write();
    LooseToTightMatrix2Dhisto->Write();

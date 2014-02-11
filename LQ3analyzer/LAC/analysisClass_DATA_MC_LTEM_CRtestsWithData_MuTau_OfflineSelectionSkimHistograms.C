@@ -50,28 +50,7 @@ void analysisClass::Loop()
    LumiC=7018;
    LumiD=7248;
    //
-   /**/
-   tauPRdR3B_SF    = 1;   tauPRdR3B_SFerr = 0;
-   tauPRdR2B_SF    = 1;   tauPRdR2B_SFerr = 0;
-   tauPRdR1B_SF    = 1;   tauPRdR1B_SFerr = 0;
-   tauPRdR3E_SF    = 1;   tauPRdR3E_SFerr = 0;
-   tauPRdR2E_SF    = 1;   tauPRdR2E_SFerr = 0;
-   tauPRdR1E_SF    = 1;   tauPRdR1E_SFerr = 0;
-   //
-   tauFRdR3B_SF    = 1;   tauFRdR3B_SFerr = 0;
-   tauFRdR2B_SF    = 1;   tauFRdR2B_SFerr = 0;
-   tauFRdR1B_SF    = 1;   tauFRdR1B_SFerr = 0;
-   tauFRdR3E_SF    = 1;   tauFRdR3E_SFerr = 0;
-   tauFRdR2E_SF    = 1;   tauFRdR2E_SFerr = 0;
-   tauFRdR1E_SF    = 1;   tauFRdR1E_SFerr = 0;
-   // --- --- --- ---
-   muPRdR3B_SF    = 1;   muPRdR3B_SFerr = 0;
-   muPRdR2B_SF    = 1;   muPRdR2B_SFerr = 0;
-   muPRdR1B_SF    = 1;   muPRdR1B_SFerr = 0;
-   muPRdR3E_SF    = 1;   muPRdR3E_SFerr = 0;
-   muPRdR2E_SF    = 1;   muPRdR2E_SFerr = 0;
-   muPRdR1E_SF    = 1;   muPRdR1E_SFerr = 0;
-   /**/
+   ResetAllSFs();
    //
 
 
@@ -295,6 +274,8 @@ void analysisClass::Loop()
      }
      if( ltemMuTau.size()==2 ) triggerMuon=ltemMuTau[0];
      //
+     if( ltemMuTau.size()!=2 ) continue; 
+     //
      int usedTrigger_=-5;
      //usedTrigger_ = SingleMu_passTrigger();
      usedTrigger_ = SingleMu40_passTrigger();
@@ -305,8 +286,7 @@ void analysisClass::Loop()
      //TriggerEfficiencyWeights_=IsoMu24e2p1_Eff( MuonPt->at(triggerMuon), MuonEta->at(triggerMuon) );
      //if(  isMu40_ ) TriggerEfficiencyWeights_=Mu40e2p1_ScaleFactor( 50, MuonEta->at(triggerMuon) );
      //if( !isMu40_ ) TriggerEfficiencyWeights_=Mu40e2p1_ScaleFactor( 50, MuonEta->at(triggerMuon) );
-     //TriggerEfficiencyWeights_=Mu40e2p1_ScaleFactor( MuonPt->at(triggerMuon), MuonEta->at(triggerMuon) );
-     TriggerEfficiencyWeights_=Mu40e2p1_ScaleFactor( 50, MuonEta->at(triggerMuon) );
+     TriggerEfficiencyWeights_=Mu40e2p1_ScaleFactor( MuonPt->at(triggerMuon), MuonEta->at(triggerMuon) );
      AppliedTrigEffWeightshisto->Fill( TriggerEfficiencyWeights_ );
      // ---- total = pileup x trigger
      double w = 0;
@@ -390,7 +370,7 @@ void analysisClass::Loop()
 	 pZeta>-10 &&
 	 //fabs(HPSTauEta->at(ltemMuTau[1]))<1.5 && //barrel Taus only
 	 fabs(HPSTauEta->at(ltemMuTau[1]))>=1.5 && //endcap Taus only
-	 fabs(HPSTauPt->at(ltemMuTau[1]))>35 && //TauPt>35
+	 HPSTauPt->at(ltemMuTau[1])>35 && //TauPt>35
 	 //fabs(MuonEta->at(ltemMuTau[0]))<1.5 && //barrel Muons only
 	 ST()>150  && JetCounter()<=1 && NLepJet<=3 && // <<<< CONTROL REGION with DATA
 	 //ST()>300  && JetCounter()>1 && NLepJet>3 && // <<<< CONTROL REGION like SIGNAL selection!! (for mixing the two)
@@ -439,7 +419,7 @@ void analysisClass::Loop()
        }
        /**/
        //
-       /**/
+       /*
        //Check RecoMu  (LQ3->Tau)
        for( unsigned int iMuT=0; iMuT<GenLQTauMuonPt->size(); iMuT++){
 	 GenMu.SetPtEtaPhiM( GenLQTauMuonPt->at(iMuT),     GenLQTauMuonEta->at(iMuT),   GenLQTauMuonPhi->at(iMuT), 0 );
@@ -451,40 +431,16 @@ void analysisClass::Loop()
 	 GenTau.SetPtEtaPhiM( GenLQTauTauTauVisiblePt->at(iTauT),     GenLQTauTauTauVisibleEta->at(iTauT),   GenLQTauTauTauVisiblePhi->at(iTauT), 0 );
 	 if( GenTau.DeltaR(RecoTau)<0.15 ) isRecoTauPrompt_ = true;
        }
-       /**/
+       */
        //
        //-----------------------------------
        // Muon Scale Factors
-       //cout<<"BEFORE Wdr3Bpar1: "<<Wdr3Bpar1<<endl;
        InitMuonFunctionParameters();
-       //cout<<" AFTER Wdr3Bpar1: "<<Wdr3Bpar1<<endl;
-       double muPt=MuonPt->at(ltemMuTau[0]);
-       // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
-       // CorrFactor( double A0, double A1, double A2, double pt, double B0, double B1, double B2 ){  //
-       // CorrFactor=DATA/Wjets                                                                       //
-       // return (PromptRateFunction( A0, A1, A2, pt )/PromptRateFunction( B0, B1, B2, pt ));         //
-       // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
-       muPRdR3B_SF    = CorrFactor( DATAdr3Bpar1, DATAdr3Bpar2, DATAdr3Bpar3, muPt, Wdr3Bpar1, Wdr3Bpar2, Wdr3Bpar3 );
-       muPRdR3B_SFerr = CorrFactorError( DATAdr3Bpar1, DATAdr3Bpar2, DATAdr3Bpar3, DATAdr3BparErr1, DATAdr3BparErr2, DATAdr3BparErr3, muPt, 
-					 Wdr3Bpar1, Wdr3Bpar2, Wdr3Bpar3, Wdr3BparErr1, Wdr3BparErr2, Wdr3BparErr3 );
-       muPRdR2B_SF    = CorrFactor( DATAdr2Bpar1, DATAdr2Bpar2, DATAdr2Bpar3, muPt, Wdr2Bpar1, Wdr2Bpar2, Wdr2Bpar3 );
-       muPRdR2B_SFerr = CorrFactorError( DATAdr2Bpar1, DATAdr2Bpar2, DATAdr2Bpar3, DATAdr2BparErr1, DATAdr2BparErr2, DATAdr2BparErr3, muPt, 
-					 Wdr2Bpar1, Wdr2Bpar2, Wdr2Bpar3, Wdr2BparErr1, Wdr2BparErr2, Wdr2BparErr3 );
-       muPRdR1B_SF    = CorrFactor( DATAdr1Bpar1, DATAdr1Bpar2, DATAdr1Bpar3, muPt, Wdr1Bpar1, Wdr1Bpar2, Wdr1Bpar3 );
-       muPRdR1B_SFerr = CorrFactorError( DATAdr1Bpar1, DATAdr1Bpar2, DATAdr1Bpar3, DATAdr1BparErr1, DATAdr1BparErr2, DATAdr1BparErr3, muPt, 
-					 Wdr1Bpar1, Wdr1Bpar2, Wdr1Bpar3, Wdr1BparErr1, Wdr1BparErr2, Wdr1BparErr3 );
-       //-------
-       muPRdR3E_SF    = CorrFactor( DATAdr3Epar1, DATAdr3Epar2, DATAdr3Epar3, muPt, Wdr3Epar1, Wdr3Epar2, Wdr3Epar3 );
-       muPRdR3E_SFerr = CorrFactorError( DATAdr3Epar1, DATAdr3Epar2, DATAdr3Epar3, DATAdr3EparErr1, DATAdr3EparErr2, DATAdr3EparErr3, muPt, 
-					 Wdr3Epar1, Wdr3Epar2, Wdr3Epar3, Wdr3EparErr1, Wdr3EparErr2, Wdr3EparErr3 );
-       muPRdR2E_SF    = CorrFactor( DATAdr2Epar1, DATAdr2Epar2, DATAdr2Epar3, muPt, Wdr2Epar1, Wdr2Epar2, Wdr2Epar3 );
-       muPRdR2E_SFerr = CorrFactorError( DATAdr2Epar1, DATAdr2Epar2, DATAdr2Epar3, DATAdr2EparErr1, DATAdr2EparErr2, DATAdr2EparErr3, muPt, 
-					 Wdr2Epar1, Wdr2Epar2, Wdr2Epar3, Wdr2EparErr1, Wdr2EparErr2, Wdr2EparErr3 );
-       muPRdR1E_SF    = CorrFactor( DATAdr1Epar1, DATAdr1Epar2, DATAdr1Epar3, muPt, Wdr1Epar1, Wdr1Epar2, Wdr1Epar3 );
-       muPRdR1E_SFerr = CorrFactorError( DATAdr1Epar1, DATAdr1Epar2, DATAdr1Epar3, DATAdr1EparErr1, DATAdr1EparErr2, DATAdr1EparErr3, muPt, 
-					 Wdr1Epar1, Wdr1Epar2, Wdr1Epar3, Wdr1EparErr1, Wdr1EparErr2, Wdr1EparErr3 );
+       InitMuonSFs(ltemMuTau[0]);
        //-----------------------------------
        // Tau Scale Factors
+       InitTauSFs();
+       /*
        tauPRdR3B_SF    = 0.981;   tauPRdR3B_SFerr = 0.028;
        tauPRdR2B_SF    = 0.960;   tauPRdR2B_SFerr = 0.092;
        tauPRdR1B_SF    = 0.960;   tauPRdR1B_SFerr = 0.092;
@@ -506,32 +462,14 @@ void analysisClass::Loop()
        tauFRdR3E_SF    = 1.000;   tauFRdR3E_SFerr = 0.065;//for TauPt>32.5
        tauFRdR2E_SF    = 1.101;   tauFRdR2E_SFerr = 0.114;
        tauFRdR1E_SF    = 1.117;   tauFRdR1E_SFerr = 0.173;
+       */
        //-----------------------------------
        //
        double LTEM_ScaleFactor_=1;
        if( !isData  ){//for MC: apply SF dependent event weights to TT box based on Gen info, set SFs back to one
 	 LTEM_ScaleFactor_=LTEM_ScaleFactor( ltemMuTau[0], isRecoMuPrompt_, ltemMuTau[1], isRecoTauPrompt_ );
 	 //
-	 muPRdR3B_SF    = 1;   muPRdR3B_SFerr = 0;
-	 muPRdR2B_SF    = 1;   muPRdR2B_SFerr = 0;
-	 muPRdR1B_SF    = 1;   muPRdR1B_SFerr = 0;
-	 muPRdR3E_SF    = 1;   muPRdR3E_SFerr = 0;
-	 muPRdR2E_SF    = 1;   muPRdR2E_SFerr = 0;
-	 muPRdR1E_SF    = 1;   muPRdR1E_SFerr = 0;
-	 //
-	 tauPRdR3B_SF    = 1;   tauPRdR3B_SFerr = 0;
-	 tauPRdR2B_SF    = 1;   tauPRdR2B_SFerr = 0;
-	 tauPRdR1B_SF    = 1;   tauPRdR1B_SFerr = 0;
-	 tauPRdR3E_SF    = 1;   tauPRdR3E_SFerr = 0;
-	 tauPRdR2E_SF    = 1;   tauPRdR2E_SFerr = 0;
-	 tauPRdR1E_SF    = 1;   tauPRdR1E_SFerr = 0;
-	 //
-	 tauFRdR3B_SF    = 1;   tauFRdR3B_SFerr = 0;
-	 tauFRdR2B_SF    = 1;   tauFRdR2B_SFerr = 0;
-	 tauFRdR1B_SF    = 1;   tauFRdR1B_SFerr = 0;
-	 tauFRdR3E_SF    = 1;   tauFRdR3E_SFerr = 0;
-	 tauFRdR2E_SF    = 1;   tauFRdR2E_SFerr = 0;
-	 tauFRdR1E_SF    = 1;   tauFRdR1E_SFerr = 0;
+	 ResetAllSFs();
        }
        //
        //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -873,10 +811,11 @@ void analysisClass::Loop()
        VertexN=0;
        //
        //
-       for(unsigned int iVertexR=0; iVertexR<VertexX->size(); iVertexR++){
-	 if( vertexRCheck(iVertexR) ) VertexN++;
-       }
-       VertexNhisto->Fill((double)VertexN, w);
+       //for(unsigned int iVertexR=0; iVertexR<VertexX->size(); iVertexR++){
+       //if( vertexRCheck(iVertexR) ) VertexN++;
+       //}
+       //VertexNhisto->Fill((double)VertexN, w);
+       VertexNhisto->Fill((double)(VertexX->size()), w);
        //
        for(unsigned int iTauR=0; iTauR<HPSTauPt->size(); iTauR++){
 	 if( !tauRisoCheck(iTauR) )continue;  
